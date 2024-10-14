@@ -1,8 +1,8 @@
-module.exports = {
+export default {
   content: [
-    './resources/views/**/*.blade.php',
-    './resources/views/**/*.js',
-    './resources/views/**/*.vue',
+    "./resources/**/*.blade.php",
+    "./resources/**/*.js",
+    "./resources/**/*.vue",
   ],
   theme: {
     extend: {},
