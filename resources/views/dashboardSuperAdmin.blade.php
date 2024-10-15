@@ -17,9 +17,9 @@
                 <h1 class="text-lg font-semibold">Dashboard</h1>
             </div>
             <div class="items-center flex space-x-4">
-                <a href="#" class="text-blue-500 hover:text-black-700">Maps</a>
-                <a href="#" class="text-blue-500 hover:text-black-700">Manage Admin</a>
-                <a href="#" class="text-blue-500 hover:text-black-700">Manage Ground</a>
+                <a href="#" class="text-blue-500 hover:text-black">Maps</a>
+                <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
+                <a href="#" class="text-blue-500 hover:text-black">Manage Ground</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
