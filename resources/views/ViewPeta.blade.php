@@ -29,9 +29,16 @@
                 <h1 class="text-lg font-semibold">Dashboard</h1>
             </div>
             <div class="items-center flex space-x-4">
-                <a href="#" class="text-blue-500 hover:text-black">Maps</a>
-                <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
-                <a href="#" class="text-blue-500 hover:text-black">Manage Ground</a>
+                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superAdmin'))
+                    <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
+                    <a href="#" class="text-black-500 hover:text-black">Maps</a>
+                    @if(auth()->user()->hasRole('superAdmin'))
+                        <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
+                    @endif
+                    <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
+                @else
+                    <a href="#" class="text-black-500 hover:text-black">Maps</a>
+                @endif
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
 
@@ -102,12 +109,12 @@
 
         avatar.addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent event bubbling
-            dropdown.classList.toggle('hidden'); 
+            dropdown.classList.toggle('hidden');
         });
 
         window.addEventListener('click', function(event) {
             if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden'); 
+                dropdown.classList.add('hidden');
             }
         });
 
@@ -150,7 +157,7 @@
 
         // Add zoom control (optional, Leaflet includes it by default)
         // You can customize or reposition it if needed
-        
+
 
         // Add a marker at Umbulharjo
         const marker = L.marker([-7.8213, 110.3841]).addTo(map)

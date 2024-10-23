@@ -7,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
-    
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
     <style>
         #map {
-            height: 80vh; 
-            width: 100%;  
+            height: 80vh;
+            width: 100%;
         }
     </style>
 </head>
@@ -83,7 +83,7 @@
 
         <div class="flex justify-end space-x-4 mt-6">
             <button class="bg-blue-500 text-white px-4 py-2 rounded-md">Add</button>
-            <button class="bg-gray-300 text-black px-4 py-2 rounded-md">Cancel</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Cancel</button>
         </div>
     </div>
 
@@ -91,7 +91,7 @@
     <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
 
     <script>
-      var map = L.map('map').setView([-7.8046, 110.3590], 13); 
+      var map = L.map('map').setView([-7.8046, 110.3590], 13);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -99,14 +99,14 @@
 
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
-      
+
       var drawControl = new L.Control.Draw({
         edit: {
-          featureGroup: drawnItems 
+          featureGroup: drawnItems
         },
         draw: {
-          polygon: true, 
-          marker: true,  
+          polygon: true,
+          marker: true,
           polyline: true,
           rectangle: true,
           circle: true,
@@ -118,7 +118,7 @@
       map.on(L.Draw.Event.CREATED, function (event) {
           var layer = event.layer;
           drawnItems.addLayer(layer);
-          
+
           if (layer instanceof L.Marker) {
               var message = prompt("Masukkan pesan untuk marker:", "Marker ditambahkan!");
               layer.bindPopup(message).openPopup();

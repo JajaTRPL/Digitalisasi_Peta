@@ -7,35 +7,26 @@ Route::get('/login', function () {
     return view('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboardAdmin');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('admin', function(){
-    return view('dashboardAdmin');
-})->middleware(['auth', 'verified', 'role:admin']);
+Route::get('/dashboard', function(){
+    return view('dashboard');
+})->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('dashboard');
 
-
-Route::get('superadmin', function(){
-    return view('dashboardSuperAdmin');
-})->middleware(['auth', 'verified', 'role:superAdmin']);
-
-Route::get('/ViewPetaAdmin', function () {
-    return view('ViewPetaAdmin');
-});
+Route::get('/ViewPeta', function () {
+    return view('ViewPeta');
+})->middleware(['auth', 'verified', 'role_or_permission:lihat-map|superAdmin|admin'])->name('ViewPeta');
 
 Route::get('/ManageGround', function () {
     return view('ManageGround');
-});
+})->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('ManageGround');
 
 Route::get('/AddGround', function () {
     return view('AddGround');
-});
+})->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
 
 require __DIR__.'/auth.php';

@@ -27,13 +27,13 @@
 
             <!-- Password -->
             <div class="mb-4">
-                <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg">
+                <input id="password" name="password" type="password" required autocomplete="new-password" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-lg">
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
             <!-- Confirm Password -->
             <div class="mb-4">
-                <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="Confirmation Password" class="w-full p-3 border border-gray-300 rounded-lg">
+                <input id="password" name="password_confirmation" type="password" required autocomplete="new-password" placeholder="Confirmation Password" class="w-full p-3 border border-gray-300 rounded-lg">
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
 

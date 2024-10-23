@@ -14,12 +14,14 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
-                <h1 class="text-lg font-semibold">Dashboard</h1>
             </div>
             <div class="items-center flex space-x-4">
-                <a href="#" class="text-blue-500 hover:text-black">Maps</a>
+                <a href="{{route('dashboard')}}" class="text-black-500 hover:text-black">Dashboard</a>
+                <a href="{{route('ViewPeta')}}" class="text-blue-500 hover:text-black">Maps</a>
+                @if(auth()->user()->hasRole('superAdmin'))
                 <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
-                <a href="#" class="text-blue-500 hover:text-black">Manage Ground</a>
+                @endif
+                <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
 
@@ -58,15 +60,15 @@
         const dropdown = document.querySelector('.dropdown-content');
 
         avatar.addEventListener('click', function() {
-            dropdown.classList.toggle('hidden'); 
+            dropdown.classList.toggle('hidden');
         });
 
         window.addEventListener('click', function(event) {
             if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden'); 
+                dropdown.classList.add('hidden');
             }
         });
     </script>
-    
+
 </body>
 </html>
