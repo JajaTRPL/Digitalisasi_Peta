@@ -26,4 +26,16 @@ Route::get('superadmin', function(){
     return view('dashboardSuperAdmin');
 })->middleware(['auth', 'verified', 'role:superAdmin']);
 
+Route::get('/ViewPetaAdmin', function () {
+    return view('ViewPetaAdmin');
+});
+
+Route::get('/ManageGround', function () {
+    return view('ManageGround');
+});
+
+Route::get('/AddGround', function () {
+    return view('AddGround');
+});
+
 require __DIR__.'/auth.php';

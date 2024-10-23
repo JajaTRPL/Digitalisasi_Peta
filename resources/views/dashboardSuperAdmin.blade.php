@@ -20,20 +20,24 @@
                 <a href="#" class="text-blue-500 hover:text-black">Maps</a>
                 <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
                 <a href="#" class="text-blue-500 hover:text-black">Manage Ground</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
+                <div class="relative inline-block text-left">
+                    <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
 
-                    <x-dropdown-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-dropdown-link>
-                </form>
-                <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="h-12 w-12 rounded-full">
+                    <div class="dropdown-content absolute right-0 z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                        <div class="py-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    {{ __('Log Out') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
-
 
     <div class="container mx-auto mt-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
@@ -49,5 +53,20 @@
         </div>
     </div>
 
+    <script>
+        const avatar = document.querySelector('.profile-avatar');
+        const dropdown = document.querySelector('.dropdown-content');
+
+        avatar.addEventListener('click', function() {
+            dropdown.classList.toggle('hidden'); 
+        });
+
+        window.addEventListener('click', function(event) {
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden'); 
+            }
+        });
+    </script>
+    
 </body>
 </html>
