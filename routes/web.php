@@ -15,11 +15,11 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/dashboard', function(){
     return view('dashboard');
-})->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('dashboard');
+})->middleware(['auth', 'verified', 'role:superAdmin|admin|guest'])->name('dashboard');
 
 Route::get('/ViewPeta', function () {
     return view('ViewPeta');
-})->middleware(['auth', 'verified', 'role_or_permission:lihat-map|superAdmin|admin'])->name('ViewPeta');
+})->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
 
 Route::get('/ManageGround', function () {
     return view('ManageGround');

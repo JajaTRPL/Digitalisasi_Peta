@@ -41,12 +41,12 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->givePermissionTo('lihat-map');
+        $user->assignRole('guest');
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('ViewPeta', absolute: false));
+        return redirect(route('dashboard', absolute: false));
     }
 }

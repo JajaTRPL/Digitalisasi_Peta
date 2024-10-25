@@ -16,12 +16,18 @@
                 <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
             </div>
             <div class="items-center flex space-x-4">
-                <a href="{{route('dashboard')}}" class="text-black-500 hover:text-black">Dashboard</a>
-                <a href="{{route('ViewPeta')}}" class="text-blue-500 hover:text-black">Maps</a>
-                @if(auth()->user()->hasRole('superAdmin'))
-                <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
+                @if(auth()->user()->hasRole('guest'))
+                    <a href="{{route('dashboard')}}" class="text-black-500 hover:text-black">Dashboard</a>
+                    <a href="{{route('ViewPeta')}}" class="text-blue-500 hover:text-black">Maps</a>
+                @elseif (auth()->user()->hasRole('superAdmin') || auth()->user()->hasRole('admin'))
+                    <a href="{{route('dashboard')}}" class="text-black-500 hover:text-black">Dashboard</a>
+                    <a href="{{route('ViewPeta')}}" class="text-blue-500 hover:text-black">Maps</a>
+                    @if(auth()->user()->hasRole('superAdmin'))
+                        <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
+                    @endif
+                    <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
                 @endif
-                <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
+
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
 

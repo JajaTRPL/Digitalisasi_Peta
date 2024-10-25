@@ -26,6 +26,7 @@ class RolePermissionSeeder extends Seeder
 
         Role::create(['name' => 'superAdmin']);
         Role::create(['name' => 'admin']);
+        Role::create(['name'=> 'guest']);
 
         $roleSuperAdmin = Role::findByName('superAdmin');
         $roleSuperAdmin -> givePermissionTo('tambah-admin');
@@ -43,5 +44,8 @@ class RolePermissionSeeder extends Seeder
         $roleAdmin -> givePermissionTo('edit-map');
         $roleAdmin -> givePermissionTo('hapus-map');
         $roleAdmin -> givePermissionTo('lihat-map');
+
+        $roleGuest = Role::findByName('guest');
+        $roleGuest -> givePermissionTo('lihat-map');
     }
 }

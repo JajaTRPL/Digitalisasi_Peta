@@ -37,7 +37,8 @@
                     @endif
                     <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
                 @else
-                    <a href="#" class="text-black-500 hover:text-black">Maps</a>
+                    <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
+                    <a href="" class="text-black-500 hover:text-black">Maps</a>
                 @endif
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
