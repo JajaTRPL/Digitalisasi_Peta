@@ -352,5 +352,20 @@
     </div>
    </div>
   </div>
+
+  <script>
+        const avatar = document.querySelector('.profile-avatar');
+        const dropdown = document.querySelector('.dropdown-content');
+
+        avatar.addEventListener('click', function() {
+            dropdown.classList.toggle('hidden');
+        });
+
+        window.addEventListener('click', function(event) {
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+  </script>
  </body>
 </html>

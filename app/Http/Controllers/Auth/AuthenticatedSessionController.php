@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->to('dashboard');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('ViewPeta', absolute: false));
     }
 
     /**

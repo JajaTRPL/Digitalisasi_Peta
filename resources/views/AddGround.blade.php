@@ -22,12 +22,13 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
-                <h1 class="text-lg font-semibold">Dashboard</h1>
+                <h1 class="text-lg font-semibold">Tambah Peta</h1>
             </div>
             <div class="items-center flex space-x-4">
-                <a href="#" class="text-blue-500 hover:text-black">Maps</a>
+                <a href="{{ route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
+                <a href="{{ route('ViewPeta')}}" class="text-blue-500 hover:text-black">Maps</a>
                 <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
-                <a href="#" class="text-blue-500 hover:text-black">Manage Ground</a>
+                <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
                     <div class="dropdown-content absolute right-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
@@ -91,42 +92,58 @@
     <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
 
     <script>
-      var map = L.map('map').setView([-7.8046, 110.3590], 13);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-      }).addTo(map);
+        //user drop down
+        const avatar = document.querySelector('.profile-avatar');
+        const dropdown = document.querySelector('.dropdown-content');
 
-      var drawnItems = new L.FeatureGroup();
-      map.addLayer(drawnItems);
+        avatar.addEventListener('click', function() {
+            dropdown.classList.toggle('hidden');
+        });
 
-      var drawControl = new L.Control.Draw({
-        edit: {
-          featureGroup: drawnItems
-        },
-        draw: {
-          polygon: true,
-          marker: true,
-          polyline: true,
-          rectangle: true,
-          circle: true,
-        }
-      });
-      map.addControl(drawControl);
+        window.addEventListener('click', function(event) {
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // map
+        var map = L.map('map').setView([-7.8046, 110.3590], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+            featureGroup: drawnItems
+            },
+            draw: {
+            polygon: true,
+            marker: true,
+            polyline: true,
+            rectangle: true,
+            circle: true,
+            }
+        });
+        map.addControl(drawControl);
 
 
-      map.on(L.Draw.Event.CREATED, function (event) {
-          var layer = event.layer;
-          drawnItems.addLayer(layer);
+        map.on(L.Draw.Event.CREATED, function (event) {
+            var layer = event.layer;
+            drawnItems.addLayer(layer);
 
-          if (layer instanceof L.Marker) {
-              var message = prompt("Masukkan pesan untuk marker:", "Marker ditambahkan!");
-              layer.bindPopup(message).openPopup();
-          } else if (layer instanceof L.Polygon) {
-              var polygonMessage = prompt("Masukkan pesan untuk polygon:", "Polygon ditambahkan!");
-              layer.bindPopup(polygonMessage).openPopup();
-          }
-      });
+            if (layer instanceof L.Marker) {
+                var message = prompt("Masukkan pesan untuk marker:", "Marker ditambahkan!");
+                layer.bindPopup(message).openPopup();
+            } else if (layer instanceof L.Polygon) {
+                var polygonMessage = prompt("Masukkan pesan untuk polygon:", "Polygon ditambahkan!");
+                layer.bindPopup(polygonMessage).openPopup();
+            }
+        });
     </script>
 </body>
 </html>

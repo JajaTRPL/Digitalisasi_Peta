@@ -26,7 +26,7 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
-                <h1 class="text-lg font-semibold">Dashboard</h1>
+                <h1 class="text-lg font-semibold">Lihat Peta</h1>
             </div>
             <div class="items-center flex space-x-4">
                 @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superAdmin'))
