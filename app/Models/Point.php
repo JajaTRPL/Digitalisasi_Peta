@@ -9,10 +9,10 @@ class Point extends Model
 {
     use HasFactory;
 
-    protected $table = 'ground_points';
+    protected $table = 'markers';
+
     protected $fillable = [
-        'point_information_id',
         'latitude',
-        'logtitude'
+        'longtitude'
     ];
 }

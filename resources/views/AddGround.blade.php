@@ -51,35 +51,35 @@
         <div class="grid grid-cols-2 gap-6">
             <div>
                 <label class="block text-gray-700">Nama Aset</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Assets Number" type="text" id="nama_asset"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset" type="text" id="nama_asset"/>
             </div>
             <div>
                 <label class="block text-gray-700">Status Kepemilikan</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Assets Name" type="text" id="status_kepemilikan"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Status Kepemilikan" type="text" id="status_kepemilikan"/>
             </div>
             <div>
                 <label class="block text-gray-700">Status Tanah</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Acquisition Date" type="text" id="status_tanah"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Status Tanah" type="text" id="status_tanah"/>
             </div>
             <div>
                 <label class="block text-gray-700">Alamat</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Ownership Status" type="text" id="alamat"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Alamat" type="text" id="alamat"/>
             </div>
             <div>
                 <label class="block text-gray-700">Tipe Tanah</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Surface Area" type="text" id="tipe_tanah"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Tipe Tanah" type="text" id="tipe_tanah"/>
             </div>
             <div>
                 <label class="block text-gray-700">Luas Aset Tanah</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text" id="luas_asset"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Luas Asset Tanah" type="text" id="luas_asset"/>
             </div>
             <div>
                 <label class="block text-gray-700">Longtitude</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text" id="logtitude"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude" type="text" id="longitude"/>
             </div>
             <div>
                 <label class="block text-gray-700">Latitude</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text" id="latitude"/>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Latitude" type="text" id="latitude"/>
             </div>
             {{-- <div class="col-span-2">
                 <label class="block text-gray-700">Foto</label>
@@ -175,12 +175,8 @@
 
                 const centerMarker = L.marker(center);
                 drawnItems.addLayer(centerMarker);
-                // const center = layer.getBounds().getCenter();
-                // const centerMarker = L.marker(center);
-                // drawnItems.addLayer(centerMarker);
-
                 document.getElementById('latitude').value = center[0];
-                document.getElementById('logtitude').value = center[1];
+                document.getElementById('longitude').value = center[1];
             });
         });
 
@@ -188,12 +184,32 @@
             document.getElementById('simpan').addEventListener('click', function(e) {
                 e.preventDefault();
 
-                // Ambil nilai koordinat dari elemen input
+                // koordinat polygon
                 const coordinates = document.getElementById('polygon').value;
+
+                // longitude dan latitude marker
+                const latitude = document.getElementById('latitude').value;
+                const longitude = document.getElementById('longitude').value;
+
+                // ground information
+                const nama_asset = document.getElementById('nama_asset').value;
+                const status_kepemilikan = document.getElementById('status_kepemilikan').value;
+                const status_tanah = document.getElementById('status_tanah').value;
+                const alamat = document.getElementById('alamat').value;
+                const tipe_tanah = document.getElementById('tipe_tanah').value;
+                const luas_asset = document.getElementById('luas_asset').value;
 
                 // Buat data untuk dikirim
                 const formData = {
                     coordinates: coordinates,
+                    latitude: latitude,
+                    longitude: longitude,
+                    nama_asset: nama_asset,
+                    status_kepemilikan: status_kepemilikan,
+                    status_tanah: status_tanah,
+                    alamat: alamat,
+                    tipe_tanah: tipe_tanah,
+                    luas_asset: luas_asset,
                     _token: '{{ csrf_token() }}'  // CSRF token Laravel
                 };
 

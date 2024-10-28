@@ -169,10 +169,17 @@
 
         // console.log(polygon);
         // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
-        var polygon = @json($polygon);
-
+        var polygon = @json($polygonGeoJson);
+        var markerpolygon = @json($markerGeoJson)
     // Parsing data GeoJSON dan tambahkan layer ke peta
-        var layer = L.geoJSON(JSON.parse(polygon)).addTo(map);
+        var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
+        
+        var markerlayer = L.geoJSON(JSON.parse(markerpolygon), {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng);
+            }
+        }).addTo(map);
+
 
         // Sesuaikan tampilan peta sesuai dengan batas layer
         // var bounds = layer.getBounds();
