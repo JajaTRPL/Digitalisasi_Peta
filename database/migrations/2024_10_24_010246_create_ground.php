@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ground', function (Blueprint $table) {
+        Schema::create('grounds', function (Blueprint $table) {
             $table->id();
+            $table->json('coordinates');
             $table->timestamps();
         });
     }
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ground');
+        Schema::dropIfExists('grounds');
     }
 };

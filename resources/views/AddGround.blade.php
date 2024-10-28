@@ -50,46 +50,66 @@
     <div class="max-w-7xl mx-auto p-6 bg-white mt-6 shadow-md rounded-md">
         <div class="grid grid-cols-2 gap-6">
             <div>
-                <label class="block text-gray-700">Assets Number</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Assets Number" type="text"/>
+                <label class="block text-gray-700">Nama Aset</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Assets Number" type="text" id="nama_asset"/>
             </div>
             <div>
-                <label class="block text-gray-700">Assets Name</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Assets Name" type="text"/>
+                <label class="block text-gray-700">Status Kepemilikan</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Assets Name" type="text" id="status_kepemilikan"/>
             </div>
             <div>
-                <label class="block text-gray-700">Acquisition Date</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Acquisition Date" type="text"/>
+                <label class="block text-gray-700">Status Tanah</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Acquisition Date" type="text" id="status_tanah"/>
             </div>
             <div>
-                <label class="block text-gray-700">Ownership Status</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Ownership Status" type="text"/>
+                <label class="block text-gray-700">Alamat</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Ownership Status" type="text" id="alamat"/>
             </div>
             <div>
-                <label class="block text-gray-700">Surface Area(m2)</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Surface Area" type="text"/>
+                <label class="block text-gray-700">Tipe Tanah</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Surface Area" type="text" id="tipe_tanah"/>
             </div>
             <div>
-                <label class="block text-gray-700">Address</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text"/>
+                <label class="block text-gray-700">Luas Aset Tanah</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text" id="luas_asset"/>
             </div>
-            <div class="col-span-2">
-                <label class="block text-gray-700">Add Photo</label>
+            <div>
+                <label class="block text-gray-700">Longtitude</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text" id="logtitude"/>
+            </div>
+            <div>
+                <label class="block text-gray-700">Latitude</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Enter Address" type="text" id="latitude"/>
+            </div>
+            {{-- <div class="col-span-2">
+                <label class="block text-gray-700">Foto</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" type="file"/>
             </div>
+            <div class="col-span-2">
+                <label class="block text-gray-700">Sertifikat</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" type="file"/>
+            </div> --}}
         </div>
 
         <!-- Peta Leaflet -->
         <div id="map" class="w-full h-96 border border-gray-300 rounded-md mt-6"></div>
 
+        <div>
+            <label>The layer To Be Stored:</label>
+            <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="{{request('polygon')}}">
+        </div>
+
         <div class="flex justify-end space-x-4 mt-6">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-md">Add</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="simpan" name="simpan">Add</button>
             <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Cancel</button>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
 
     <script>
 
@@ -108,13 +128,15 @@
         });
 
         // map
-        var map = L.map('map').setView([-7.8046, 110.3590], 13);
+        var map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
         var drawnItems = new L.FeatureGroup();
+        var markerGroup = new L.FeatureGroup();
+        map.addLayer(markerGroup);
         map.addLayer(drawnItems);
 
         var drawControl = new L.Control.Draw({
@@ -133,17 +155,66 @@
 
 
         map.on(L.Draw.Event.CREATED, function (event) {
+
+            if (drawnItems.getLayers().length > 0) {
+                const layers = drawnItems.getLayers();
+                drawnItems.clearLayers();    // Hapus polygon lama
+                markerGroup.clearLayers();   // Hapus marker lama
+            }
+
+            var type = event.layerType;
             var layer = event.layer;
             drawnItems.addLayer(layer);
+            const geoJsonData = layer.toGeoJSON(); // Definisi geoJsonData ada di sini
+            console.log(JSON.stringify(geoJsonData));
+            $(document).ready(function() {
+                $('#polygon').val(JSON.stringify(layer.toGeoJSON()));
 
-            if (layer instanceof L.Marker) {
-                var message = prompt("Masukkan pesan untuk marker:", "Marker ditambahkan!");
-                layer.bindPopup(message).openPopup();
-            } else if (layer instanceof L.Polygon) {
-                var polygonMessage = prompt("Masukkan pesan untuk polygon:", "Polygon ditambahkan!");
-                layer.bindPopup(polygonMessage).openPopup();
-            }
+                const centroid = turf.centroid(geoJsonData);
+                const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
+
+                const centerMarker = L.marker(center);
+                drawnItems.addLayer(centerMarker);
+                // const center = layer.getBounds().getCenter();
+                // const centerMarker = L.marker(center);
+                // drawnItems.addLayer(centerMarker);
+
+                document.getElementById('latitude').value = center[0];
+                document.getElementById('logtitude').value = center[1];
+            });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('simpan').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // Ambil nilai koordinat dari elemen input
+                const coordinates = document.getElementById('polygon').value;
+
+                // Buat data untuk dikirim
+                const formData = {
+                    coordinates: coordinates,
+                    _token: '{{ csrf_token() }}'  // CSRF token Laravel
+                };
+
+
+                // Kirim request menggunakan axios
+                axios.post('{{ route('save.ground') }}', formData)
+                    .then(response => {
+                        alert(response.data.message);
+                        // Redirect ke halaman setelah sukses
+                        window.location.href = '{{ route('ManageGround') }}';
+                    })
+                    .catch(error => {
+                        if (error.response) {
+                            alert('Error: ' + error.response.data.message || error.response.statusText);
+                        } else {
+                            alert('An error occurred');
+                        }
+                    });
+            });
+        });
+
     </script>
 </body>
 </html>

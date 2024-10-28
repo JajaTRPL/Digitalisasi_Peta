@@ -120,7 +120,7 @@
         });
 
         // Initialize the Leaflet map
-        const map = L.map('map').setView([-7.8213, 110.3841], 15); // Umbulharjo coordinates with zoom level 15
+        const map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15); // Umbulharjo coordinates with zoom level 15
 
         // Define different tile layers
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -161,12 +161,22 @@
 
 
         // Add a marker at Umbulharjo
-        const marker = L.marker([-7.8213, 110.3841]).addTo(map)
+        const marker = L.marker([-7.614555267905213, 110.43468152673236]).addTo(map)
             .bindPopup('Umbulharjo')
             .openPopup();
 
         // Optional: Add more interactive features like popups, tooltips, etc.
 
+        // console.log(polygon);
+        // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
+        var polygon = @json($polygon);
+
+    // Parsing data GeoJSON dan tambahkan layer ke peta
+        var layer = L.geoJSON(JSON.parse(polygon)).addTo(map);
+
+        // Sesuaikan tampilan peta sesuai dengan batas layer
+        // var bounds = layer.getBounds();
+        // map.fitBounds(bounds);
     </script>
 </body>
 </html>
