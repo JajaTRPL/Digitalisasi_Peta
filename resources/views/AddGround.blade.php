@@ -96,8 +96,10 @@
 
         <div>
             <label>The layer To Be Stored:</label>
-            <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="{{request('polygon')}}">
+            <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="{{request('polygon')}}" >
+            {{-- style="visibility: hidden" --}}
         </div>
+
 
         <div class="flex justify-end space-x-4 mt-6">
             <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="simpan" name="simpan">Add</button>
@@ -165,6 +167,16 @@
             var type = event.layerType;
             var layer = event.layer;
             drawnItems.addLayer(layer);
+
+            const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+    // Set the style of the drawn layer with the random color
+            layer.setStyle({
+                color: randomColor,
+                fillColor: randomColor,
+                fillOpacity: 0.5,
+            });
+
             const geoJsonData = layer.toGeoJSON(); // Definisi geoJsonData ada di sini
             console.log(JSON.stringify(geoJsonData));
             $(document).ready(function() {

@@ -11,20 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('grounds', function (Blueprint $table) {
-            $table->id();
-            $table->json('coordinates');
-            $table->timestamps();
-        });
-
-        Schema::create('markers', function (Blueprint $table) {
-            $table->id();
-            $table->decimal('latitude',8,6);
-            $table->decimal('longitude', 9,6);
-            $table->timestamps();
-        });
-
-        Schema::create('informations', function (Blueprint $table){
+        Schema::create('groundDetails', function (Blueprint $table){
             $table->id();
             $table->string('nama_asset');
             $table->string('status_kepemilikan');
@@ -34,6 +21,29 @@ return new class extends Migration
             $table->integer('luas_asset');
             $table->timestamps();
         });
+
+        Schema::create('groundMarkers', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('ground_detail_id');
+            $table->decimal('latitude',8,6);
+            $table->decimal('longitude', 9,6);
+            $table->timestamps();
+
+            $table->foreign('ground_detail_id')->references('id')->on('groundDetails')->onDelete('cascade');
+        });
+
+        Schema::create('grounds', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('marker_id');
+            $table->json('coordinates');
+            $table->timestamps();
+
+            $table->foreign('marker_id')->references('id')->on('groundMarkers')->onDelete('cascade');
+        });
+
+
+
+
     }
 
     /**

@@ -9,10 +9,12 @@ class Point extends Model
 {
     use HasFactory;
 
-    protected $table = 'markers';
+    protected $table = 'groundMarkers';
 
-    protected $fillable = [
-        'latitude',
-        'longtitude'
-    ];
+    protected $fillable = ['ground_detail_id', 'latitude', 'longitude'];
+
+    public function groundDetail()
+    {
+        return $this->belongsTo(GroundInfo::class, 'ground_detail_id');
+    }
 }

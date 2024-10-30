@@ -9,7 +9,10 @@ class Ground extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'coordinates'
-    ];
+    protected $fillable = ['marker_id', 'coordinates'];
+
+    public function marker()
+    {
+        return $this->belongsTo(Point::class, 'marker_id');
+    }
 }

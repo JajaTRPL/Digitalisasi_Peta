@@ -26,16 +26,6 @@ class GroundController extends Controller
         ]);
 
         // Membuat objek Ground baru
-        $ground = new Ground();
-        $ground->coordinates = $request->coordinates;
-        $ground->save();
-
-
-        $marker = new Point();
-        $marker->latitude = $request -> latitude; // Assign latitude value
-        $marker->longitude = $request -> longitude; // Make sure longitude has a value
-        $marker->save();
-
         $information = new GroundInfo();
         $information->nama_asset = $request->nama_asset;
         $information->status_kepemilikan = $request->status_kepemilikan;
@@ -44,7 +34,20 @@ class GroundController extends Controller
         $information->tipe_tanah = $request->tipe_tanah;
         $information->luas_asset = $request->luas_asset;
         $information->save();
-        
+
+        // Membuat GroundMarker dan kaitkan dengan GroundDetail
+        $marker = new Point();
+        $marker->latitude = $request->latitude;
+        $marker->longitude = $request->longitude;
+        $marker->ground_detail_id = $information->id;
+        $marker->save();
+
+        // Membuat Ground dengan marker_id dari marker yang baru saja disimpan
+        $ground = new Ground();
+        $ground->coordinates = $request->coordinates;
+        $ground->marker_id = $marker->id; // Menggunakan ID yang dihasilkan untuk marker_id
+        $ground->save();
+
         // Mengembalikan response
         return response()->json(['message' => 'Ground saved successfully!'], 201);
     }
