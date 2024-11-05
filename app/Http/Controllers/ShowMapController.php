@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ground;
+use App\Models\GroundMarkers;
 use App\Models\Point;
 use Illuminate\Http\Request;
 
-class MapController extends Controller
+class ShowMapController extends Controller
 {
     public function showMap()
     {
@@ -20,7 +21,7 @@ class MapController extends Controller
         ];
 
         // Fetch all markers and prepare the GeoJSON FeatureCollection for points
-        $markers = Point::all();
+        $markers = GroundMarkers::all();
         $markerGeoJsonData = [
             'type' => 'FeatureCollection',
             'features' => $markers->map(function ($marker) {

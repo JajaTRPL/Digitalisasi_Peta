@@ -6,13 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('groundDetails', function (Blueprint $table){
-            $table->id();
+            $table->string('id')->primary();
             $table->string('nama_asset');
             $table->string('status_kepemilikan');
             $table->string('status_tanah');
@@ -23,8 +21,8 @@ return new class extends Migration
         });
 
         Schema::create('groundMarkers', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('ground_detail_id');
+            $table->string('id')->primary();
+            $table->string('ground_detail_id');
             $table->decimal('latitude',8,6);
             $table->decimal('longitude', 9,6);
             $table->timestamps();
@@ -33,24 +31,19 @@ return new class extends Migration
         });
 
         Schema::create('grounds', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('marker_id');
+            $table->string('id')->primary();
+            $table->string('marker_id');
             $table->json('coordinates');
             $table->timestamps();
 
             $table->foreign('marker_id')->references('id')->on('groundMarkers')->onDelete('cascade');
         });
-
-
-
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('grounds');
+        Schema::dropIfExists('groundMarkers');
+        Schema::dropIfExists('groundDetails');
     }
 };

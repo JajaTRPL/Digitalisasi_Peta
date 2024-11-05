@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ground;
-use App\Models\GroundInfo;
-use App\Models\Point;
-use App\Models\GroundInformation;
+use App\Models\GroundDetails;
+use App\Models\GroundMarkers;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
 
-class GroundController extends Controller
+class AddGroundController extends Controller
 {
     public function saveGround(Request $request)
     {
@@ -25,8 +25,15 @@ class GroundController extends Controller
             'luas_asset' => 'required|numeric',
         ]);
 
+        $groundDetailsID = IdGenerator::generate([
+            'table' => 'grounddetails',
+            'length' => 8,
+            'prefix' => 'GD-',
+        ]);
+
         // Membuat objek Ground baru
-        $information = new GroundInfo();
+        $information = new GroundDetails();
+        $information->id = $groundDetailsID;
         $information->nama_asset = $request->nama_asset;
         $information->status_kepemilikan = $request->status_kepemilikan;
         $information->status_tanah = $request->status_tanah;
@@ -35,15 +42,30 @@ class GroundController extends Controller
         $information->luas_asset = $request->luas_asset;
         $information->save();
 
+
+        $groundMarkersID = IdGenerator::generate([
+            'table' => 'groundmarkers',
+            'length' => 8,
+            'prefix' => 'GM-',
+        ]);
+
         // Membuat GroundMarker dan kaitkan dengan GroundDetail
-        $marker = new Point();
+        $marker = new GroundMarkers();
+        $marker->id = $groundMarkersID;
         $marker->latitude = $request->latitude;
         $marker->longitude = $request->longitude;
         $marker->ground_detail_id = $information->id;
         $marker->save();
 
+
+        $groundsID = IdGenerator::generate([
+            'table' => 'grounds',
+            'length' => 8,
+            'prefix' => 'G-',
+        ]);
         // Membuat Ground dengan marker_id dari marker yang baru saja disimpan
         $ground = new Ground();
+        $ground->id = $groundsID;
         $ground->coordinates = $request->coordinates;
         $ground->marker_id = $marker->id; // Menggunakan ID yang dihasilkan untuk marker_id
         $ground->save();

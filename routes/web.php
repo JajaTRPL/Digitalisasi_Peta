@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\GroundController;
-use App\Http\Controllers\MapController;
+use App\Http\Controllers\AddGroundController;
+use App\Http\Controllers\ShowMapController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Commands\Show;
 
 Route::get('/login', function () {
-    return view('login');
+    return view('auth.login');
 });
 
 Route::middleware('auth')->group(function () {
@@ -19,7 +20,7 @@ Route::get('/dashboard', function(){
     return view('dashboard');
 })->middleware(['auth', 'verified', 'role:superAdmin|admin|guest'])->name('dashboard');
 
-Route::get('/ViewPeta', [MapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
+Route::get('/ViewPeta', [ShowMapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
 
 Route::get('/ManageGround', function(){
     return view('ManageGround');
@@ -29,6 +30,6 @@ Route::get('/AddGround', function () {
     return view('AddGround');
 })->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
 
-Route::post('/save-ground', [GroundController::class, 'saveGround'])->name('save.ground');
+Route::post('/save-ground', [AddGroundController::class, 'saveGround'])->name('save.ground');
 
 require __DIR__.'/auth.php';

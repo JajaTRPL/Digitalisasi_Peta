@@ -155,6 +155,7 @@
         });
         map.addControl(drawControl);
 
+        let centerMarker;
 
         map.on(L.Draw.Event.CREATED, function (event) {
 
@@ -170,7 +171,6 @@
 
             const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 
-    // Set the style of the drawn layer with the random color
             layer.setStyle({
                 color: randomColor,
                 fillColor: randomColor,
@@ -179,18 +179,45 @@
 
             const geoJsonData = layer.toGeoJSON(); // Definisi geoJsonData ada di sini
             console.log(JSON.stringify(geoJsonData));
-            $(document).ready(function() {
-                $('#polygon').val(JSON.stringify(layer.toGeoJSON()));
 
-                const centroid = turf.centroid(geoJsonData);
-                const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
+            addMarker(geoJsonData);
+            // $(document).ready(function() {
+            //     $('#polygon').val(JSON.stringify(layer.toGeoJSON()));
 
-                const centerMarker = L.marker(center);
-                drawnItems.addLayer(centerMarker);
-                document.getElementById('latitude').value = center[0];
-                document.getElementById('longitude').value = center[1];
-            });
+            //     const centroid = turf.centroid(geoJsonData);
+            //     const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
+
+            //     const centerMarker = L.marker(center);
+            //     drawnItems.addLayer(centerMarker);
+            //     document.getElementById('latitude').value = center[0];
+            //     document.getElementById('longitude').value = center[1];
+            // });
         });
+
+        map.on('draw:edited', function(event){
+            event.layers.eachLayer(function(layer){
+                const geoJsonData = layer.toGeoJSON();
+
+                addMarker(geoJsonData);
+            })
+        })
+
+        function addMarker(geoJsonData){
+            $('#polygon').val(JSON.stringify(geoJsonData));
+
+            const centroid = turf.centroid(geoJsonData);
+            const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
+
+            if (centerMarker) {
+                centerMarker.setLatLng(center);
+            } else {
+                centerMarker = L.marker(center);
+                markerGroup.addLayer(centerMarker);
+            }
+
+            document.getElementById('latitude').value = center[0];
+            document.getElementById('longitude').value = center[1];
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('simpan').addEventListener('click', function(e) {

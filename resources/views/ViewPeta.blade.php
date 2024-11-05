@@ -156,34 +156,25 @@
 
         L.control.layers(baseLayers).addTo(map);
 
-        // Add zoom control (optional, Leaflet includes it by default)
-        // You can customize or reposition it if needed
-
 
         // Add a marker at Umbulharjo
         const marker = L.marker([-7.614555267905213, 110.43468152673236]).addTo(map)
             .bindPopup('Umbulharjo')
             .openPopup();
 
-        // Optional: Add more interactive features like popups, tooltips, etc.
 
-        // console.log(polygon);
-        // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
+            // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
         var markerpolygon = @json($markerGeoJson)
-    // Parsing data GeoJSON dan tambahkan layer ke peta
+        // Parsing data GeoJSON dan tambahkan layer ke peta
         var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
-        
+
         var markerlayer = L.geoJSON(JSON.parse(markerpolygon), {
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng);
             }
         }).addTo(map);
 
-
-        // Sesuaikan tampilan peta sesuai dengan batas layer
-        // var bounds = layer.getBounds();
-        // map.fitBounds(bounds);
     </script>
 </body>
 </html>
