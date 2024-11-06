@@ -156,6 +156,8 @@
         map.addControl(drawControl);
 
         let centerMarker;
+        const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
 
         map.on(L.Draw.Event.CREATED, function (event) {
 
@@ -169,7 +171,6 @@
             var layer = event.layer;
             drawnItems.addLayer(layer);
 
-            const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 
             layer.setStyle({
                 color: randomColor,
@@ -181,17 +182,6 @@
             console.log(JSON.stringify(geoJsonData));
 
             addMarker(geoJsonData);
-            // $(document).ready(function() {
-            //     $('#polygon').val(JSON.stringify(layer.toGeoJSON()));
-
-            //     const centroid = turf.centroid(geoJsonData);
-            //     const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
-
-            //     const centerMarker = L.marker(center);
-            //     drawnItems.addLayer(centerMarker);
-            //     document.getElementById('latitude').value = center[0];
-            //     document.getElementById('longitude').value = center[1];
-            // });
         });
 
         map.on('draw:edited', function(event){

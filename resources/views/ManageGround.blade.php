@@ -82,7 +82,35 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($dataGround as $ground)
                     <tr class="border-t">
+                        <td class="py-2">{{$ground->id}}</td>
+                        <td class="py-2">{{$ground->nama_asset}}</td>
+                        <td class="py-2">{{$ground->updated_at}}</td>
+                        <td class="py-2">
+                            <a class="text-gray-500 mx-1" href="#">
+                                <i class="fas fa-pen">
+                                </i>
+                            </a>
+                            
+                            <form action="{{route('GroundDestroy', $ground->id)}}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-gray-500 mx-1" onclick="return confirm('Rill mau hapus?')" type="submit">
+                                    <i class="fas fa-trash">
+                                    </i>
+                                </button>
+                            </form>
+
+                            <a class="text-gray-500 mx-1" href="#">
+                                <i class="fas fa-eye">
+                                </i>
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+
+                    {{-- <tr class="border-t">
                         <td class="py-2">
                             <a class="text-blue-500" href="#">
                                 #4910
@@ -324,7 +352,7 @@
                                 </i>
                             </a>
                         </td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
             <div class="flex items-center justify-between mt-4">
