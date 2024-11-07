@@ -162,7 +162,7 @@
 
 
         <div class="flex justify-end space-x-4 mt-6">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="simpan" name="simpan">Add</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="simpan" name="simpan">Edit</button>
             <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Cancel</button>
         </div>
     </div>

@@ -20,7 +20,7 @@ class GroundDetailsController extends Controller
     }
 
     public function destroy($id){
-        $ground = Ground::find($id);
+        $ground = GroundDetails::find($id);
 
         $ground ->delete();
 

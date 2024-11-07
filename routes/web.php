@@ -33,4 +33,10 @@ Route::get('/AddGround', function () {
 
 Route::post('/save-ground', [AddGroundController::class, 'saveGround'])->name('save.ground');
 
+// Route untuk menampilkan halaman Edit Peta
+Route::get('/edit-peta/{id}', [MapController::class, 'edit'])->name('editPeta');
+
+// Route untuk mengupdate data peta
+Route::post('/update-peta/{id}', [MapController::class, 'update'])->name('updatePeta');
+
 require __DIR__.'/auth.php';
