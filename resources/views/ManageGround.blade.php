@@ -84,7 +84,7 @@
                 <tbody>
                     @foreach ($dataGround as $ground)
                     <tr class="border-t">
-                        <td class="py-2">{{$ground->id}}</td>
+                        <td class="py-2">{{$ground->ground_detail_id}}</td>
                         <td class="py-2">{{$ground->nama_asset}}</td>
                         <td class="py-2">{{$ground->updated_at}}</td>
                         <td class="py-2">
@@ -92,13 +92,13 @@
                                 <i class="fas fa-pen">
                                 </i>
                             </a>
-                            
-                            <form action="{{route('GroundDestroy', $ground->id)}}" method="POST">
+
+                            <form action="{{route('GroundDestroy', $ground->ground_detail_id)}}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button class="text-gray-500 mx-1" onclick="return confirm('Rill mau hapus?')" type="submit">
-                                    <i class="fas fa-trash">
-                                    </i>
+                                <button class="text-gray-500 mx-1" onclick="return confirm('Apakah anda yakin ingin menghapus data ground ini??')"
+                                    type="submit">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </form>
 
@@ -109,250 +109,6 @@
                         </td>
                     </tr>
                     @endforeach
-
-                    {{-- <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4910
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 1
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4909
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 2
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4908
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 3
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4907
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 4
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4906
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 5
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4905
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 6
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4904
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 7
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4903
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 8
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="border-t">
-                        <td class="py-2">
-                            <a class="text-blue-500" href="#">
-                                #4902
-                            </a>
-                        </td>
-                        <td class="py-2">
-                            Ground 9
-                        </td>
-                        <td class="py-2">
-                            19/09/24
-                        </td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-trash">
-                                </i>
-                            </a>
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
-                            </a>
-                        </td>
-                    </tr> --}}
                 </tbody>
             </table>
             <div class="flex items-center justify-between mt-4">

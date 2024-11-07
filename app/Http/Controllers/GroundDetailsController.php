@@ -13,14 +13,14 @@ class GroundDetailsController extends Controller
         $dataGround = DB::table('groundDetails')
         ->join('groundMarkers', 'groundDetails.id', '=', 'groundMarkers.ground_detail_id')
         ->join('grounds', 'groundMarkers.id', '=', 'grounds.marker_id')
-        ->select('groundDetails.*', 'groundMarkers.*', 'grounds.*')
+        ->select('groundDetails.id as ground_detail_id', 'groundDetails.nama_asset', 'groundDetails.updated_at')
         ->get();
 
         return view('ManageGround', compact('dataGround'));
     }
 
     public function destroy($id){
-        $ground = Ground::find($id);
+        $ground = GroundDetails::find($id);
 
         $ground ->delete();
 

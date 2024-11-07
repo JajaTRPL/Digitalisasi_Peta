@@ -25,8 +25,9 @@ Route::get('/dashboard', function(){
 Route::get('/ViewPeta', [ShowMapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
 
 Route::get('/ManageGround', [GroundDetailsController::class, 'showData'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('ManageGround');
-// Route::delete('/books/{id}', action: [GroundDetailsController::class, 'destroy'])->name('books.destroy');
+
 Route::delete('/ManageGround/{id}', [GroundDetailsController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
+
 Route::get('/AddGround', function () {
     return view('AddGround');
 })->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
