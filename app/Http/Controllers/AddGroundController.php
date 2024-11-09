@@ -5,11 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\Ground;
 use App\Models\GroundDetails;
 use App\Models\GroundMarkers;
+use App\Models\StatusKepemilikan;
+use App\Models\StatusTanah;
+use App\Models\TipeTanah;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AddGroundController extends Controller
 {
+    public function show(){
+
+        $statusKepemilikan = StatusKepemilikan::all();
+        $statusTanah = StatusTanah::all();
+        $tipeTanah = TipeTanah::all();
+
+        return view('AddGround', compact('statusKepemilikan', 'statusTanah', 'tipeTanah'));
+    }
+
     public function saveGround(Request $request)
     {
         // Validasi input
@@ -23,7 +36,10 @@ class AddGroundController extends Controller
             'alamat' => 'required|string',
             'tipe_tanah' => 'required|string',
             'luas_asset' => 'required|numeric',
+            'foto_tanah' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            'sertifikat' => 'required|file|mimes:pdf,doc,docx|max:5120',
         ]);
+
 
         $groundDetailsID = IdGenerator::generate([
             'table' => 'grounddetails',
@@ -31,15 +47,20 @@ class AddGroundController extends Controller
             'prefix' => 'GD-',
         ]);
 
+        $currentUserID = Auth::user()->id;
+
         // Membuat objek Ground baru
         $information = new GroundDetails();
         $information->id = $groundDetailsID;
         $information->nama_asset = $request->nama_asset;
-        $information->status_kepemilikan = $request->status_kepemilikan;
-        $information->status_tanah = $request->status_tanah;
         $information->alamat = $request->alamat;
-        $information->tipe_tanah = $request->tipe_tanah;
         $information->luas_asset = $request->luas_asset;
+        $information->status_kepemilikan_id = $request->status_kepemilikan;
+        $information->status_tanah_id = $request->status_tanah;
+        $information->tipe_tanah_id = $request->tipe_tanah;
+        $information->foto_ground = $request->foto_tanah;
+        $information->sertifikat = $request->sertifikat;
+        $information->user_id = $currentUserID;
         $information->save();
 
 

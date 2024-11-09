@@ -64,19 +64,19 @@
                     <input class="border border-gray-300 rounded px-4 py-2" placeholder="Search User" type="text" />
                 </div>
             </div>
-            <table class="min-w-full bg-white">
+            <table class="min-w-full bg-white table-auto">
                 <thead>
                     <tr>
-                        <th class="py-2">
+                        <th class="py-2 px-4 border-b text-left">
                             #
                         </th>
-                        <th class="py-2">
+                        <th class="py-2 px-4 border-b text-left">
                             NAME GROUND
                         </th>
-                        <th class="py-2">
+                        <th class="py-2 px-4 border-b text-left">
                             UPDATED AT
                         </th>
-                        <th class="py-2">
+                        <th class="py-2 px-4 border-b text-left">
                             ACTION
                         </th>
                     </tr>
@@ -84,27 +84,31 @@
                 <tbody>
                     @foreach ($dataGround as $ground)
                     <tr class="border-t">
-                        <td class="py-2">{{$ground->ground_detail_id}}</td>
-                        <td class="py-2">{{$ground->nama_asset}}</td>
-                        <td class="py-2">{{$ground->updated_at}}</td>
-                        <td class="py-2">
-                            <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-pen">
-                                </i>
+                        <td class="py-2 px-4">
+                            {{$ground->ground_detail_id}}
+                        </td>
+                        <td class="py-2 px-4">
+                            {{$ground->nama_asset}}
+                        </td>
+                        <td class="py-2 px-4">
+                            {{$ground->updated_at}}
+                        </td>
+                        <td class="py-2 px-4">
+                            <a class="text-gray-500 mx-1" href="{{route('editPeta', $ground->ground_detail_id)}}">
+                                <i class="fas fa-pen"></i>
                             </a>
 
-                            <form action="{{route('GroundDestroy', $ground->ground_detail_id)}}" method="POST">
+                            <form action="{{route('GroundDestroy', $ground->ground_detail_id)}}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button class="text-gray-500 mx-1" onclick="return confirm('Apakah anda yakin ingin menghapus data ground ini??')"
+                                <button class="text-gray-500 mx-1" onclick="return confirm('Rill mau hapus?')"
                                     type="submit">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
 
                             <a class="text-gray-500 mx-1" href="#">
-                                <i class="fas fa-eye">
-                                </i>
+                                <i class="fas fa-eye"></i>
                             </a>
                         </td>
                     </tr>

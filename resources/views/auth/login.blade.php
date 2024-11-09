@@ -13,10 +13,10 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
 
-            <div class="mb-4">
+            {{-- <div class="mb-4">
                 <input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Username" class="w-full p-3 border border-gray-300 rounded-lg">
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
-            </div>
+            </div> --}}
 
             <div class="mb-4">
                 <input id="email" name="email" type="email" placeholder="Email" :value="old('email')" required autofocus autocomplete="username" class="w-full p-3 border border-gray-300 rounded-lg">

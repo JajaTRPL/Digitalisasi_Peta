@@ -8,22 +8,48 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map {
-            height: 100vh; /* Full viewport height */
-            width: 100%;   /* Full width */
+            height: 100%;
+            width: 111%; /* Map fills entire width when sidebar is closed */
+            transition: width 0.3s ease-in-out;
         }
-        /* Custom styles for map controls */
-        .map-control {
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+
+        /* Sidebar style */
+        #sidebar {
+            width: 16.66%; /* Sidebar takes 25% of the screen width */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #sidebar.closed {
+            transform: translateX(-100%);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
         }
     </style>
 </head>
 <body class="bg-gray-100">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="container mx-auto py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
                 <h1 class="text-lg font-semibold">Lihat Peta</h1>
@@ -62,11 +88,15 @@
     <!-- Main Content -->
     <div class="flex">
         <!-- Sidebar -->
-        <div class="w-1/4 bg-white shadow-md h-screen flex flex-col">
+        <div id="sidebar" class="bg-#F5F5F5 shadow-md h-screen flex flex-col">
             <div class="flex items-center p-4 border-b">
                 <span class="text-lg font-semibold">
                     Ground Kelurahan
                 </span>
+                <!-- Tombol untuk menutup sidebar menggunakan gambar -->
+                <button id="toggleSidebar" class="ml-4">
+                    <img src="{{ asset('images/Sidebar.png') }}" alt="Toggle Sidebar" class="w-6 h-6">
+                </button>
             </div>
             <div class="p-4">
                 <label class="block text-sm font-medium text-gray-700" for="sort">
@@ -93,6 +123,18 @@
         <!-- Map Section -->
         <div class="w-3/4">
             <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content shadow-lg">
+            <h2 class="text-xl font-semibold mb-2">Informasi Tanah</h2>
+            <img id="landPhoto" src="" alt="Foto Tanah" class="w-full h-48 object-cover mb-2 rounded-md">
+            <p><strong>Nama:</strong> <span id="landName"></span></p>
+            <p><strong>Alamat:</strong> <span id="landAddress"></span></p>
+            <p><strong>Status Kepemilikan:</strong> <span id="landOwnership"></span></p>
+            <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Tutup</button>
         </div>
     </div>
 
@@ -163,9 +205,9 @@
             .openPopup();
 
 
-            // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
+        // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
-        var markerpolygon = @json($markerGeoJson)
+        var markerpolygon = @json($markerGeoJson);
         // Parsing data GeoJSON dan tambahkan layer ke peta
         var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
 
@@ -174,6 +216,39 @@
                 return L.marker(latlng);
             }
         }).addTo(map);
+
+        // Adding markers with click events
+        grounds.forEach(ground => {
+            const marker = L.marker([ground.lat, ground.lng]).addTo(map);
+            marker.on('click', () => {
+                // Set modal content
+                document.getElementById('landPhoto').src = ground.photo;
+                document.getElementById('landName').textContent = ground.name;
+                document.getElementById('landAddress').textContent = ground.address;
+                document.getElementById('landOwnership').textContent = ground.ownership;
+
+                // Display modal
+                document.getElementById('infoModal').style.display = 'flex';
+            });
+        });
+
+        // Close modal
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('infoModal').style.display = 'none';
+        });
+
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('closed');
+
+            // Update map container width
+            const mapContainer = document.getElementById('mapContainer');
+            if (sidebar.classList.contains('closed')) {
+                mapContainer.style.width = '100%'; // Map fills the entire width
+            } else {
+                mapContainer.style.width = '83.33%'; // Map takes 5/6 of the width
+            }
+        });
 
     </script>
 </body>

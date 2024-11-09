@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\StatusKepemilikan;
+use App\StatusTanah;
+use App\TipeTanah;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,4 +21,5 @@ class Ground extends Model
     {
         return $this->belongsTo(GroundMarkers::class, 'marker_id');
     }
+    
 }
