@@ -9,7 +9,7 @@
         "haruncpi/laravel-id-generator": "^1.1",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "spatie/laravel-permission": "^6.9"
+        "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

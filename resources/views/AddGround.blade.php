@@ -34,19 +34,25 @@
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile"
                         class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
-                    <div
-                        class="dropdown-content absolute right-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
-                        <div class="py-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit"
-                                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    {{ __('Log Out') }}
-                                </button>
-                            </form>
+                        <div class="dropdown-content absolute right-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                            <div class="py-1">
+                                <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
+                                    <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z"></path>
+                                    </svg>
+                                    Profile
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-gray-700 bg-red-50 hover:bg-red-200 hover:text-red-800 rounded-md transition duration-200 ease-in-out">
+                                        <svg class="w-4 h-4 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M8.707 15.707a1 1 0 01-1.414 0L2.586 11l4.707-4.707a1 1 0 011.414 1.414L5.414 11l3.293 3.293a1 1 0 010 1.414zm9.414-1.414a1 1 0 01-1.414 0L11 8.414V7h2a3 3 0 000-6H7a3 3 0 000 6h2v1.414l-5.707 5.707a1 1 0 01-1.414-1.414L7 7.586V7a1 1 0 011-1h4a1 1 0 011 1v5.586l5.293 5.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        Log Out
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -228,6 +234,94 @@
 
         // map
         var map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15);
+
+        // Definisi layer tile
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap'
+        });
+
+        const satelliteLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenTopoMap'
+        });
+
+        const esriSatelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            attribution: 'Esri, © OpenStreetMap contributors'
+        });
+
+        const cartoDBPositronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© CartoDB, © OpenStreetMap contributors'
+        });
+
+        // Menambahkan layer default (OpenStreetMap) ke peta
+        osmLayer.addTo(map);
+
+        // Menyiapkan kontrol layer dan menambahkannya ke peta
+        const baseLayers = {
+            "OpenStreetMap": osmLayer,
+            "Esri Satellite": esriSatelliteLayer,
+            "CartoDB Positron": cartoDBPositronLayer,
+            "OpenTopoMap": satelliteLayer
+        };
+
+        L.control.layers(baseLayers).addTo(map);
+
+        // Buat kontrol kustom untuk fullscreen
+        const FullscreenControl = L.Control.extend({
+            options: {
+                position: 'topright' // Atur posisi tombol
+            },
+
+            onAdd: function (map) {
+                const container = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+                container.innerHTML = '⛶'; // Icon atau teks tombol
+                container.style.backgroundColor = 'white';
+                container.style.width = '30px';
+                container.style.height = '30px';
+                container.style.cursor = 'pointer';
+
+                let isFullscreen = false;
+
+                container.onclick = function () {
+                    const mapContainer = document.getElementById('map');
+                    if (!isFullscreen) {
+                        mapContainer.classList.add('fullscreen-map');
+                        container.innerHTML = '↩'; // Ubah ikon ke "kembali"
+                        isFullscreen = true;
+                    } else {
+                        mapContainer.classList.remove('fullscreen-map');
+                        container.innerHTML = '⛶'; // Kembali ke ikon fullscreen
+                        isFullscreen = false;
+                    }
+                    map.invalidateSize(); // Refresh ukuran peta setelah mengubah ukurannya
+                };
+
+                return container;
+            }
+        });
+
+        // Tambahkan kontrol kustom ke peta
+        map.addControl(new FullscreenControl());
+
+        // CSS untuk fullscreen
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .fullscreen-map {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                z-index: 9999;
+                background-color: white;
+            }
+        `;
+        document.head.appendChild(style);
+
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'

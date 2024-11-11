@@ -18,7 +18,7 @@
             width: 16.66%; /* Sidebar takes 25% of the screen width */
             transition: transform 0.3s ease-in-out;
         }
-
+        
         #sidebar.closed {
             transform: translateX(-100%);
         }
@@ -71,11 +71,19 @@
 
                     <div class="dropdown-content absolute right-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
                         <div class="py-1">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
+                                <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z"></path>
+                                </svg>
+                                Profile
+                            </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                    {{ __('Log Out') }}
+                                <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-gray-700 bg-red-50 hover:bg-red-200 hover:text-red-800 rounded-md transition duration-200 ease-in-out">
+                                    <svg class="w-4 h-4 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" d="M8.707 15.707a1 1 0 01-1.414 0L2.586 11l4.707-4.707a1 1 0 011.414 1.414L5.414 11l3.293 3.293a1 1 0 010 1.414zm9.414-1.414a1 1 0 01-1.414 0L11 8.414V7h2a3 3 0 000-6H7a3 3 0 000 6h2v1.414l-5.707 5.707a1 1 0 01-1.414-1.414L7 7.586V7a1 1 0 011-1h4a1 1 0 011 1v5.586l5.293 5.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Log Out
                                 </button>
                             </form>
                         </div>
@@ -103,19 +111,18 @@
                     Sort by:
                 </label>
                 <select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" id="sort" name="sort">
-                    <option>Asc</option>
-                    <option>Desc</option>
+                    <option value="asc">Asc</option>
+                    <option value="desc">Desc</option>
                 </select>
+
             </div>
-            <div class="overflow-y-auto flex-1">
+            <div id="ground-list" class="overflow-y-auto flex-1">
                 <ul>
-                    <!-- Example Ground Items -->
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 1</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 2</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 3</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 4</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 5</li>
-                    <!-- Add more grounds as needed -->
                 </ul>
             </div>
         </div>
@@ -142,7 +149,7 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
     <!-- Optional: Include Font Awesome for Icons -->
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 
     <!-- Script to handle interactivity -->
     <script>
@@ -166,23 +173,26 @@
 
         // Define different tile layers
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: 18,
             attribution: '© OpenStreetMap'
         });
 
         const satelliteLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
+            maxZoom: 18,
             attribution: '© OpenTopoMap'
         });
 
-        const topoLayer = L.tileLayer('https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=YOUR_API_KEY', {
-            maxZoom: 19,
-            attribution: '© Thunderforest'
+        // Mengganti layer topoLayer dengan Esri Satellite
+        const esriSatelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18,
+            attribution: 'Esri, © OpenStreetMap contributors'
         });
 
-        const terrainLayer = L.tileLayer('https://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© Stamen'
+
+        // Mengganti layer topoLayer dengan CartoDB Positron
+        const cartoDBPositronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© CartoDB, © OpenStreetMap contributors'
         });
 
         // Add the default OSM layer to the map
@@ -191,9 +201,9 @@
         // Create a layer control and add it to the map
         const baseLayers = {
             "OpenStreetMap": osmLayer,
-            "OpenTopoMap": satelliteLayer,
-            "Thunderforest Landscape": topoLayer,
-            "Stamen Terrain": terrainLayer
+            "Esri Satellite": esriSatelliteLayer,
+            "CartoDB Positron": cartoDBPositronLayer,
+            "OpenTopoMap": satelliteLayer
         };
 
         L.control.layers(baseLayers).addTo(map);
@@ -205,9 +215,10 @@
             .openPopup();
 
 
-        // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
+            // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
-        var markerpolygon = @json($markerGeoJson);
+        var markerpolygon = @json($markerGeoJson)
+        
         // Parsing data GeoJSON dan tambahkan layer ke peta
         var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
 
@@ -249,6 +260,45 @@
                 mapContainer.style.width = '83.33%'; // Map takes 5/6 of the width
             }
         });
+
+        // Menambahkan event listener untuk perubahan sort order
+        document.getElementById('sort').addEventListener('change', function() {
+            console.log('Sorting changed!');
+            
+            const list = document.getElementById('ground-list');
+            const items = Array.from(list.children);
+            const sortOrder = this.value;
+
+            if(sortOrder==='asc'){
+            items.sort((a,b)=>{
+                return a.textContent.localeCompare(b.textContent)
+            });
+
+            // Append child elements back into the parent element 
+            // to reflect changes on UI
+            
+            items.forEach(item=>{
+                    list.appendChild(item);
+
+            })
+
+        }else{
+            items.sort((a,b)=>{
+                return b.textContent.localeCompare(a.textContent)
+
+            })
+            
+            // Append child elements back into the parent element 
+            // to reflect changes on UI
+            
+            items.forEach(item=>{
+                    list.appendChild(item);
+
+            })
+        }
+
+        });
+
 
     </script>
 </body>
