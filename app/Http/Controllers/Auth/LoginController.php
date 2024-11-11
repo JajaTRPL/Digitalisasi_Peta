@@ -13,13 +13,18 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
-        $credentials = $request->only('email', 'password', 'name');
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('email', 'password');
 
         if(Auth::attempt($credentials)){
             return redirect()->intended('dashboard');
         }
 
-        return redirect()->back()->withErrors(['email' => 'Mohon masukkan data yang benar']);
+        return redirect()->back()->withInput()->withErrors(['email' => 'Mohon masukkan data yang benar']);
     }
 
     public function logout(){
