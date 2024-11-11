@@ -9,20 +9,23 @@
     <style>
         #map {
             height: 100%;
-            width: 111%; /* Map fills entire width when sidebar is closed */
+            width: 125%;
+            transform: translateX(-20%);
             transition: width 0.3s ease-in-out;
         }
 
         /* Sidebar style */
         #sidebar {
-            width: 16.66%; /* Sidebar takes 25% of the screen width */
+            z-index: 1000;
             transition: transform 0.3s ease-in-out;
         }
 
         #sidebar.closed {
-            transform: translateX(-100%);
+            transform: translateX(-80%);
         }
-
+        #ground-list-container.closed {
+            display: none;
+        }
         .modal {
             display: none;
             position: fixed;
@@ -46,7 +49,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="bg-black relative">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-md">
         <div class="container mx-auto py-4 flex justify-between items-center">
@@ -71,7 +74,7 @@
                 <div class="relative inline-block text-left">
                     <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
 
-                    <div class="dropdown-content absolute right-0 z- mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                    <div class="dropdown-content absolute right-0 z-[999] mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
                         <div class="py-1">
                             <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
                                 <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -96,19 +99,19 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="flex">
+    <div class="flex relative">
         <!-- Sidebar -->
-        <div id="sidebar" class="bg-#F5F5F5 shadow-md h-screen flex flex-col">
-            <div class="flex items-center p-4 border-b">
+        <div id="sidebar" class="bg-[#F5F5F5] shadow-md h-screen flex flex-col w-1/5">
+            <div class="flex items-center justify-between p-4 border-b">
                 <span class="text-lg font-semibold">
                     Ground Kelurahan
                 </span>
                 <!-- Tombol untuk menutup sidebar menggunakan gambar -->
-                <button id="toggleSidebar" class="ml-4">
+                <button id="toggleSidebar">
                     <img src="{{ asset('images/Sidebar.png') }}" alt="Toggle Sidebar" class="w-6 h-6">
                 </button>
             </div>
-            <div class="p-4">
+            <div class="p-4"  id="select-container" >
                 <label class="block text-sm font-medium text-gray-700" for="sort">
                     Sort by:
                 </label>
@@ -118,19 +121,19 @@
                 </select>
 
             </div>
-            <div id="ground-list" class="overflow-y-auto flex-1">
-                <ul>
+            <divclass="overflow-y-auto flex-1">
+                <ul id="ground-list">
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 1</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 2</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 3</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 4</li>
                     <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 5</li>
                 </ul>
-            </div>
+            </divclass=>
         </div>
 
         <!-- Map Section -->
-        <div class="w-3/4">
+        <div class="w-screen">
             <div id="map"></div>
         </div>
     </div>
@@ -142,8 +145,11 @@
             <img id="landPhoto" src="" alt="Foto Tanah" class="w-full h-48 object-cover mb-2 rounded-md">
             <p><strong>Nama:</strong> <span id="landName"></span></p>
             <p><strong>Alamat:</strong> <span id="landAddress"></span></p>
-            <p><strong>Status Kepemilikan:</strong> <span id="landOwnership"></span></p>
-            <button id="closeModal" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Tutup</button>
+            <p><strong>Tipe Tanah:</strong> <span id="landOwnership"></span></p>
+            <div class="w-full flex justify-between mt-5">
+                <button id="closeModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md">Tutup</button>
+                <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Show Detail</button>
+            </div>
         </div>
     </div>
 
@@ -159,6 +165,53 @@
         const avatar = document.querySelector('.profile-avatar');
         const dropdown = document.querySelector('.dropdown-content');
 
+        document.getElementById('sort').addEventListener('change', function() {
+            console.log('Sorting changed!');
+
+            const list = document.getElementById('ground-list');
+            const items = Array.from(list.children);
+            const sortOrder = this.value;
+
+            if(sortOrder==='asc'){
+                
+                items.sort((a,b)=>{
+                    return a.textContent.localeCompare(b.textContent)
+                });
+
+                // Append child elements back into the parent element
+                // to reflect changes on UI
+
+                items.forEach(item=>{
+                        list.appendChild(item);
+
+                })
+
+            }   else{
+                items.sort((a,b)=>{
+                    return b.textContent.localeCompare(a.textContent)
+
+                })
+
+                // Append child elements back into the parent element
+                // to reflect changes on UI
+
+                items.forEach(item=>{
+                        list.appendChild(item);
+
+                })
+            }
+
+        });
+
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const glist = document.getElementById('select-container');
+            sidebar.classList.toggle('closed');
+            glist.classList.toggle('hidden');
+            // Update map container width
+            
+        });
+
         avatar.addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent event bubbling
             dropdown.classList.toggle('hidden');
@@ -171,7 +224,10 @@
         });
 
         // Initialize the Leaflet map
-        const map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15); // Umbulharjo coordinates with zoom level 15
+        const map = L.map('map', {zoomControl: false }).setView([-7.614555267905213, 110.43468152673236], 15); // Umbulharjo coordinates with zoom level 15
+
+        // Menambahkan kembali kontrol zoom di bawah kontrol layer
+        L.control.zoom({ position: 'topright' }).addTo(map);
 
         // Define different tile layers
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -220,86 +276,62 @@
             // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
         var markerpolygon = @json($markerGeoJson)
+
+        
         
         // Parsing data GeoJSON dan tambahkan layer ke peta
         var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
 
+
+        var detailsData = {!! $detailsJson !!}
+
+
         var markerlayer = L.geoJSON(JSON.parse(markerpolygon), {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng);
+                const marker = L.marker(latlng);
+                marker.addEventListener('click', function(){
+                    const result = detailsData.find(item => item.hasOwnProperty(`${latlng.lat}_${latlng.lng}`));
+                    if(result){
+                        const ground = result[`${latlng.lat}_${latlng.lng}`]
+                        document.getElementById('landPhoto').src = "https://cdn.icon-icons.com/icons2/2508/PNG/512/house_home_location_placeholder_map_icon_150726.png";
+                        document.getElementById('landName').textContent = ground.nama_asset;
+                        document.getElementById('landAddress').textContent = ground.alamat;
+                        document.getElementById('landOwnership').textContent = ground.tipe_tanah;
+
+                        // Display modal
+                        document.getElementById('infoModal').style.display = 'flex';
+                    } else {
+                        console.log('data salah')
+                    }
+                })
+                return marker
             }
         }).addTo(map);
 
         // Adding markers with click events
-        grounds.forEach(ground => {
-            const marker = L.marker([ground.lat, ground.lng]).addTo(map);
-            marker.on('click', () => {
-                // Set modal content
-                document.getElementById('landPhoto').src = ground.photo;
-                document.getElementById('landName').textContent = ground.name;
-                document.getElementById('landAddress').textContent = ground.address;
-                document.getElementById('landOwnership').textContent = ground.ownership;
+        // grounds.forEach(ground => {
+        //     const marker = L.marker([ground.lat, ground.lng]).addTo(map);
+        //     marker.on('click', () => {
+        //         // Set modal content
+        //         document.getElementById('landPhoto').src = ground.photo;
+        //         document.getElementById('landName').textContent = ground.name;
+        //         document.getElementById('landAddress').textContent = ground.address;
+        //         document.getElementById('landOwnership').textContent = ground.ownership;
 
-                // Display modal
-                document.getElementById('infoModal').style.display = 'flex';
-            });
-        });
+        //         // Display modal
+        //         document.getElementById('infoModal').style.display = 'flex';
+        //     });
+        // });
 
         // Close modal
         document.getElementById('closeModal').addEventListener('click', () => {
             document.getElementById('infoModal').style.display = 'none';
         });
 
-        document.getElementById('toggleSidebar').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('closed');
-
-            // Update map container width
-            const mapContainer = document.getElementById('mapContainer');
-            if (sidebar.classList.contains('closed')) {
-                mapContainer.style.width = '100%'; // Map fills the entire width
-            } else {
-                mapContainer.style.width = '83.33%'; // Map takes 5/6 of the width
-            }
-        });
+        
 
         // Menambahkan event listener untuk perubahan sort order
-        document.getElementById('sort').addEventListener('change', function() {
-            console.log('Sorting changed!');
-
-            const list = document.getElementById('ground-list');
-            const items = Array.from(list.children);
-            const sortOrder = this.value;
-
-            if(sortOrder==='asc'){
-            items.sort((a,b)=>{
-                return a.textContent.localeCompare(b.textContent)
-            });
-
-            // Append child elements back into the parent element
-            // to reflect changes on UI
-
-            items.forEach(item=>{
-                    list.appendChild(item);
-
-            })
-
-        }else{
-            items.sort((a,b)=>{
-                return b.textContent.localeCompare(a.textContent)
-
-            })
-
-            // Append child elements back into the parent element
-            // to reflect changes on UI
-
-            items.forEach(item=>{
-                    list.appendChild(item);
-
-            })
-        }
-
-        });
+        
 
 
     </script>

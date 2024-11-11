@@ -13,8 +13,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
     <style>
         #map {
-            height: 80vh;
             width: 100%;
+        }
+        .fullscreen-map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            display: hidden;
+            background-color: black;
         }
     </style>
 </head>
@@ -193,7 +202,8 @@
         </div>
 
         <!-- Peta Leaflet -->
-        <div id="map" class="w-full h-96 border border-gray-300 rounded-md mt-6"></div>
+        <div id="map" class="w-full h-[80vh] border border-gray-300 rounded-md mt-6"></div>
+        
 
         <div>
             {{-- <label>The layer To Be Stored:</label> --}}
@@ -288,12 +298,32 @@
 
                 container.onclick = function () {
                     const mapContainer = document.getElementById('map');
+                    // <div id="map" class="w-full h-[80vh] border border-gray-300 rounded-md mt-6"></div>
+                    // <div id="map" class="w-screen h-screen fixed top-0 translate-x-[-50%] left-[50%] border border-gray-300 rounded-md"></div>
                     if (!isFullscreen) {
-                        mapContainer.classList.add('fullscreen-map');
+                        mapContainer.classList.remove('w-full');
+                        mapContainer.classList.remove('h-[80vh]');
+                        mapContainer.classList.remove('mt-6');
+                        mapContainer.classList.add('w-screen');
+                        mapContainer.classList.add('h-screen');
+                        mapContainer.classList.add('fixed');
+                        mapContainer.classList.add('top-0');
+                        mapContainer.classList.add('translate-x-[-50%]');
+                        mapContainer.classList.add('left-[50%]');
+                        mapContainer.setAttribute("style","position:fixed;")
                         container.innerHTML = '↩'; // Ubah ikon ke "kembali"
                         isFullscreen = true;
                     } else {
-                        mapContainer.classList.remove('fullscreen-map');
+                        mapContainer.classList.add('w-full');
+                        mapContainer.classList.add('h-[80vh]');
+                        mapContainer.classList.add('mt-6');
+                        mapContainer.classList.remove('w-screen');
+                        mapContainer.classList.remove('h-screen');
+                        mapContainer.classList.remove('fixed');
+                        mapContainer.classList.remove('top-0');
+                        mapContainer.classList.remove('translate-x-[-50%]');
+                        mapContainer.classList.remove('left-[50%]');
+                        mapContainer.setAttribute("style","position:relative;")
                         container.innerHTML = '⛶'; // Kembali ke ikon fullscreen
                         isFullscreen = false;
                     }
@@ -306,21 +336,6 @@
 
         // Tambahkan kontrol kustom ke peta
         map.addControl(new FullscreenControl());
-
-        // CSS untuk fullscreen
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .fullscreen-map {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                z-index: 9999;
-                background-color: white;
-            }
-        `;
-        document.head.appendChild(style);
 
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
