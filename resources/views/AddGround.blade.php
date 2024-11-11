@@ -149,7 +149,7 @@
                 </label>
             </div> --}}
 
-            {{-- <div class="font-[sans-serif] max-w-md mx-auto">
+            <div class="font-[sans-serif] max-w-md mx-auto">
                 <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                 <input type="file"
                   class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
@@ -163,7 +163,7 @@
                   class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
                   id="sertifikat" name="sertifikat"/>
                 <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
-            </div> --}}
+            </div>
 
             {{-- <div class="col-span-2">
                 <label class="block text-gray-700 mb-1">Sertifikat</label>

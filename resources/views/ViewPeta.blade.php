@@ -18,7 +18,7 @@
             width: 16.66%; /* Sidebar takes 25% of the screen width */
             transition: transform 0.3s ease-in-out;
         }
-        
+
         #sidebar.closed {
             transform: translateX(-100%);
         }
@@ -51,7 +51,9 @@
     <nav class="bg-white shadow-md">
         <div class="container mx-auto py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
+                <a href="{{route('dashboard')}}">
+                    <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full" >
+                </a>
                 <h1 class="text-lg font-semibold">Lihat Peta</h1>
             </div>
             <div class="items-center flex space-x-4">
@@ -218,7 +220,7 @@
             // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
         var markerpolygon = @json($markerGeoJson)
-        
+
         // Parsing data GeoJSON dan tambahkan layer ke peta
         var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
 
@@ -264,7 +266,7 @@
         // Menambahkan event listener untuk perubahan sort order
         document.getElementById('sort').addEventListener('change', function() {
             console.log('Sorting changed!');
-            
+
             const list = document.getElementById('ground-list');
             const items = Array.from(list.children);
             const sortOrder = this.value;
@@ -274,9 +276,9 @@
                 return a.textContent.localeCompare(b.textContent)
             });
 
-            // Append child elements back into the parent element 
+            // Append child elements back into the parent element
             // to reflect changes on UI
-            
+
             items.forEach(item=>{
                     list.appendChild(item);
 
@@ -287,10 +289,10 @@
                 return b.textContent.localeCompare(a.textContent)
 
             })
-            
-            // Append child elements back into the parent element 
+
+            // Append child elements back into the parent element
             // to reflect changes on UI
-            
+
             items.forEach(item=>{
                     list.appendChild(item);
 

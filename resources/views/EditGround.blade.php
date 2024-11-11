@@ -145,6 +145,22 @@
                 </label>
             </div> --}}
 
+            <div class="font-[sans-serif] max-w-md mx-auto">
+                <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
+                <input type="file"
+                  class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
+                  id="foto_tanah" name="foto_tanah"/>
+                <p class="text-xs text-gray-400 mt-2">Foto Tanah PNG JPG</p>
+            </div>
+
+            <div class="font-[sans-serif] max-w-md mx-auto">
+                <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
+                <input type="file"
+                  class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
+                  id="sertifikat" name="sertifikat"/>
+                <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
+            </div>
+
             <div>
                 <label class="block text-gray-700">Longtitude</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude" type="text" id="longitude" value="{{$dataGround->longitude}}"/>
@@ -166,7 +182,7 @@
 
         <div class="flex justify-end space-x-4 mt-6">
             <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="simpan" name="simpan">Edit</button>
-            <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Cancel</button>
+            <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Kembali</button>
         </div>
     </div>
 
@@ -246,7 +262,8 @@
 
             var type = event.layerType;
             var layer = event.layer;
-            drawnItems.addLayer(layer);
+            polygon = layer;
+            drawnItems.addLayer(polygon);
 
 
             layer.setStyle({
@@ -279,7 +296,8 @@
                 centerMarker.setLatLng(center);
             } else {
                 centerMarker = L.marker(center);
-                markerGroup.addLayer(centerMarker);
+                markerpolygon = centerMarker;
+                markerGroup.addLayer(markerpolygon);
             }
 
             document.getElementById('latitude').value = center[0];
@@ -291,49 +309,43 @@
                 e.preventDefault();
 
                 // koordinat polygon
-                const coordinates = document.getElementById('polygon').value;
+                const formData = new FormData();
+                const foto_tanah = document.querySelector('#foto_tanah');
+                const sertifikat = document.querySelector('#sertifikat');
 
-                // longitude dan latitude marker
-                const latitude = document.getElementById('latitude').value;
-                const longitude = document.getElementById('longitude').value;
-
-                // ground information
-                const nama_asset = document.getElementById('nama_asset').value;
-                const status_kepemilikan = document.getElementById('status_kepemilikan').value;
-                const status_tanah = document.getElementById('status_tanah').value;
-                const alamat = document.getElementById('alamat').value;
-                const tipe_tanah = document.getElementById('tipe_tanah').value;
-                const luas_asset = document.getElementById('luas_asset').value;
-
-                // Buat data untuk dikirim
-                const formData = {
-                    coordinates: coordinates,
-                    latitude: latitude,
-                    longitude: longitude,
-                    nama_asset: nama_asset,
-                    status_kepemilikan: status_kepemilikan,
-                    status_tanah: status_tanah,
-                    alamat: alamat,
-                    tipe_tanah: tipe_tanah,
-                    luas_asset: luas_asset,
-                    _token: '{{ csrf_token() }}'  // CSRF token Laravel
-                };
-
+                formData.append('coordinates', document.getElementById('polygon').value);
+                formData.append('latitude', document.getElementById('latitude').value);
+                formData.append('longitude', document.getElementById('longitude').value);
+                formData.append('nama_asset', document.getElementById('nama_asset').value);
+                formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
+                formData.append('status_tanah', document.getElementById('status_tanah').value);
+                formData.append('alamat', document.getElementById('alamat').value);
+                formData.append('tipe_tanah', document.getElementById('tipe_tanah').value);
+                formData.append('luas_asset', document.getElementById('luas_asset').value);
+                formData.append('foto_tanah', foto_tanah.files[0]);
+                formData.append('sertifikat', sertifikat.files[0]);
+                formData.append('_token', '{{ csrf_token() }}');
 
                 // Kirim request menggunakan axios
-                axios.post('{{ route('save.ground') }}', formData)
-                    .then(response => {
-                        alert(response.data.message);
-                        // Redirect ke halaman setelah sukses
-                        window.location.href = '{{ route('ManageGround') }}';
-                    })
-                    .catch(error => {
-                        if (error.response) {
-                            alert('Error: ' + error.response.data.message || error.response.statusText);
-                        } else {
-                            alert('An error occurred');
-                        }
-                    });
+                const id = '{{$dataGround->id}}';
+
+                axios.put(`/update-peta/${id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    alert(response.data.message);
+                    // Redirect ke halaman setelah sukses
+                    window.location.href = '{{ route('ManageGround') }}';
+                })
+                .catch(error => {
+                    if (error.response) {
+                        alert('Error: ' + (error.response.data.message || error.response.statusText));
+                    } else {
+                        alert('An error occurred');
+                    }
+                });
             });
         });
 

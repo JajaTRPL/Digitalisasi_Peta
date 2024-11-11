@@ -10,7 +10,10 @@
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
+                <a href="{{route('dashboard')}}">
+                    <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full" >
+                </a>
+                <h1 class="text-lg font-semibold">Manage Ground</h1>
             </div>
             <div class="items-center flex space-x-4">
                 <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>

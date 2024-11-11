@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddGroundController;
-use App\Http\Controllers\GroundDetailsController;
-use App\Http\Controllers\ManageGroundController;
+use App\Http\Controllers\GroundController;
 use App\Http\Controllers\ShowMapController;
 use App\Http\Controllers\ProfileController;
 use App\Models\GroundDetails;
@@ -25,18 +24,19 @@ Route::get('/dashboard', function(){
 
 Route::get('/ViewPeta', [ShowMapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
 
-Route::get('/ManageGround', [GroundDetailsController::class, 'showData'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('ManageGround');
+Route::get('/ManageGround', [GroundController::class, 'showData'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('ManageGround');
 
-Route::delete('/ManageGround/{id}', [GroundDetailsController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
+Route::delete('/ManageGround/{id}', [GroundController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
 
-Route::get('/AddGround', [AddGroundController::class, 'show'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
+Route::get('/AddGround', [GroundController::class, 'create'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
 
-Route::post('/save-ground', [AddGroundController::class, 'saveGround'])->name('save.ground');
+Route::post('/save-ground', [GroundController::class, 'store'])->name('save.ground');
 
+Route::put('/update-peta/{id}', [GroundController::class, 'update'])->name('updateGround');
 // Route untuk menampilkan halaman Edit Peta
-Route::get('/edit-peta/{id}', [GroundDetailsController::class, 'edit'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('editPeta');
+Route::get('/edit-peta/{id}', [GroundController::class, 'edit'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('editPeta');
 
 // Route untuk mengupdate data peta
-Route::post('/update-peta/{id}', [GroundDetailsController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('updatePeta');
+Route::post('/update-peta/{id}', [GroundController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('updatePeta');
 
 require __DIR__.'/auth.php';
