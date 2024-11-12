@@ -10,9 +10,9 @@ class GroundMarkers extends Model
 {
     use HasFactory;
 
-    protected $table = 'groundMarkers';
+    protected $table = 'ground_markers';
 
-    protected $fillable = ['id', 'ground_detail_id', 'latitude', 'longitude'];
+    protected $fillable = ['latitude', 'longitude'];
 
     public $incrementing = false;
     protected $keyType = 'string';

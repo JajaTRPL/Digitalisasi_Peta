@@ -13,7 +13,7 @@ class StatusTanahSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('statusTanah')->insert([
+        DB::table('status_tanah')->insert([
             ['id' => 'ST-00001', 'nama_status_tanah' => 'Disewakan'],
             ['id' => 'ST-00002', 'nama_status_tanah' => 'Tersewa']
         ]);

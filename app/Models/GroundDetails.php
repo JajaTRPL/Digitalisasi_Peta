@@ -10,11 +10,44 @@ class GroundDetails extends Model
 {
     use HasFactory;
 
-    protected $table ='groundDetails';
-
-    protected $fillable = ['id', 'nama_asset', 'status_kepemilikan', 'status_tanah', 'alamat', 'tipe_tanah', 'luas_asset'];
-
+    protected $table ='ground_details';
+    protected $fillable = ['nama_asset', 'alamat', 'luas_asset'];
     public $incrementing = false;
     protected $keyType = 'string';
+
+    public function statusKepemilikan()
+    {
+        return $this->belongsTo(StatusKepemilikan::class, 'status_kepemilikan_id');
+    }
+
+    public function statusTanah()
+    {
+        return $this->belongsTo(StatusTanah::class, 'status_tanah_id');
+    }
+
+    public function tipeTanah()
+    {
+        return $this->belongsTo(TipeTanah::class, 'tipe_tanah_id');
+    }
+
+    public function photoGround()
+    {
+        return $this->belongsTo(PhotoGround::class, 'photo_ground_id');
+    }
+
+    public function sertificateGround()
+    {
+        return $this->belongsTo(SertificateGround::class, 'sertificate_ground_id');
+    }
+
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
 
 }

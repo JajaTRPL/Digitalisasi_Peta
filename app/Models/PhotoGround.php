@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class StatusKepemilikan extends Model
+class PhotoGround extends Model
 {
     use HasFactory;
 
-    protected $table ='status_kepemilikan';
-
-    protected $fillable = ['nama_status_kepemilikan'];
-
+    protected $table = 'ground_photo';
+    protected $fillable = ['name', 'size'];
     public $incrementing = false;
     protected $keyType = 'string';
 }

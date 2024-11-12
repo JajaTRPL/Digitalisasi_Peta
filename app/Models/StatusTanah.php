@@ -9,9 +9,9 @@ class StatusTanah extends Model
 {
     use HasFactory;
 
-    protected $table ='statusTanah';
+    protected $table ='status_tanah';
 
-    protected $fillable = ['id', 'nama_status_tanah'];
+    protected $fillable = ['nama_status_tanah'];
 
     public $incrementing = false;
     protected $keyType = 'string';

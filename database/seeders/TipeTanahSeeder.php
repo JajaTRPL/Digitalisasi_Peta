@@ -13,7 +13,7 @@ class TipeTanahSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('tipeTanah')->insert([
+        DB::table('tipe_tanah')->insert([
             ['id' => 'TG-000001', 'nama_tipe_tanah' => 'Tanah Bengkok'],
             ['id' => 'TG-000002', 'nama_tipe_tanah' => 'Tanah Khas Desa'],
             ['id' => 'TG-000003', 'nama_tipe_tanah' => 'Tanah Wakaf'],

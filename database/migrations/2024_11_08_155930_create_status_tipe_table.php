@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('statusKepemilikan', function (Blueprint $table) {
+        Schema::create('status_kepemilikan', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->string('nama_status_kepemilikan');
             $table->timestamps();
         });
 
-        Schema::create('statusTanah', function(Blueprint $table){
+        Schema::create('status_tanah', function(Blueprint $table){
             $table->string('id')->primary();
             $table->string('nama_status_tanah');
             $table->timestamps();
         });
 
-        Schema::create('tipeTanah', function(Blueprint $table){
+        Schema::create('tipe_tanah', function(Blueprint $table){
             $table->string('id')->primary();
             $table->string('nama_tipe_tanah');
             $table->timestamps();

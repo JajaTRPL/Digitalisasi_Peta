@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ground;
 use App\Models\GroundDetails;
 use App\Models\GroundMarkers;
+use App\Models\PhotoGround;
+use App\Models\SertificateGround;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\StatusKepemilikan;
@@ -16,10 +18,10 @@ use Illuminate\Support\Facades\Auth;
 class GroundController extends Controller
 {
     public function showData(){
-        $dataGround = DB::table('groundDetails')
-        ->join('groundMarkers', 'groundDetails.id', '=', 'groundMarkers.ground_detail_id')
-        ->join('grounds', 'groundMarkers.id', '=', 'grounds.marker_id')
-        ->select('groundDetails.id as ground_detail_id', 'groundDetails.nama_asset', 'groundDetails.updated_at')
+        $dataGround = DB::table('ground_details')
+        ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
+        ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
+        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at')
         ->get();
 
         return view('ManageGround', compact('dataGround'));
@@ -48,9 +50,36 @@ class GroundController extends Controller
             'sertifikat' => 'required|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
+        $photoGroundID = IdGenerator::generate([
+            'table' => 'ground_photo',
+            'length' => 8,
+            'prefix' => 'PG-',
+        ]);
+
+        $photoGround = new PhotoGround();
+        $photoGround->id = $photoGroundID;
+        $name = $request->file('foto_tanah')->getClientOriginalName();
+        $photoGround->size = $request->file('foto_tanah')->getSize();
+        $request->file('foto_tanah')->storeAs('public/images/', $name);
+        $photoGround->name = $name;
+        $photoGround->save();
+
+        $sertificateGroundID = IdGenerator::generate([
+            'table' => 'ground_sertificate',
+            'length' => 8,
+            'prefix' => 'SG-',
+        ]);
+
+        $sertificateGround = new SertificateGround();
+        $sertificateGround->id = $sertificateGroundID;
+        $sertificateGround->size = $request->file('sertifikat')->getSize();
+        $name = $request->file('sertifikat')->getClientOriginalName();
+        $request->file('sertifikat')->storeAs('public/sertifikat/', $name);
+        $sertificateGround->name = $name;
+        $sertificateGround->save();
 
         $groundDetailsID = IdGenerator::generate([
-            'table' => 'grounddetails',
+            'table' => 'ground_details',
             'length' => 8,
             'prefix' => 'GD-',
         ]);
@@ -66,14 +95,15 @@ class GroundController extends Controller
         $information->status_kepemilikan_id = $request->status_kepemilikan;
         $information->status_tanah_id = $request->status_tanah;
         $information->tipe_tanah_id = $request->tipe_tanah;
-        $information->foto_ground = $request->foto_tanah;
-        $information->sertifikat = $request->sertifikat;
-        $information->user_id = $currentUserID;
+        $information->photo_ground_id = $photoGroundID;
+        $information->sertificate_ground_id = $sertificateGroundID;
+        $information->added_by = $currentUserID;
+        $information->updated_by = $currentUserID;
         $information->save();
 
 
         $groundMarkersID = IdGenerator::generate([
-            'table' => 'groundmarkers',
+            'table' => 'ground_markers',
             'length' => 8,
             'prefix' => 'GM-',
         ]);
@@ -104,22 +134,22 @@ class GroundController extends Controller
     }
 
     public function edit($id){
-        $dataGround = DB::table('groundDetails')
-        ->join('groundMarkers', 'groundDetails.id', '=', 'groundMarkers.ground_detail_id')
-        ->join('grounds', 'groundMarkers.id', '=', 'grounds.marker_id')
-        ->select('groundDetails.*', 'groundMarkers.*', 'grounds.*')
-        ->where('groundDetails.id', $id)
+        $dataGround = DB::table('ground_details')
+        ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
+        ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
+        ->select('ground_details.*', 'ground_markers.*', 'grounds.*')
+        ->where('ground_details.id', $id)
         ->first();
 
-        $statusKepemilikan = DB::table('statusKepemilikan')->get();
-        $statusTanah = DB::table('statusTanah')->get();
-        $tipeTanah = DB::table('tipeTanah')->get();
+        $statusKepemilikan = DB::table('status_kepemilikan')->get();
+        $statusTanah = DB::table('status_tanah')->get();
+        $tipeTanah = DB::table('tipe_tanah')->get();
 
-        $dataGroundCoordinate = DB::table('groundDetails')
-        ->join('groundMarkers', 'groundDetails.id', '=', 'groundMarkers.ground_detail_id')
-        ->join('grounds', 'groundMarkers.id', '=', 'grounds.marker_id')
-        ->select('groundMarkers.latitude', 'groundMarkers.longitude','grounds.coordinates')
-        ->where('groundDetails.id', $id)
+        $dataGroundCoordinate = DB::table('ground_details')
+        ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
+        ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
+        ->select('ground_markers.latitude', 'ground_markers.longitude','grounds.coordinates')
+        ->where('ground_details.id', $id)
         ->get();
 
         $polygonDataGround = [

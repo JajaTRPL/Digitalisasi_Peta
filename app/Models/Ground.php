@@ -13,7 +13,7 @@ class Ground extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'marker_id', 'coordinates'];
+    protected $table = 'grounds';
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -21,5 +21,5 @@ class Ground extends Model
     {
         return $this->belongsTo(GroundMarkers::class, 'marker_id');
     }
-    
+
 }

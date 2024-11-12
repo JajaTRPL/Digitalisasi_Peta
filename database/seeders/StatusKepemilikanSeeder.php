@@ -13,7 +13,7 @@ class StatusKepemilikanSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('statusKepemilikan')->insert([
+        DB::table('status_kepemilikan')->insert([
             ['id' => 'SK-00001', 'nama_status_kepemilikan' => 'Milik Pemerintah'],
             ['id' => 'SK-00002', 'nama_status_kepemilikan' => 'Milik Perorangan'],
             ['id' => 'SK-00003', 'nama_status_kepemilikan' => 'Milik Kelurahan'],
