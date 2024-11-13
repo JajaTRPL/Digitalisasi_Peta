@@ -9,7 +9,7 @@ class PhotoGround extends Model
 {
     use HasFactory;
 
-    protected $table = 'ground_photo';
+    protected $table = 'ground_photos';
     protected $fillable = ['name', 'size'];
     public $incrementing = false;
     protected $keyType = 'string';

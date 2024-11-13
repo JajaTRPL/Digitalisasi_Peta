@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string('status_kepemilikan_id');
             $table->string('status_tanah_id');
             $table->string('tipe_tanah_id');
-            $table->string('photo_ground_id');
-            $table->string('sertificate_ground_id');
             $table->unsignedBigInteger('added_by');
             $table->unsignedBigInteger('updated_by');
 
@@ -31,8 +29,6 @@ return new class extends Migration
             $table->foreign('status_kepemilikan_id')->references('id')->on('status_kepemilikan')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('status_tanah_id')->references('id')->on('status_tanah')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('tipe_tanah_id')->references('id')->on('tipe_tanah')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('photo_ground_id')->references('id')->on('ground_photo')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('sertificate_ground_id')->references('id')->on('ground_sertificate')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
 

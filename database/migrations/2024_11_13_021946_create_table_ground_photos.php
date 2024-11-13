@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ground_sertificate', function (Blueprint $table) {
+        Schema::create('ground_photos', function(Blueprint $table){
             $table->string('id')->primary();
+            $table->string('ground_detail_id');
             $table->string('name');
             $table->string('size');
             $table->timestamps();
+
+            $table->foreign('ground_detail_id')->references('id')->on('ground_details')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ground_sertificate');
+        Schema::dropIfExists('ground_photos');
     }
 };

@@ -14,6 +14,7 @@ use App\Models\StatusTanah;
 use App\Models\TipeTanah;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class GroundController extends Controller
 {
@@ -24,13 +25,16 @@ class GroundController extends Controller
         ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at')
         ->get();
 
-        return view('ManageGround', compact('dataGround'));
+        $photo = PhotoGround::all();
+
+        return view('ManageGround', compact('dataGround', 'photo'));
     }
 
     public function create(){
         $statusKepemilikan = StatusKepemilikan::all();
         $statusTanah = StatusTanah::all();
         $tipeTanah = TipeTanah::all();
+
 
         return view('AddGround', compact('statusKepemilikan', 'statusTanah', 'tipeTanah'));
     }
@@ -46,37 +50,10 @@ class GroundController extends Controller
             'alamat' => 'required|string',
             'tipe_tanah' => 'required|string',
             'luas_asset' => 'required|numeric',
-            'foto_tanah' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
-            'sertifikat' => 'required|file|mimes:pdf,doc,docx|max:5120',
+            'foto_tanah' => 'nullable|file|image|mimes:jpeg,png,jpg|max:2048',
+            'sertifikat' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
-        $photoGroundID = IdGenerator::generate([
-            'table' => 'ground_photo',
-            'length' => 8,
-            'prefix' => 'PG-',
-        ]);
-
-        $photoGround = new PhotoGround();
-        $photoGround->id = $photoGroundID;
-        $name = $request->file('foto_tanah')->getClientOriginalName();
-        $photoGround->size = $request->file('foto_tanah')->getSize();
-        $request->file('foto_tanah')->storeAs('public/images/', $name);
-        $photoGround->name = $name;
-        $photoGround->save();
-
-        $sertificateGroundID = IdGenerator::generate([
-            'table' => 'ground_sertificate',
-            'length' => 8,
-            'prefix' => 'SG-',
-        ]);
-
-        $sertificateGround = new SertificateGround();
-        $sertificateGround->id = $sertificateGroundID;
-        $sertificateGround->size = $request->file('sertifikat')->getSize();
-        $name = $request->file('sertifikat')->getClientOriginalName();
-        $request->file('sertifikat')->storeAs('public/sertifikat/', $name);
-        $sertificateGround->name = $name;
-        $sertificateGround->save();
 
         $groundDetailsID = IdGenerator::generate([
             'table' => 'ground_details',
@@ -95,12 +72,60 @@ class GroundController extends Controller
         $information->status_kepemilikan_id = $request->status_kepemilikan;
         $information->status_tanah_id = $request->status_tanah;
         $information->tipe_tanah_id = $request->tipe_tanah;
-        $information->photo_ground_id = $photoGroundID;
-        $information->sertificate_ground_id = $sertificateGroundID;
         $information->added_by = $currentUserID;
         $information->updated_by = $currentUserID;
         $information->save();
 
+        $photoGroundID = IdGenerator::generate([
+            'table' => 'ground_photos',
+            'length' => 8,
+            'prefix' => 'PG-',
+        ]);
+
+        if ($request->hasFile('foto_tanah')) {
+            $filenameWithExt = $request->file('foto_tanah')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('foto_tanah')->getClientOriginalExtension();
+            $basename = uniqid() . time();
+            $smallFilename = "small_{$basename}.{$extension}";
+            $mediumFilename = "medium_{$basename}.{$extension}";
+            $largeFilename = "large_{$basename}.{$extension}";
+            $photoNameSimpan = "{$basename}.{$extension}";
+            $path = $request->file('foto_tanah')->storeAs('ground_image', $photoNameSimpan);
+        }
+
+        $photoGround = new PhotoGround();
+        $photoGround->id = $photoGroundID;
+        $name = $request->file('foto_tanah')->getClientOriginalName();
+        $photoGround->size = $request->file('foto_tanah')->getSize();
+        $photoGround->name = $photoNameSimpan;
+        $photoGround->ground_detail_id = $information->id;
+        $photoGround->save();
+
+        $sertificateGroundID = IdGenerator::generate([
+            'table' => 'ground_certificates',
+            'length' => 8,
+            'prefix' => 'SG-',
+        ]);
+
+        if ($request->hasFile('sertifikat')) {
+            $filenameWithExt = $request->file('sertifikat')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('sertifikat')->getClientOriginalExtension();
+            $basename = uniqid() . time();
+            $smallFilename = "small_{$basename}.{$extension}";
+            $mediumFilename = "medium_{$basename}.{$extension}";
+            $largeFilename = "large_{$basename}.{$extension}";
+            $sertifNameSimpan = "{$basename}.{$extension}";
+            $path = $request->file('sertifikat')->storeAs('ground_sertificate', $sertifNameSimpan);
+        }
+
+        $sertificateGround = new SertificateGround();
+        $sertificateGround->id = $sertificateGroundID;
+        $sertificateGround->size = $request->file('sertifikat')->getSize();
+        $sertificateGround->name = $sertifNameSimpan;
+        $sertificateGround->ground_detail_id = $information->id;
+        $sertificateGround->save();
 
         $groundMarkersID = IdGenerator::generate([
             'table' => 'ground_markers',
@@ -232,6 +257,27 @@ class GroundController extends Controller
 
     public function destroy($id){
         $ground = GroundDetails::find($id);
+
+        $photoGround = DB::table('ground_details')
+        ->join('ground_photos', 'ground_details.id', '=', 'ground_photos.ground_detail_id')
+        ->select('ground_photos.*')
+        ->where('ground_details.id', $id)
+        ->get();
+
+        $certificateGround = DB::table('ground_details')
+        ->join('ground_certificates', 'ground_details.id', '=', 'ground_certificates.ground_detail_id')
+        ->select('ground_certificates.*')
+        ->where('ground_details.id', $id)
+        ->get();
+
+        foreach ($photoGround as $photo) {
+            Storage::delete('ground_image/' . $photo->name);
+        }
+
+        // Hapus setiap file sertifikat dari storage
+        foreach ($certificateGround as $certificate) {
+            Storage::delete('ground_sertificate/' . $certificate->name);
+        }
 
         $ground ->delete();
 
