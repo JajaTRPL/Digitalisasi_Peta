@@ -32,7 +32,7 @@ class GroundDetails extends Model
 
     public function photoGround()
     {
-        return $this->belongsTo(PhotoGround::class, 'photo_ground_id');
+        return $this->hasOne(PhotoGround::class, 'ground_detail_id');
     }
 
     public function sertificateGround()

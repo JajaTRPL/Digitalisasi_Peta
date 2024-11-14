@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ground;
+use App\Models\GroundDetails;
 use App\Models\GroundMarkers;
 use App\Models\TipeTanah;
 use Illuminate\Support\Facades\DB;
@@ -39,8 +40,11 @@ class ShowMapController extends Controller
         ];
 
         $detailsData = $markers->map(function($marker){
+            $detail = $marker->groundDetail;
+            $photo = GroundDetails::findOrFail($detail->id)->photoGround->name;
+            $detail->photoGround = $photo;
             $data = [
-                "$marker->latitude"."_"."$marker->longitude"=> $marker->groundDetail 
+                "$marker->latitude"."_"."$marker->longitude"=> $detail
             ];
             $tipe_tanah = TipeTanah::findOrFail($marker->groundDetail->tipe_tanah_id);
             $data["$marker->latitude"."_"."$marker->longitude"]["tipe_tanah"] = $tipe_tanah->nama_tipe_tanah;

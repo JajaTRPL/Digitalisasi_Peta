@@ -293,7 +293,7 @@
                     const result = detailsData.find(item => item.hasOwnProperty(`${latlng.lat}_${latlng.lng}`));
                     if(result){
                         const ground = result[`${latlng.lat}_${latlng.lng}`]
-                        document.getElementById('landPhoto').src = "https://cdn.icon-icons.com/icons2/2508/PNG/512/house_home_location_placeholder_map_icon_150726.png";
+                        document.getElementById('landPhoto').src = "storage/ground_image/"+ground.photoGround;
                         document.getElementById('landName').textContent = ground.nama_asset;
                         document.getElementById('landAddress').textContent = ground.alamat;
                         document.getElementById('landOwnership').textContent = ground.tipe_tanah;
