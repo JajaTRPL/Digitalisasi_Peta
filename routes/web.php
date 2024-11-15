@@ -37,6 +37,10 @@ Route::put('/update-peta/{id}', [GroundController::class, 'update'])->name('upda
 Route::get('/edit-peta/{id}', [GroundController::class, 'edit'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('editPeta');
 
 // Route untuk mengupdate data peta
-Route::post('/update-peta/{id}', [GroundController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('updatePeta');
+Route::put('/update-peta/{id}', [GroundController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('updatePeta');
+
+Route::get('/testingEdit', function(){
+    return view('TestingEditGround');
+});
 
 require __DIR__.'/auth.php';

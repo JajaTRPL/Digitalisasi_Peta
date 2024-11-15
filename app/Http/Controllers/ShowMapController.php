@@ -52,13 +52,15 @@ class ShowMapController extends Controller
             return $data;
         });
 
-    
+        $dataGround = DB::table('ground_details')->select('ground_details.*')->get();
+
+
 
         // Encode data for use in the Blade view
         $polygonGeoJson = json_encode($polygonGeoJsonData);
         $markerGeoJson = json_encode($markerGeoJsonData);
         $detailsJson = json_encode($detailsData);
 
-        return view('ViewPeta', compact('polygonGeoJson', 'markerGeoJson', 'detailsJson'));
+        return view('ViewPeta', compact('polygonGeoJson', 'markerGeoJson', 'detailsJson', 'dataGround'));
     }
 }

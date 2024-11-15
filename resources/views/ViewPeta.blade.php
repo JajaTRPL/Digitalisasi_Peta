@@ -122,13 +122,12 @@
 
             </div>
             <divclass="overflow-y-auto flex-1">
+                @foreach ($dataGround as $ground)
                 <ul id="ground-list">
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 1</li>
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 2</li>
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 3</li>
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 4</li>
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">Ground 5</li>
+                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">{{$ground->nama_asset}}</li>
                 </ul>
+                @endforeach
+
             </divclass=>
         </div>
 
@@ -143,9 +142,9 @@
         <div class="modal-content shadow-lg">
             <h2 class="text-xl font-semibold mb-2">Informasi Tanah</h2>
             <img id="landPhoto" src="" alt="Foto Tanah" class="w-full h-48 object-cover mb-2 rounded-md">
-            <p><strong>Nama:</strong> <span id="landName"></span></p>
-            <p><strong>Alamat:</strong> <span id="landAddress"></span></p>
-            <p><strong>Tipe Tanah:</strong> <span id="landOwnership"></span></p>
+            <p><strong>Nama:</strong> <span id="nama_asset"></span></p>
+            <p><strong>Alamat:</strong> <span id="alamat"></span></p>
+            <p><strong>Tipe Tanah:</strong> <span id="tipe_tanah"></span></p>
             <div class="w-full flex justify-between mt-5">
                 <button id="closeModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md">Tutup</button>
                 <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Show Detail</button>
@@ -173,7 +172,7 @@
             const sortOrder = this.value;
 
             if(sortOrder==='asc'){
-                
+
                 items.sort((a,b)=>{
                     return a.textContent.localeCompare(b.textContent)
                 });
@@ -209,7 +208,7 @@
             sidebar.classList.toggle('closed');
             glist.classList.toggle('hidden');
             // Update map container width
-            
+
         });
 
         avatar.addEventListener('click', function(event) {
@@ -268,17 +267,17 @@
 
 
         // Add a marker at Umbulharjo
-        const marker = L.marker([-7.614555267905213, 110.43468152673236]).addTo(map)
-            .bindPopup('Umbulharjo')
-            .openPopup();
+        // const marker = L.marker([-7.614555267905213, 110.43468152673236]).addTo(map)
+        //     .bindPopup('Umbulharjo')
+        //     .openPopup();
 
 
             // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
         var markerpolygon = @json($markerGeoJson)
 
-        
-        
+
+
         // Parsing data GeoJSON dan tambahkan layer ke peta
         var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
 
@@ -294,9 +293,9 @@
                     if(result){
                         const ground = result[`${latlng.lat}_${latlng.lng}`]
                         document.getElementById('landPhoto').src = "storage/ground_image/"+ground.photoGround;
-                        document.getElementById('landName').textContent = ground.nama_asset;
-                        document.getElementById('landAddress').textContent = ground.alamat;
-                        document.getElementById('landOwnership').textContent = ground.tipe_tanah;
+                        document.getElementById('nama_asset').textContent = ground.nama_asset;
+                        document.getElementById('alamat').textContent = ground.alamat;
+                        document.getElementById('tipe_tanah').textContent = ground.tipe_tanah;
 
                         // Display modal
                         document.getElementById('infoModal').style.display = 'flex';
@@ -328,10 +327,10 @@
             document.getElementById('infoModal').style.display = 'none';
         });
 
-        
+
 
         // Menambahkan event listener untuk perubahan sort order
-        
+
 
 
     </script>

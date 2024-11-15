@@ -182,7 +182,7 @@
 
 
             <div class="flex justify-end space-x-4 mt-6">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="perbarui" name="perbarui">Perbarui</button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="update" name="update">Perbarui</button>
                 <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Kembali</button>
             </div>
         </form>
@@ -308,53 +308,34 @@
             document.getElementById('longitude').value = center[1];
         }
 
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('update').addEventListener('click', function(e) {
+                e.preventDefault();
 
-        // koordinat polygon
-                // const formData = new FormData();
-                // const foto_tanah = document.querySelector('#foto_tanah');
-                // const sertifikat = document.querySelector('#sertifikat');
+                // koordinat polygon
+                const formData = new FormData();
+                const foto_tanah = document.querySelector('#foto_tanah');
+                const sertifikat = document.querySelector('#sertifikat');
 
                 // formData.append('coordinates', JSON.stringify(document.getElementById('polygon').value));
 
-                // formData.append('coordinates', document.getElementById('polygon').value);
-                // formData.append('latitude', document.getElementById('latitude').value);
-                // formData.append('longitude', document.getElementById('longitude').value);
-                // const nama_asset = formData.append('nama_asset', document.getElementById('nama_asset').value);
-                // formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
-                // formData.append('status_tanah', document.getElementById('status_tanah').value);
-                // formData.append('alamat', document.getElementById('alamat').value);
-                // formData.append('tipe_tanah', document.getElementById('tipe_tanah').value);
-                // formData.append('luas_asset', document.getElementById('luas_asset').value);
+                formData.append('coordinates', document.getElementById('polygon').value);
+                formData.append('latitude', document.getElementById('latitude').value);
+                formData.append('longitude', document.getElementById('longitude').value);
+                formData.append('nama_asset', document.getElementById('nama_asset').value);
+                formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
+                formData.append('status_tanah', document.getElementById('status_tanah').value);
+                formData.append('alamat', document.getElementById('alamat').value);
+                formData.append('tipe_tanah', document.getElementById('tipe_tanah').value);
+                formData.append('luas_asset', document.getElementById('luas_asset').value);
                 // formData.append('foto_tanah', foto_tanah.files[0]);
                 // formData.append('sertifikat', sertifikat.files[0]);
                 // formData.append('_token', '{{ csrf_token() }}');
 
                 // Kirim request menggunakan axios
-                // const id = '{{$dataGround->id}}';
+                const id = '{{$dataGround->id}}';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('perbarui').addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const nama_asset = document.getElementById('nama_asset').value;
-                const status_kepemilikan = document.getElementById('status_kepemilikan').value;
-                const status_tanah = document.getElementById('status_tanah').value;
-                const alamat = document.getElementById('alamat').value;
-                const tipe_tanah = document.getElementById('tipe_tanah').value;
-                const luas_asset = document.getElementById('luas_asset').value;
-
-                const formData = {
-                    nama_asset: nama_asset,
-                    status_kepemilikan: status_kepemilikan,
-                    status_tanah: status_tanah,
-                    alamat: alamat,
-                    tipe_tanah: tipe_tanah,
-                    luas_asset: luas_asset,
-                }
-
-                console.log(formData);
-
-                axios.put(`/update-peta/{{$dataGround->id}}`, formData, {
+                axios.put(`/update-peta/${id}`, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

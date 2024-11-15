@@ -22,7 +22,8 @@ class GroundController extends Controller
         $dataGround = DB::table('ground_details')
         ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
         ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
-        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at')
+        ->join('users', 'ground_details.added_by', '=', 'users.id')
+        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at', 'users.name as added_by_name')
         ->get();
 
         $photo = PhotoGround::all();
@@ -207,18 +208,15 @@ class GroundController extends Controller
 
     public function update(Request $request, $id){
 
+        dd($request->all());
+
         $request->validate([
-            'coordinates' => 'required|json',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
             'nama_asset' => 'required|string',
             'status_kepemilikan' => 'required|string',
             'status_tanah' => 'required|string',
             'alamat' => 'required|string',
             'tipe_tanah' => 'required|string',
             'luas_asset' => 'required|numeric',
-            'foto_tanah' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
-            'sertifikat' => 'required|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
         $groundDetail = GroundDetails::findOrFail($id);
@@ -228,31 +226,41 @@ class GroundController extends Controller
         $groundDetail->status_tanah_id = $request->status_tanah;
         $groundDetail->luas_asset = $request->luas_asset;
         $groundDetail->tipe_tanah_id = $request->tipe_tanah;
-
-        if ($request->hasFile('foto_tanah')) {
-            // Baca isi file sebagai binary dan simpan ke database
-            $groundDetail->foto_tanah = file_get_contents($request->file('foto_tanah')->getRealPath());
-        }
-
-        // Update sertifikat jika ada file baru
-        if ($request->hasFile('sertifikat')) {
-            // Baca isi file sebagai binary dan simpan ke database
-            $groundDetail->sertifikat = file_get_contents($request->file('sertifikat')->getRealPath());
-        }
-
         $groundDetail->save();
 
-
-        $groundMarker = GroundMarkers::findOrFail($id);
-        $groundMarker->longitude = $request->longitude;
-        $groundMarker->latitude = $request->latitude;
-        $groundMarker->save();
-
-        $ground = Ground::findOrFail($id);
-        $ground->coordinates = $request->coordinates;
-        $ground->save();
-
         return redirect()->back()->with('success', 'Data ground berhasil diperbarui');
+
+        // 'foto_tanah' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            // 'sertifikat' => 'required|file|mimes:pdf,doc,docx|max:5120',
+
+
+            // 'coordinates' => 'required|json',
+            // 'latitude' => 'required|numeric',
+            // 'longitude' => 'required|numeric',
+
+        // $photoGround = PhotoGround::findOrFail($id);
+
+        // if ($request->hasFile('foto_tanah')) {
+        //     // Baca isi file sebagai binary dan simpan ke database
+        //     $groundDetail->foto_tanah = file_get_contents($request->file('foto_tanah')->getRealPath());
+        // }
+
+        // // Update sertifikat jika ada file baru
+        // if ($request->hasFile('sertifikat')) {
+        //     // Baca isi file sebagai binary dan simpan ke database
+        //     $groundDetail->sertifikat = file_get_contents($request->file('sertifikat')->getRealPath());
+        // }
+
+
+        // $groundMarker = GroundMarkers::findOrFail($id);
+        // $groundMarker->longitude = $request->longitude;
+        // $groundMarker->latitude = $request->latitude;
+        // $groundMarker->save();
+
+        // $ground = Ground::findOrFail($id);
+        // $ground->coordinates = $request->coordinates;
+        // $ground->save();
+
     }
 
     public function destroy($id){

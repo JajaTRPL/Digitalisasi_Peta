@@ -77,16 +77,19 @@
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border-b text-left">
-                            #
+                            ID
                         </th>
                         <th class="py-2 px-4 border-b text-left">
-                            NAME GROUND
+                            NAMA ASSET
                         </th>
                         <th class="py-2 px-4 border-b text-left">
-                            UPDATED AT
+                            DIBUAT OLEH
                         </th>
                         <th class="py-2 px-4 border-b text-left">
-                            ACTION
+                            DIPERBARUI PADA
+                        </th>
+                        <th class="py-2 px-4 border-b text-left">
+                            AKSI
                         </th>
                     </tr>
                 </thead>
@@ -98,6 +101,9 @@
                         </td>
                         <td class="py-2 px-4">
                             {{$ground->nama_asset}}
+                        </td>
+                        <td class="py-2 px-4">
+                            {{$ground->added_by_name}}
                         </td>
                         <td class="py-2 px-4">
                             {{$ground->updated_at}}
