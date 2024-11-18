@@ -11,7 +11,7 @@ class GroundDetails extends Model
     use HasFactory;
 
     protected $table ='ground_details';
-    protected $fillable = ['nama_asset', 'alamat', 'luas_asset'];
+    protected $fillable = ['nama_asset', 'alamat', 'luas_asset', 'id'];
     public $incrementing = false;
     protected $keyType = 'string';
 

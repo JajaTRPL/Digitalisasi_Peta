@@ -12,7 +12,7 @@ class GroundMarkers extends Model
 
     protected $table = 'ground_markers';
 
-    protected $fillable = ['latitude', 'longitude'];
+    protected $fillable = ['latitude', 'longitude', 'id', 'ground_detail_id'];
 
     public $incrementing = false;
     protected $keyType = 'string';

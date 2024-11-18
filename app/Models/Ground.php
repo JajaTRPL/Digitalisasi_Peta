@@ -14,6 +14,8 @@ class Ground extends Model
     use HasFactory;
 
     protected $table = 'grounds';
+    protected $fillable = ['coordinated', 'id', 'ground_detail_id'];
+
     public $incrementing = false;
     protected $keyType = 'string';
 

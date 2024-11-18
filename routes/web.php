@@ -31,16 +31,10 @@ Route::delete('/ManageGround/{id}', [GroundController::class, 'destroy'])->middl
 Route::get('/AddGround', [GroundController::class, 'create'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
 
 Route::post('/save-ground', [GroundController::class, 'store'])->name('save.ground');
-
-Route::put('/update-peta/{id}', [GroundController::class, 'update'])->name('updateGround');
 // Route untuk menampilkan halaman Edit Peta
 Route::get('/edit-peta/{id}', [GroundController::class, 'edit'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('editPeta');
 
 // Route untuk mengupdate data peta
 Route::put('/update-peta/{id}', [GroundController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('updatePeta');
-
-Route::get('/testingEdit', function(){
-    return view('TestingEditGround');
-});
 
 require __DIR__.'/auth.php';

@@ -292,7 +292,7 @@
                     const result = detailsData.find(item => item.hasOwnProperty(`${latlng.lat}_${latlng.lng}`));
                     if(result){
                         const ground = result[`${latlng.lat}_${latlng.lng}`]
-                        document.getElementById('landPhoto').src = "storage/ground_image/"+ground.photoGround;
+                        document.getElementById('landPhoto').src = "storage/ground_image/"+ ground.photoGround;
                         document.getElementById('nama_asset').textContent = ground.nama_asset;
                         document.getElementById('alamat').textContent = ground.alamat;
                         document.getElementById('tipe_tanah').textContent = ground.tipe_tanah;

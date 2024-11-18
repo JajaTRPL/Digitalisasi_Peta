@@ -150,7 +150,7 @@
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                     <input type="file"
                     class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                    id="foto_tanah" name="foto_tanah"/>
+                    id="foto_tanah" name="foto_tanah" value="{{asset('storage/ground_image/' . $photoGround->name)}}"/>
                     <p class="text-xs text-gray-400 mt-2">Foto Tanah PNG JPG</p>
                 </div>
 
@@ -158,7 +158,7 @@
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                     <input type="file"
                     class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                    id="sertifikat" name="sertifikat"/>
+                    id="sertifikat" name="sertifikat" value="{{asset('storage/ground_sertificate/' . $sertifikatGround->name)}}"/>
                     <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
                 </div>
 
@@ -183,7 +183,7 @@
 
             <div class="flex justify-end space-x-4 mt-6">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="perbarui" name="perbarui">Perbarui</button>
-                <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Kembali</button>
+                <button class="bg-gray-300 text-black px-4 py-2 rounded-md"><a href="{{route('ManageGround')}}">Kembali</a></button>
             </div>
         </form>
 
@@ -253,28 +253,20 @@
         map.addControl(drawControl);
 
         let centerMarker;
-        const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
 
         map.on(L.Draw.Event.CREATED, function (event) {
 
             if (drawnItems.getLayers().length > 0) {
                 const layers = drawnItems.getLayers();
-                drawnItems.clearLayers();    // Hapus polygon lama
-                markerGroup.clearLayers();   // Hapus marker lama
+                drawnItems.clearLayers();    // Hapus polygon lama  // Hapus marker lama
             }
+
+            markerGroup.clearLayers();
 
             var type = event.layerType;
             var layer = event.layer;
             polygon = layer;
             drawnItems.addLayer(polygon);
-
-
-            layer.setStyle({
-                color: randomColor,
-                fillColor: randomColor,
-                fillOpacity: 0.5,
-            });
 
             const geoJsonData = layer.toGeoJSON(); // Definisi geoJsonData ada di sini
             console.log(JSON.stringify(geoJsonData));
@@ -297,72 +289,54 @@
             const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
 
             if (centerMarker) {
-                centerMarker.setLatLng(center);
-            } else {
-                centerMarker = L.marker(center);
-                markerpolygon = centerMarker;
-                markerGroup.addLayer(markerpolygon);
+                markerGroup.removeLayer(centerMarker); // Ensure it's removed first
             }
+            centerMarker = L.marker(center);
+            markerGroup.addLayer(centerMarker);
 
             document.getElementById('latitude').value = center[0];
             document.getElementById('longitude').value = center[1];
         }
 
-
-        // koordinat polygon
-                // const formData = new FormData();
-                // const foto_tanah = document.querySelector('#foto_tanah');
-                // const sertifikat = document.querySelector('#sertifikat');
-
-                // formData.append('coordinates', JSON.stringify(document.getElementById('polygon').value));
-
-                // formData.append('coordinates', document.getElementById('polygon').value);
-                // formData.append('latitude', document.getElementById('latitude').value);
-                // formData.append('longitude', document.getElementById('longitude').value);
-                // const nama_asset = formData.append('nama_asset', document.getElementById('nama_asset').value);
-                // formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
-                // formData.append('status_tanah', document.getElementById('status_tanah').value);
-                // formData.append('alamat', document.getElementById('alamat').value);
-                // formData.append('tipe_tanah', document.getElementById('tipe_tanah').value);
-                // formData.append('luas_asset', document.getElementById('luas_asset').value);
-                // formData.append('foto_tanah', foto_tanah.files[0]);
-                // formData.append('sertifikat', sertifikat.files[0]);
-                // formData.append('_token', '{{ csrf_token() }}');
-
-                // Kirim request menggunakan axios
-                // const id = '{{$dataGround->id}}';
-
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('perbarui').addEventListener('click', function(e) {
                 e.preventDefault();
 
+                const coordinates = document.getElementById('polygon').value;
+                const latitude = document.getElementById('latitude').value;
+                const longitude = document.getElementById('longitude').value;
                 const nama_asset = document.getElementById('nama_asset').value;
                 const status_kepemilikan = document.getElementById('status_kepemilikan').value;
                 const status_tanah = document.getElementById('status_tanah').value;
                 const alamat = document.getElementById('alamat').value;
                 const tipe_tanah = document.getElementById('tipe_tanah').value;
                 const luas_asset = document.getElementById('luas_asset').value;
+                const foto_tanah = document.querySelector('#foto_tanah').files[0];
+                const sertifikat = document.querySelector('#sertifikat').files[0];
 
-                const formData = {
-                    nama_asset: nama_asset,
-                    status_kepemilikan: status_kepemilikan,
-                    status_tanah: status_tanah,
-                    alamat: alamat,
-                    tipe_tanah: tipe_tanah,
-                    luas_asset: luas_asset,
-                }
+                const formData = new FormData();
+                formData.append('coordinates', coordinates);
+                formData.append('latitude', latitude);
+                formData.append('longitude', longitude);
+                formData.append('nama_asset', nama_asset);
+                formData.append('status_kepemilikan', status_kepemilikan);
+                formData.append('status_tanah', status_tanah);
+                formData.append('alamat', alamat);
+                formData.append('tipe_tanah', tipe_tanah);
+                formData.append('luas_asset', luas_asset);
+                formData.append('foto_tanah', foto_tanah);
+                formData.append('sertifikat', sertifikat);
+                formData.append('_method', 'PUT');
 
                 console.log(formData);
 
-                axios.put(`/update-peta/{{$dataGround->id}}`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    }
-                })
+                const config = {
+                    headers: { 'content-type': 'multipart/form-data' }
+                }
+
+                axios.post(`/update-peta/{{$dataGround->ground_detail_id}}`, formData, config)
                 .then(response => {
                     alert(response.data.message);
-                    // Redirect ke halaman setelah sukses
                     window.location.href = '{{ route('ManageGround') }}';
                 })
                 .catch(error => {

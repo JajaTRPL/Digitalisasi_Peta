@@ -203,7 +203,7 @@
 
         <!-- Peta Leaflet -->
         <div id="map" class="w-full h-[80vh] border border-gray-300 rounded-md mt-6"></div>
-        
+
 
         <div>
             {{-- <label>The layer To Be Stored:</label> --}}
@@ -362,58 +362,53 @@
         map.addControl(drawControl);
 
         let centerMarker;
-        const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
 
         map.on(L.Draw.Event.CREATED, function (event) {
-
+    // Clear previous layers
             if (drawnItems.getLayers().length > 0) {
-                const layers = drawnItems.getLayers();
-                drawnItems.clearLayers();    // Hapus polygon lama
-                markerGroup.clearLayers();   // Hapus marker lama
+                drawnItems.clearLayers(); // Clear old polygons
             }
+            markerGroup.clearLayers(); // Clear old markers
 
+            // Add the new layer
             var type = event.layerType;
             var layer = event.layer;
             drawnItems.addLayer(layer);
 
-
-            layer.setStyle({
-                color: randomColor,
-                fillColor: randomColor,
-                fillOpacity: 0.5,
-            });
-
-            const geoJsonData = layer.toGeoJSON(); // Definisi geoJsonData ada di sini
+            // Convert to GeoJSON and process
+            const geoJsonData = layer.toGeoJSON();
             console.log(JSON.stringify(geoJsonData));
-
             addMarker(geoJsonData);
         });
 
-        map.on('draw:edited', function(event){
-            event.layers.eachLayer(function(layer){
+        map.on('draw:edited', function(event) {
+            event.layers.eachLayer(function(layer) {
                 const geoJsonData = layer.toGeoJSON();
+                $('#polygon').val(JSON.stringify(geoJsonData)); // Update koordinat ke input
+                addMarker(geoJsonData); // Update marker pusat (centroid) jika diperlukan
+            });
+        });
 
-                addMarker(geoJsonData);
-            })
-        })
-
-        function addMarker(geoJsonData){
+        function addMarker(geoJsonData) {
+            // Update polygon value
             $('#polygon').val(JSON.stringify(geoJsonData));
 
+            // Calculate the centroid
             const centroid = turf.centroid(geoJsonData);
             const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
 
+            // Remove existing marker and add a new one
             if (centerMarker) {
-                centerMarker.setLatLng(center);
-            } else {
-                centerMarker = L.marker(center);
-                markerGroup.addLayer(centerMarker);
+                markerGroup.removeLayer(centerMarker); // Ensure it's removed first
             }
+            centerMarker = L.marker(center);
+            markerGroup.addLayer(centerMarker);
 
+            // Update latitude and longitude
             document.getElementById('latitude').value = center[0];
             document.getElementById('longitude').value = center[1];
         }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('submit').addEventListener('click', function(e) {
