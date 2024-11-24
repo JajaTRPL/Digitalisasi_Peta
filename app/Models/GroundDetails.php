@@ -50,4 +50,9 @@ class GroundDetails extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    public function alamat_id()
+    {
+        return $this->belongsTo(GroundAddress::class, 'alamat_id');
+    }
+
 }

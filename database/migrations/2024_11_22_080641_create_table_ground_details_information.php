@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('ground_details', function (Blueprint $table){
             $table->string('id')->primary();
             $table->string('nama_asset');
-            $table->string('alamat');
+            $table->string('alamat_id');
             $table->integer('luas_asset');
             $table->string('status_kepemilikan_id');
             $table->string('status_tanah_id');
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->foreign('status_kepemilikan_id')->references('id')->on('status_kepemilikan')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('status_tanah_id')->references('id')->on('status_tanah')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('tipe_tanah_id')->references('id')->on('tipe_tanah')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('alamat_id')->references('id')->on('ground_address');
             $table->foreign('added_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
 

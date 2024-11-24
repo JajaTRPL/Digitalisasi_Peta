@@ -4,6 +4,7 @@
     <script src="https://cdn.tailwindcss.com">
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
 </head>
 
 <body class="bg-green-50">
@@ -31,7 +32,7 @@
                                 <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z"></path>
                                 </svg>
-                                Profile
+                                {{$currentUser}}
                             </a>
                             <form method="POST" action="{{ route('logout') }}" class="h-5">
                                 @csrf
@@ -55,25 +56,8 @@
                 <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="window.location.href='/AddGround'">
                     + Add Ground
                 </button>
-                <div class="flex items-center space-x-4">
-                    <label class="text-gray-700" for="show">
-                        Show:
-                    </label>
-                    <select class="border border-gray-300 rounded px-2 py-1" id="show">
-                        <option>
-                            10
-                        </option>
-                        <option>
-                            25
-                        </option>
-                        <option>
-                            50
-                        </option>
-                    </select>
-                    <input class="border border-gray-300 rounded px-4 py-2" placeholder="Search User" type="text" />
-                </div>
             </div>
-            <table class="min-w-full bg-white table-auto">
+            <table class="min-w-full bg-white table-auto" id="datatable">
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border-b text-left">
@@ -109,7 +93,7 @@
                             {{$ground->updated_at}}
                         </td>
                         <td class="py-2 px-4">
-                            <a class="text-gray-500 mx-1" href="{{route('editPeta', $ground->ground_detail_id)}}">
+                            <a class="text-gray-500 mx-1" href="{{route('EditPeta', $ground->ground_detail_id)}}">
                                 <i class="fas fa-pen"></i>
                             </a>
 
@@ -130,34 +114,6 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="flex items-center justify-between mt-4">
-                <p class="text-gray-600">
-                    Showing 1 to 10 of 50 entries
-                </p>
-                <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 border border-gray-300 rounded">
-                        &lt;
-                    </button>
-                    <button class="px-3 py-1 bg-blue-500 text-white rounded">
-                        1
-                    </button>
-                    <button class="px-3 py-1 border border-gray-300 rounded">
-                        2
-                    </button>
-                    <button class="px-3 py-1 border border-gray-300 rounded">
-                        3
-                    </button>
-                    <button class="px-3 py-1 border border-gray-300 rounded">
-                        4
-                    </button>
-                    <button class="px-3 py-1 border border-gray-300 rounded">
-                        5
-                    </button>
-                    <button class="px-3 py-1 border border-gray-300 rounded">
-                        &gt;
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -173,6 +129,16 @@
             if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.add('hidden');
             }
+        });
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+
+    <script>
+        $(document).ready( function () {
+            $('#datatable').DataTable();
         });
     </script>
 </body>

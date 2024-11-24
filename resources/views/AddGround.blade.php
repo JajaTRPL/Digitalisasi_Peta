@@ -84,33 +84,61 @@
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Alamat"
                     type="text" id="alamat" />
             </div>
-            {{-- <div>
+            <div>
+                <label class="block text-gray-700">RT</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RT"
+                    type="text" id="rt" />
+            </div>
+            <div>
+                <label class="block text-gray-700">RW</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RW"
+                    type="text" id="rw" />
+            </div>
+            <div>
+                <label class="block text-gray-700">Padukuhan</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="padukuhan">
+                    <option value="" disabled selected>Pilih Padukuhan</option>
+                    <option value="Palemsari">Palemsari</option>
+                    <option value="Pangukrejo">Pangukrejo</option>
+                    <option value="Gondang">Gondang</option>
+                    <option value="Gambretan">Gambretan</option>
+                    <option value="Balong">Balong</option>
+                    <option value="Plosorejo">Plosorejo</option>
+                    <option value="Karanggeneng">Karanggeneng</option>
+                    <option value="Plosokerep">Plosokerep</option>
+                    <option value="Pentingsari">Pentingsari</option>
+                </select>
+            </div>
+            <div>
                 <label class="block text-gray-700">Desa</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="desa">
-                    <option value="" disabled selected>Pilih Desa</option>
-                    <option value="desa1">Desa 1</option>
-                    <option value="desa2">Desa 2</option>
-                    <option value="desa3">Desa 3</option>
-                </select>
-            </div> --}}
-            {{-- <div>
-                <label class="block text-gray-700">Rt</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="rt">
-                    <option value="" disabled selected>Pilih Rt</option>
-                    <option value="desa1">1</option>
-                    <option value="desa2">2</option>
-                    <option value="desa3">3</option>
-                </select>
-            </div> --}}
-            {{-- <div>
-                <label class="block text-gray-700">Rw</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="rw">
-                    <option value="" disabled selected>Pilih Rw</option>
-                    <option value="desa1">1</option>
-                    <option value="desa2">2</option>
-                    <option value="desa3">3</option>
-                </select>
-            </div> --}}
+                <input
+                    type="text"
+                    class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                    value="Umbulharjo"
+                    readonly
+                    id="desa"
+                />
+            </div>
+            <div>
+                <label class="block text-gray-700">Kecamatan</label>
+                <input
+                    type="text"
+                    class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                    value="Cangkringan"
+                    readonly
+                    id="kecamatan"
+                />
+            </div>
+            <div>
+                <label class="block text-gray-700">Kabupaten</label>
+                <input
+                    type="text"
+                    class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                    value="Sleman"
+                    readonly
+                    id="kabupaten"
+                />
+            </div>
             <div>
                 <label class="block text-gray-700">Status Kepemilikan</label>
                 <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_kepemilikan">
@@ -143,21 +171,6 @@
                     @endforeach
                 </select>
             </div>
-            {{-- <div class="col-span-2">
-                <label class="block text-gray-700 mb-1">Foto</label>
-                <label for="foto_tanah"
-                    class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M4 3a2 2 0 012-2h8a2 2 0 012 2v6.586l1.707 1.707a1 1 0 01-1.414 1.414l-1.707-1.707V17a2 2 0 01-2 2H6a2 2 0 01-2-2V3zm4 9a1 1 0 011-1h4a1 1 0 010 2H9a1 1 0 01-1-1z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <span class="mt-2 text-sm text-gray-600">Klik untuk unggah Foto</span>
-                    <input id="foto_tanah" name="foto_tanah" type="file" class="hidden" />
-                </label>
-            </div> --}}
-
             <div class="font-[sans-serif] max-w-md mx-auto">
                 <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                 <input type="file"
@@ -173,22 +186,6 @@
                   id="sertifikat" name="sertifikat"/>
                 <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
             </div>
-
-            {{-- <div class="col-span-2">
-                <label class="block text-gray-700 mb-1">Sertifikat</label>
-                <label for="sertifikat"
-                    class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" viewBox="0 0 20 20"
-                        fill="currentColor">
-                        <path fill-rule="evenodd"
-                            d="M4 3a2 2 0 012-2h8a2 2 0 012 2v6.586l1.707 1.707a1 1 0 01-1.414 1.414l-1.707-1.707V17a2 2 0 01-2 2H6a2 2 0 01-2-2V3zm4 9a1 1 0 011-1h4a1 1 0 010 2H9a1 1 0 01-1-1z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    <span class="mt-2 text-sm text-gray-600">Klik untuk unggah Sertifikat</span>
-                    <input id="sertifikat" name="sertifikat" type="file" class="hidden" />
-                </label>
-            </div> --}}
-
             <div>
                 <label class="block text-gray-700">Longtitude</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude"
@@ -425,6 +422,9 @@
                 formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
                 formData.append('status_tanah', document.getElementById('status_tanah').value);
                 formData.append('alamat', document.getElementById('alamat').value);
+                formData.append('rt', document.getElementById('rt').value);
+                formData.append('rw', document.getElementById('rw').value);
+                formData.append('padukuhan', document.getElementById('padukuhan').value);
                 formData.append('tipe_tanah', document.getElementById('tipe_tanah').value);
                 formData.append('luas_asset', document.getElementById('luas_asset').value);
                 formData.append('foto_tanah', foto_tanah.files[0]);
@@ -432,7 +432,7 @@
                 formData.append('_token', '{{ csrf_token() }}');
 
                 // Kirim request menggunakan axios
-                axios.post('{{ route('save.ground') }}', formData, {
+                axios.post('{{ route('SaveGround') }}', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     }

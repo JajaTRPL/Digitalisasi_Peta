@@ -63,35 +63,63 @@
                 </div>
                 <div>
                     <label class="block text-gray-700">Alamat</label>
-                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Alamat" type="text" id="alamat" value="{{$dataGround->alamat}}"/>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Alamat" type="text" id="alamat" value="{{$alamatGround->detail_alamat}}"/>
                 </div>
-                {{-- <div>
+                <div>
+                    <label class="block text-gray-700">RT</label>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RT"
+                        type="text" id="rt" value="{{$alamatGround->rt}}"/>
+                </div>
+                <div>
+                    <label class="block text-gray-700">RW</label>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RW"
+                        type="text" id="rw" value="{{$alamatGround->rw}}"/>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Padukuhan</label>
+                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="padukuhan">
+                        <option value="{{$alamatGround->padukuhan}}" disabled selected>{{$alamatGround->padukuhan}}</option>
+                        <option value="Palemsari">Palemsari</option>
+                        <option value="Pangukrejo">Pangukrejo</option>
+                        <option value="Gondang">Gondang</option>
+                        <option value="Gambretan">Gambretan</option>
+                        <option value="Balong">Balong</option>
+                        <option value="Plosorejo">Plosorejo</option>
+                        <option value="Karanggeneng">Karanggeneng</option>
+                        <option value="Plosokerep">Plosokerep</option>
+                        <option value="Pentingsari">Pentingsari</option>
+                    </select>
+                </div>
+                <div>
                     <label class="block text-gray-700">Desa</label>
-                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="desa">
-                        <option value="" disabled selected>Pilih Desa</option>
-                        <option value="desa1">Desa 1</option>
-                        <option value="desa2">Desa 2</option>
-                        <option value="desa3">Desa 3</option>
-                    </select>
+                    <input
+                        type="text"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                        value="Umbulharjo"
+                        readonly
+                        id="desa"
+                    />
                 </div>
                 <div>
-                    <label class="block text-gray-700">Rt</label>
-                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="rt">
-                        <option value="" disabled selected>Pilih Rt</option>
-                        <option value="desa1">1</option>
-                        <option value="desa2">2</option>
-                        <option value="desa3">3</option>
-                    </select>
+                    <label class="block text-gray-700">Kecamatan</label>
+                    <input
+                        type="text"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                        value="Cangkringan"
+                        readonly
+                        id="kecamatan"
+                    />
                 </div>
                 <div>
-                    <label class="block text-gray-700">Rw</label>
-                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="rw">
-                        <option value="" disabled selected>Pilih Rw</option>
-                        <option value="desa1">1</option>
-                        <option value="desa2">2</option>
-                        <option value="desa3">3</option>
-                    </select>
-                </div> --}}
+                    <label class="block text-gray-700">Kabupaten</label>
+                    <input
+                        type="text"
+                        class="w-full mt-1 p-2 border border-gray-300 rounded-md"
+                        value="Sleman"
+                        readonly
+                        id="kabupaten"
+                    />
+                </div>
                 <div>
                     <label class="block text-gray-700">Status Kepemilikan</label>
                     <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_kepemilikan">
@@ -158,7 +186,7 @@
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                     <input type="file"
                     class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                    id="sertifikat" name="sertifikat" value="{{asset('storage/ground_sertificate/' . $sertifikatGround->name)}}"/>
+                    id="sertifikat" name="sertifikat" value="{{ asset('storage/ground_sertificate/' . $sertifikatGround->name)}}"/>
                     <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
                 </div>
 
@@ -308,7 +336,7 @@
                 const nama_asset = document.getElementById('nama_asset').value;
                 const status_kepemilikan = document.getElementById('status_kepemilikan').value;
                 const status_tanah = document.getElementById('status_tanah').value;
-                const alamat = document.getElementById('alamat').value;
+                // const alamat = document.getElementById('alamat').value;
                 const tipe_tanah = document.getElementById('tipe_tanah').value;
                 const luas_asset = document.getElementById('luas_asset').value;
                 const foto_tanah = document.querySelector('#foto_tanah').files[0];
@@ -321,7 +349,7 @@
                 formData.append('nama_asset', nama_asset);
                 formData.append('status_kepemilikan', status_kepemilikan);
                 formData.append('status_tanah', status_tanah);
-                formData.append('alamat', alamat);
+                // formData.append('alamat', alamat);
                 formData.append('tipe_tanah', tipe_tanah);
                 formData.append('luas_asset', luas_asset);
                 formData.append('foto_tanah', foto_tanah);
@@ -330,20 +358,30 @@
 
                 console.log(formData);
 
+                for (const [key, value] of formData.entries()) {
+                    console.log(`${key}:`, value);
+                }
+
                 const config = {
                     headers: { 'content-type': 'multipart/form-data' }
                 }
 
-                axios.post(`/update-peta/{{$dataGround->ground_detail_id}}`, formData, config)
+                axios.post(`/UpdatePeta/{{$dataGround->ground_detail_id}}`, formData, config)
                 .then(response => {
                     alert(response.data.message);
                     window.location.href = '{{ route('ManageGround') }}';
                 })
                 .catch(error => {
-                    if (error.response) {
-                        alert('Error: ' + (error.response.data.message || error.response.statusText));
+                    console.log(error.reponse);
+                    if (error.response?.data?.errors) {
+                        const errors = error.response.data.errors;
+                        let errorMessage = 'Validation Errors:\n';
+                        for (const [field, messages] of Object.entries(errors)) {
+                            errorMessage += `${field}: ${messages.join(', ')}\n`;
+                        }
+                        alert(errorMessage);
                     } else {
-                        alert('An error occurred');
+                        alert('Error: ' + (error.response?.data?.message || error.message));
                     }
                 });
             });
