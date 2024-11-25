@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,9 +24,11 @@
         #sidebar.closed {
             transform: translateX(-80%);
         }
+
         #ground-list-container.closed {
             display: none;
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -49,44 +52,55 @@
         }
     </style>
 </head>
+
 <body class="bg-black relative">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-md">
         <div class="container mx-auto py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <a href="{{route('dashboard')}}">
-                    <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full" >
+                    <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
                 </a>
                 <h1 class="text-lg font-semibold">Lihat Peta</h1>
             </div>
             <div class="items-center flex space-x-4">
                 @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('superAdmin'))
-                    <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
-                    <a href="#" class="text-black-500 hover:text-black">Maps</a>
-                    @if(auth()->user()->hasRole('superAdmin'))
-                        <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
-                    @endif
-                    <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
+                <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
+                <a href="#" class="text-black-500 hover:text-black">Maps</a>
+                @if(auth()->user()->hasRole('superAdmin'))
+                <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
+                @endif
+                <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
                 @else
-                    <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
-                    <a href="" class="text-black-500 hover:text-black">Maps</a>
+                <a href="{{route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
+                <a href="" class="text-black-500 hover:text-black">Maps</a>
                 @endif
                 <div class="relative inline-block text-left">
-                    <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
+                    <img src="{{ asset('images/Avatar.png') }}" alt="Profile"
+                        class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
 
-                    <div class="dropdown-content absolute right-0 z-[999] mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                    <div
+                        class="dropdown-content absolute right-0 z-[999] mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
                         <div class="py-1">
-                            <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
-                                <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z"></path>
+                            <a href="#"
+                                class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
+                                <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z">
+                                    </path>
                                 </svg>
                                 Profile
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-gray-700 bg-red-50 hover:bg-red-200 hover:text-red-800 rounded-md transition duration-200 ease-in-out">
-                                    <svg class="w-4 h-4 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M8.707 15.707a1 1 0 01-1.414 0L2.586 11l4.707-4.707a1 1 0 011.414 1.414L5.414 11l3.293 3.293a1 1 0 010 1.414zm9.414-1.414a1 1 0 01-1.414 0L11 8.414V7h2a3 3 0 000-6H7a3 3 0 000 6h2v1.414l-5.707 5.707a1 1 0 01-1.414-1.414L7 7.586V7a1 1 0 011-1h4a1 1 0 011 1v5.586l5.293 5.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                                <button type="submit"
+                                    class="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-gray-700 bg-red-50 hover:bg-red-200 hover:text-red-800 rounded-md transition duration-200 ease-in-out">
+                                    <svg class="w-4 h-4 text-red-700" fill="currentColor" viewBox="0 0 20 20"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                            d="M8.707 15.707a1 1 0 01-1.414 0L2.586 11l4.707-4.707a1 1 0 011.414 1.414L5.414 11l3.293 3.293a1 1 0 010 1.414zm9.414-1.414a1 1 0 01-1.414 0L11 8.414V7h2a3 3 0 000-6H7a3 3 0 000 6h2v1.414l-5.707 5.707a1 1 0 01-1.414-1.414L7 7.586V7a1 1 0 011-1h4a1 1 0 011 1v5.586l5.293 5.293a1 1 0 010 1.414z"
+                                            clip-rule="evenodd"></path>
                                     </svg>
                                     Log Out
                                 </button>
@@ -111,11 +125,13 @@
                     <img src="{{ asset('images/Sidebar.png') }}" alt="Toggle Sidebar" class="w-6 h-6">
                 </button>
             </div>
-            <div class="p-4"  id="select-container" >
+            <div class="p-4" id="select-container">
                 <label class="block text-sm font-medium text-gray-700" for="sort">
                     Sort by:
                 </label>
-                <select class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md" id="sort" name="sort">
+                <select
+                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                    id="sort" name="sort">
                     <option value="asc">Asc</option>
                     <option value="desc">Desc</option>
                 </select>
@@ -128,7 +144,7 @@
                 </ul>
                 @endforeach
 
-            </divclass=>
+                </divclass=>
         </div>
 
         <!-- Map Section -->
@@ -142,9 +158,9 @@
         <div class="modal-content shadow-lg">
             <h2 class="text-xl font-semibold mb-2">Informasi Tanah</h2>
             <img id="landPhoto" src="" alt="Foto Tanah" class="w-full h-48 object-cover mb-2 rounded-md">
-            <p><strong>Nama:</strong> <span id="nama_asset"></span></p>
-            <p><strong>Alamat:</strong> <span id="alamat"></span></p>
-            <p><strong>Tipe Tanah:</strong> <span id="tipe_tanah"></span></p>
+            <p><strong>Nama:</strong> <span id="landName"></span></p>
+            <p><strong>Alamat:</strong> <span id="landAddress"></span></p>
+            <p><strong>Tipe Tanah:</strong> <span id="landOwnership"></span></p>
             <div class="w-full flex justify-between mt-5">
                 <button id="closeModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded-md">Tutup</button>
                 <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">Show Detail</button>
@@ -159,7 +175,7 @@
             <div class="relative mb-4">
                 <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
             </div>
-            
+
             <!-- Modal Body with Information -->
             <h2 class="text-2xl font-semibold mb-4">Detail Informasi Tanah</h2>
             <div class="grid grid-cols-2 gap-4">
@@ -195,15 +211,17 @@
                     <p class="font-semibold">Nomor Sertifikat:</p>
                     <p id="numberSertif">-</p>
                 </div>
-            
+
             </div>
-    
+
             <!-- Modal Footer with Close Button -->
             <div class="flex justify-center mt-5">
                 <button id="closeDetailModal" class="px-4 py-2 bg-red-500 text-white rounded-md">Tutup</button>
             </div>
         </div>
     </div>
+
+
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -216,6 +234,17 @@
         // Dropdown functionality
         const avatar = document.querySelector('.profile-avatar');
         const dropdown = document.querySelector('.dropdown-content');
+
+        avatar.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent event bubbling
+            dropdown.classList.toggle('hidden');
+        });
+
+        window.addEventListener('click', function(event) {
+            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
         document.getElementById('sort').addEventListener('change', function() {
             console.log('Sorting changed!');
@@ -264,16 +293,6 @@
 
         });
 
-        avatar.addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent event bubbling
-            dropdown.classList.toggle('hidden');
-        });
-
-        window.addEventListener('click', function(event) {
-            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
 
         // Initialize the Leaflet map
         const map = L.map('map', {zoomControl: false }).setView([-7.614555267905213, 110.43468152673236], 15); // Umbulharjo coordinates with zoom level 15
@@ -319,13 +338,8 @@
         L.control.layers(baseLayers).addTo(map);
 
 
-        // Add a marker at Umbulharjo
-        // const marker = L.marker([-7.614555267905213, 110.43468152673236]).addTo(map)
-        //     .bindPopup('Umbulharjo')
-        //     .openPopup();
 
-
-            // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
+        // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
         var polygon = @json($polygonGeoJson);
         var markerpolygon = @json($markerGeoJson)
 
@@ -345,10 +359,10 @@
                     const result = detailsData.find(item => item.hasOwnProperty(`${latlng.lat}_${latlng.lng}`));
                     if(result){
                         const ground = result[`${latlng.lat}_${latlng.lng}`]
-                        document.getElementById('landPhoto').src = "storage/ground_image/"+ ground.photoGround;
-                        document.getElementById('nama_asset').textContent = ground.nama_asset;
-                        document.getElementById('alamat').textContent = ground.alamat;
-                        document.getElementById('tipe_tanah').textContent = ground.tipe_tanah;
+                        document.getElementById('landPhoto').src = "storage/ground_image/"+ground.photoGround;
+                        document.getElementById('landName').textContent = ground.nama_asset;
+                        document.getElementById('landAddress').textContent = ground.alamat;
+                        document.getElementById('landOwnership').textContent = ground.tipe_tanah;
 
                         // Display modal
                         document.getElementById('infoModal').style.display = 'flex';
@@ -359,21 +373,6 @@
                 return marker
             }
         }).addTo(map);
-
-        // Adding markers with click events
-        // grounds.forEach(ground => {
-        //     const marker = L.marker([ground.lat, ground.lng]).addTo(map);
-        //     marker.on('click', () => {
-        //         // Set modal content
-        //         document.getElementById('landPhoto').src = ground.photo;
-        //         document.getElementById('landName').textContent = ground.name;
-        //         document.getElementById('landAddress').textContent = ground.address;
-        //         document.getElementById('landOwnership').textContent = ground.ownership;
-
-        //         // Display modal
-        //         document.getElementById('infoModal').style.display = 'flex';
-        //     });
-        // });
 
         // Close modal
         document.getElementById('closeModal').addEventListener('click', () => {
@@ -390,7 +389,7 @@
             document.getElementById('detailLandName').textContent = document.getElementById('landName').textContent;
             document.getElementById('detailLandAddress').textContent = document.getElementById('landAddress').textContent;
             document.getElementById('detailLandOwnership').textContent = document.getElementById('landOwnership').textContent;
-            
+
             // Set additional details for modal 2
             document.getElementById('landArea').textContent = "500 m²";  // Contoh data, ganti sesuai data yang ada
             document.getElementById('ownershipStatus').textContent = "Hak Milik"; // Contoh data, ganti sesuai data yang ada
@@ -404,10 +403,7 @@
             document.getElementById('detailModal').style.display = 'none';
         });
 
-        // Menambahkan event listener untuk perubahan sort order
-
-
-
     </script>
 </body>
+
 </html>
