@@ -8,6 +8,8 @@
 </head>
 
 <body class="bg-green-50">
+
+    <!-- Navbar -->
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -100,8 +102,11 @@
                             <form action="{{route('GroundDestroy', $ground->ground_detail_id)}}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button class="text-gray-500 mx-1" onclick="return confirm('Rill mau hapus?')"
-                                    type="submit">
+                                <button
+                                    type="button"
+                                    class="text-gray-500 mx-1"
+                                    onclick="showDeleteModal('{{ route('GroundDestroy', $ground->ground_detail_id) }}', '{{ $ground->nama_asset }}', 'Alamat contoh untuk {{ $ground->nama_asset }}')"
+                                >
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -117,6 +122,47 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div id="deleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-12  w-full max-w-md">
+            <!-- Tombol Tutup Modal -->
+            <div class="flex justify-end">
+                <button class="text-red-500" onclick="toggleModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Judul Modal -->
+            <div class="text-center mb-4">
+                <h2 class="text-lg font-semibold">Apakah yakin akan menghapus tanah?</h2>
+            </div>
+            <!-- Informasi Tanah -->
+            <div class="bg-amber-50 p-6 rounded-lg">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-semibold">Nama Tanah</h3>
+                        <p class="text-gray-500" id="modalGroundName">Tanah 1</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold">Alamat</h3>
+                        <p class="text-gray-500" id="modalGroundAddress">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer interdum dui vel arcu efficitur</p>
+                    </div>
+                </div>
+                <!-- Tombol Aksi -->
+                <div class="flex justify-center mt-4 space-x-4">
+                    <!-- Tombol Batal -->
+                    <button class="px-4 py-2 w-full border border-gray-300 rounded-lg text-gray-500 h-10" onclick="toggleModal()">Batal</button>
+                    <!-- Tombol Hapus -->
+                    <form id="modalDeleteForm" method="POST" class="w-full">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 w-full bg-red-500 text-white rounded-lg">Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script>
         const avatar = document.querySelector('.profile-avatar');
         const dropdown = document.querySelector('.dropdown-content');
@@ -130,6 +176,24 @@
                 dropdown.classList.add('hidden');
             }
         });
+
+        const deleteModal = document.getElementById('deleteModal');
+        const modalDeleteForm = document.getElementById('modalDeleteForm');
+        const modalGroundName = document.getElementById('modalGroundName');
+        const modalGroundAddress = document.getElementById('modalGroundAddress');
+
+        // Fungsi untuk membuka/menutup modal
+        function toggleModal() {
+            deleteModal.classList.toggle('hidden');
+        }
+
+        // Fungsi untuk mengisi data dinamis ke modal dan menampilkan modal
+        function showDeleteModal(route, groundName, groundAddress) {
+            modalDeleteForm.action = route; // Set form action
+            // modalGroundName.textContent = groundName; // Isi nama tanah
+            // modalGroundAddress.textContent = groundAddress; // Isi alamat tanah
+            toggleModal(); // Tampilkan modal
+        }
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

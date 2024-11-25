@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddGroundController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GroundController;
 use App\Http\Controllers\ShowMapController;
 use App\Http\Controllers\ProfileController;
@@ -18,9 +19,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/dashboard', function(){
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'role:superAdmin|admin|guest'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified', 'role:superAdmin|admin|guest'])
+    ->name('dashboard');
 
 Route::get('/ViewPeta', [ShowMapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
 

@@ -18,6 +18,9 @@
     </style>
 </head>
 <body class="bg-gray-100 font-roboto">
+
+    <!-- Navbar -->
+    
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">

@@ -29,6 +29,9 @@
 </head>
 
 <body class="bg-gray-100 font-roboto">
+
+    <!-- NavBar -->
+
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -67,6 +70,8 @@
         </div>
     </nav>
 
+
+    <!-- Form Add -->
     <div class="max-w-7xl mx-auto p-6 bg-white mt-6 shadow-md rounded-md">
         <div class="grid grid-cols-2 gap-6">
             {{-- <div>

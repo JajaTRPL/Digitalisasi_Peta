@@ -56,25 +56,26 @@
         </div>
     </nav>
 
+    <!-- Chart.js Tipe Tanah -->
     <div class="container mx-auto mt-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 
-            @for ($i = 1; $i <= 8; $i++)
+            <!-- Chart.js Pie Chart -->
             <div class="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21.21 15.89A10 10 0 1 1 12 2v10l9.21 5.89z"></path>
-                </svg>
-                <p class="text-gray-600">Data {{ $i }}</p>
+                <h2 class="text-lg font-semibold mb-4">Perbandingan Tipe Tanah</h2>
+                <canvas id="groundChart"></canvas>
             </div>
-            @endfor
+
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const avatar = document.querySelector('.profile-avatar');
         const dropdown = document.querySelector('.dropdown-content');
 
-        avatar.addEventListener('click', function() {
+        avatar.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent event bubbling
             dropdown.classList.toggle('hidden');
         });
 
@@ -83,6 +84,55 @@
                 dropdown.classList.add('hidden');
             }
         });
+        // Fetching the ground data from the controller
+        const groundData = @json($groundData); // Passing the data from the controller
+
+        const ctx = document.getElementById('groundChart').getContext('2d');
+
+        // Create Pie Chart
+        const groundChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: groundData.labels,
+                datasets: [{
+                    label: 'Tipe Tanah',
+                    data: groundData.data,
+                    backgroundColor: ['#FF5733', '#33FF57', '#3357FF'],
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                // Calculating percentage
+                                let total = groundData.data.reduce((sum, value) => sum + value, 0);
+                                let percentage = (tooltipItem.raw / total * 100).toFixed(2);
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' (' + percentage + '%)';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        formatter: function(value, context) {
+                            let total = groundData.data.reduce((sum, value) => sum + value, 0);
+                            let percentage = ((value / total) * 100).toFixed(2);
+                            return `${value} (${percentage}%)`;
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                        }
+                    }
+                }
+            }
+        });
+
     </script>
 
 </body>
