@@ -14,6 +14,7 @@ use App\Models\StatusKepemilikan;
 use App\Models\StatusTanah;
 use App\Models\TipeTanah;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -85,7 +86,7 @@ class GroundController extends Controller
         ]);
 
         $currentUserID = Auth::user()->id;
-        
+
 
         // Membuat objek Ground baru
         $information = new GroundDetails();
@@ -237,17 +238,11 @@ class GroundController extends Controller
     }
 
     public function update(Request $request, $id){
-
-        // dd(vars: $request);
-
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'nama_asset' => 'required|string',
             'status_kepemilikan' => 'required|string',
             'status_tanah' => 'required|string',
             // 'alamat' => 'required|string',
-            // 'rt' => 'required|string',
-            // 'rw' => 'required|string',
-            // 'padukuhan' => 'required|string',
             'tipe_tanah' => 'required|string',
             'luas_asset' => 'required|numeric',
             'coordinates' => 'required|json',
@@ -257,76 +252,82 @@ class GroundController extends Controller
             'sertifikat' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
-        if ($validator->fails()){
-            return response()->json($validator->errors(), 422);
-        };
+        DB::beginTransaction();
 
-        $groundDetail = GroundDetails::findOrFail($id);
-        $groundDetail->nama_asset = $request->nama_asset;
-        // $groundDetail->alamat = $request->alamat;
-        $groundDetail->status_kepemilikan_id = $request->status_kepemilikan;
-        $groundDetail->status_tanah_id = $request->status_tanah;
-        $groundDetail->luas_asset = $request->luas_asset;
-        $groundDetail->tipe_tanah_id = $request->tipe_tanah;
-        $groundDetail->save();
+        try {
+            $groundDetail = GroundDetails::findOrFail($id);
+            $groundDetail->nama_asset = $request->nama_asset;
+            // $groundDetail->alamat = $request->alamat;
+            $groundDetail->status_kepemilikan_id = $request->status_kepemilikan;
+            $groundDetail->status_tanah_id = $request->status_tanah;
+            $groundDetail->luas_asset = $request->luas_asset;
+            $groundDetail->tipe_tanah_id = $request->tipe_tanah;
+            $groundDetail->save();
 
-        $photoGround = PhotoGround::where('ground_detail_id', $id)->firstOrFail();
+            $photoGround = PhotoGround::where('ground_detail_id', $id)->firstOrFail();
 
-        if ($request->hasFile('foto_tanah')) {
-            $destination = 'ground_image/' . $photoGround->name;
+            if ($request->hasFile('foto_tanah')) {
+                $destination = 'ground_image/' . $photoGround->name;
 
-            if(Storage::exists($destination)){
-                Storage::delete($destination);
+                if(Storage::exists($destination)){
+                    Storage::delete($destination);
+                }
+
+                $extension = $request->file('foto_tanah')->getClientOriginalExtension();
+                $basename = uniqid() . time();
+                $photoNameSimpan = "{$basename}.{$extension}";
+                $request->file('foto_tanah')->storeAs('ground_image', $photoNameSimpan);
+                $photoGround->name = $photoNameSimpan;
+                $photoGround->save();
             }
 
-            $extension = $request->file('foto_tanah')->getClientOriginalExtension();
-            $basename = uniqid() . time();
-            $photoNameSimpan = "{$basename}.{$extension}";
-            $request->file('foto_tanah')->storeAs('ground_image', $photoNameSimpan);
-            $photoGround->name = $photoNameSimpan;
-            $photoGround->save();
+            $sertifikatGround = SertificateGround::where('ground_detail_id', $id)->firstOrFail();
 
-        }
+            if ($request->hasFile('sertifikat')) {
+                $destination = 'ground_sertificate/' . $sertifikatGround->name;
 
-        $sertifikatGround = SertificateGround::where('ground_detail_id', $id)->firstOrFail();
+                if(Storage::exists($destination)){
+                    Storage::delete($destination);
+                }
 
-        if ($request->hasFile('sertifikat')) {
-            $destination = 'ground_sertificate/' . $sertifikatGround->name;
-
-            if(Storage::exists($destination)){
-                Storage::delete($destination);
+                $extension = $request->file('sertifikat')->getClientOriginalExtension();
+                $basename = uniqid() . time();
+                $sertifikatNameSimpan = "{$basename}.{$extension}";
+                $request->file('sertifikat')->storeAs('ground_sertificate', $sertifikatNameSimpan);
+                $sertifikatGround->name = $sertifikatNameSimpan;
+                $sertifikatGround->save();
             }
 
-            $extension = $request->file('sertifikat')->getClientOriginalExtension();
-            $basename = uniqid() . time();
-            $sertifikatNameSimpan = "{$basename}.{$extension}";
-            $request->file('sertifikat')->storeAs('ground_sertificate', $sertifikatNameSimpan);
-            $sertifikatGround->name = $sertifikatNameSimpan;
-            $sertifikatGround->save();
+            $groundMarker = GroundMarkers::where('ground_detail_id', $id)->firstOrFail();
+            $groundMarker->longitude = $request->longitude;
+            $groundMarker->latitude = $request->latitude;
+            $groundMarker->save();
+
+            $ground = DB::table('grounds as g')
+                ->join('ground_markers as gm', 'g.marker_id', '=', 'gm.id')
+                ->join('ground_details as gd', 'gm.ground_detail_id', '=', 'gd.id')
+                ->where('gm.id', $groundMarker->id) // Replace $markerId with your marker_id
+                ->where('gd.id', $id) // Replace $groundDetailId with your ground_detail_id
+                ->select('g.*')
+                ->first();
+
+            $ground = Ground::find($ground->id)->firstOrFail();
+            $ground->coordinates = $request->coordinates;
+            $ground->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil diperbarui.',
+                'data' => $groundDetail
+            ]);
+        } catch (\Exception $error) {
+            DB::rollBack();
+            throw new HttpResponseException(response()->json([
+                'message' => 'Cannot update data due to a server error.',
+            ], 500));
         }
-
-        $groundMarker = GroundMarkers::where('ground_detail_id', $id)->firstOrFail();
-        $groundMarker->longitude = $request->longitude;
-        $groundMarker->latitude = $request->latitude;
-        $groundMarker->save();
-
-        $ground = DB::table('grounds as g')
-            ->join('ground_markers as gm', 'g.marker_id', '=', 'gm.id')
-            ->join('ground_details as gd', 'gm.ground_detail_id', '=', 'gd.id')
-            ->where('gm.id', $groundMarker->id) // Replace $markerId with your marker_id
-            ->where('gd.id', $id) // Replace $groundDetailId with your ground_detail_id
-            ->select('g.*')
-            ->first();
-
-        $ground = Ground::find($ground->id)->firstOrFail();
-        $ground->coordinates = $request->coordinates;
-        $ground->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Data berhasil diperbarui.',
-            'data' => $groundDetail
-        ]);
     }
 
     public function destroy($id){

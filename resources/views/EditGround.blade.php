@@ -20,7 +20,7 @@
 <body class="bg-gray-100 font-roboto">
 
     <!-- Navbar -->
-    
+
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -342,9 +342,6 @@
                 // const alamat = document.getElementById('alamat').value;
                 const tipe_tanah = document.getElementById('tipe_tanah').value;
                 const luas_asset = document.getElementById('luas_asset').value;
-                const foto_tanah = document.querySelector('#foto_tanah').files[0];
-                const sertifikat = document.querySelector('#sertifikat').files[0];
-
                 const formData = new FormData();
                 formData.append('coordinates', coordinates);
                 formData.append('latitude', latitude);
@@ -355,15 +352,22 @@
                 // formData.append('alamat', alamat);
                 formData.append('tipe_tanah', tipe_tanah);
                 formData.append('luas_asset', luas_asset);
-                formData.append('foto_tanah', foto_tanah);
-                formData.append('sertifikat', sertifikat);
+
+                const fotoTanah = document.querySelector('#foto_tanah').files[0];
+                if (fotoTanah) {
+                    formData.append('foto_tanah', fotoTanah);
+                }
+                const sertifikat = document.querySelector('#sertifikat').files[0];
+                if (sertifikat) {
+                    formData.append('sertifikat', sertifikat);
+                }
                 formData.append('_method', 'PUT');
 
                 console.log(formData);
 
-                for (const [key, value] of formData.entries()) {
-                    console.log(`${key}:`, value);
-                }
+                // for (const [key, value] of formData.entries()) {
+                //     console.log(`${key}:`, value);
+                // }
 
                 const config = {
                     headers: { 'content-type': 'multipart/form-data' }
