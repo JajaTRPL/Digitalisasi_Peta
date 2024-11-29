@@ -38,7 +38,7 @@
                                 <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z"></path>
                                 </svg>
-                                Profile
+                                {{$currentUser}}
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -61,9 +61,22 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 
             <!-- Chart.js Pie Chart -->
-            <div class="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
+            <div class="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center ">
                 <h2 class="text-lg font-semibold mb-4">Perbandingan Tipe Tanah</h2>
                 <canvas id="groundChart"></canvas>
+                
+            </div>
+
+            <!-- Chart.js Pie Chart - Kepemilikan Tanah -->
+            <div class="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
+                <h2 class="text-lg font-semibold mb-4">Perbandingan Milik Tanah</h2>
+                <canvas id="ownershipChart"></canvas>
+            </div>
+
+            <!-- Chart.js Pie Chart - Status Tanah -->
+            <div class="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
+                <h2 class="text-lg font-semibold mb-4">Perbandingan Status Tanah</h2>
+                <canvas id="statusChart"></canvas>
             </div>
 
         </div>
@@ -73,23 +86,25 @@
     <script>
         const avatar = document.querySelector('.profile-avatar');
         const dropdown = document.querySelector('.dropdown-content');
-
+    
         avatar.addEventListener('click', function(event) {
             event.stopPropagation(); // Prevent event bubbling
             dropdown.classList.toggle('hidden');
         });
-
+    
         window.addEventListener('click', function(event) {
             if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.add('hidden');
             }
         });
+    
         // Fetching the ground data from the controller
-        const groundData = @json($groundData); // Passing the data from the controller
-
+        const groundData = @json($groundData); 
+        const ownershipData = @json($ownershipData);
+        const statusData = @json($statusData);
+    
+        // Chart for Tipe Tanah
         const ctx = document.getElementById('groundChart').getContext('2d');
-
-        // Create Pie Chart
         const groundChart = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -97,7 +112,11 @@
                 datasets: [{
                     label: 'Tipe Tanah',
                     data: groundData.data,
-                    backgroundColor: ['#FF5733', '#33FF57', '#3357FF'],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)', // Soft Red
+                        'rgba(75, 192, 192, 0.6)', // Soft Green
+                        'rgba(54, 162, 235, 0.6)'  // Soft Blue
+                    ],
                     borderColor: '#fff',
                     borderWidth: 1
                 }]
@@ -132,8 +151,108 @@
                 }
             }
         });
+    
+        // Chart for Status Kepemilikan
+    const ownershipCtx = document.getElementById('ownershipChart').getContext('2d');
+    new Chart(ownershipCtx, {
+        type: 'pie', // Tipe grafik
+        data: {
+            labels: ownershipData.labels, // Label untuk grafik
+            datasets: [{
+                label: 'Status Kepemilikan',
+                data: ownershipData.data, // Data jumlah status kepemilikan
+                backgroundColor: [
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 205, 86, 0.6)',
+                ],
+                borderColor: '#fff',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top', // Posisi legend
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            // Menghitung persentase
+                            let total = ownershipData.data.reduce((sum, value) => sum + value, 0);
+                            let percentage = (tooltipItem.raw / total * 100).toFixed(2);
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' (' + percentage + '%)';
+                        }
+                    }
+                },
+                datalabels: {
+                    formatter: function(value, context) {
+                        // Menambahkan persentase ke data label
+                        let total = ownershipData.data.reduce((sum, value) => sum + value, 0);
+                        let percentage = ((value / total) * 100).toFixed(2);
+                        return `${value} (${percentage}%)`;
+                    },
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                    }
+                }
+            }
+        },
+    });
+
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'pie', // Tipe grafik
+        data: {
+            labels: statusData.labels, // Label untuk grafik
+            datasets: [{
+                label: 'Status Tanah',
+                data: statusData.data, // Data jumlah status tanah
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.6)', // Soft Blue
+                    'rgba(255, 206, 86, 0.6)', // Soft Yellow
+                ],
+                borderColor: '#fff',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top', // Posisi legend
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            // Menghitung persentase
+                            let total = statusData.data.reduce((sum, value) => sum + value, 0);
+                            let percentage = (tooltipItem.raw / total * 100).toFixed(2);
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' (' + percentage + '%)';
+                        }
+                    }
+                },
+                datalabels: {
+                    formatter: function(value, context) {
+                        // Menambahkan persentase ke data label
+                        let total = statusData.data.reduce((sum, value) => sum + value, 0);
+                        let percentage = ((value / total) * 100).toFixed(2);
+                        return `${value} (${percentage}%)`;
+                    },
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                    }
+                }
+            }
+        },
+    });
+
 
     </script>
+    
 
 </body>
 </html>

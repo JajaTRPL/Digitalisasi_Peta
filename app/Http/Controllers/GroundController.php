@@ -41,9 +41,9 @@ class GroundController extends Controller
         $statusKepemilikan = StatusKepemilikan::all();
         $statusTanah = StatusTanah::all();
         $tipeTanah = TipeTanah::all();
+        $currentUser = Auth::user()->name;
 
-
-        return view('AddGround', compact('statusKepemilikan', 'statusTanah', 'tipeTanah'));
+        return view('AddGround', compact('statusKepemilikan', 'statusTanah', 'tipeTanah', 'currentUser'));
     }
 
     public function store(Request $request){
@@ -85,6 +85,7 @@ class GroundController extends Controller
         ]);
 
         $currentUserID = Auth::user()->id;
+        
 
         // Membuat objek Ground baru
         $information = new GroundDetails();

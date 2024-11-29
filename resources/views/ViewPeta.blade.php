@@ -90,7 +90,7 @@
                                         d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z">
                                     </path>
                                 </svg>
-                                Profile
+                                {{$currentUser}}
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -127,7 +127,7 @@
             </div>
             <div class="p-4" id="select-container">
                 <label class="block text-sm font-medium text-gray-700" for="sort">
-                    Sort by:
+                    Urutkan Berdasarkan:
                 </label>
                 <select
                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
@@ -135,16 +135,15 @@
                     <option value="asc">Asc</option>
                     <option value="desc">Desc</option>
                 </select>
-
             </div>
-            <divclass="overflow-y-auto flex-1">
-                @foreach ($dataGround as $ground)
-                <ul id="ground-list">
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">{{$ground->nama_asset}}</li>
-                </ul>
-                @endforeach
 
-                </divclass=>
+            <div class="overflow-y-auto flex-1">
+                <ul id="ground-list">
+                    @foreach ($dataGround as $ground)
+                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">{{ $ground->nama_asset }}</li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
 
         <!-- Map Section -->
@@ -246,42 +245,29 @@
             }
         });
 
+        // Fungsi Ascending Descending
         document.getElementById('sort').addEventListener('change', function() {
-            console.log('Sorting changed!');
-
             const list = document.getElementById('ground-list');
-            const items = Array.from(list.children);
+            const items = Array.from(list.children); // Ambil semua item dalam list
+            
+            // Tentukan urutan pengurutan berdasarkan pilihan
             const sortOrder = this.value;
 
-            if(sortOrder==='asc'){
-
-                items.sort((a,b)=>{
-                    return a.textContent.localeCompare(b.textContent)
+            // Mengurutkan berdasarkan nama_asset
+            if(sortOrder === 'asc') {
+                items.sort((a, b) => {
+                    return a.textContent.localeCompare(b.textContent); // Urutkan ascending
                 });
-
-                // Append child elements back into the parent element
-                // to reflect changes on UI
-
-                items.forEach(item=>{
-                        list.appendChild(item);
-
-                })
-
-            }   else{
-                items.sort((a,b)=>{
-                    return b.textContent.localeCompare(a.textContent)
-
-                })
-
-                // Append child elements back into the parent element
-                // to reflect changes on UI
-
-                items.forEach(item=>{
-                        list.appendChild(item);
-
-                })
+            } else {
+                items.sort((a, b) => {
+                    return b.textContent.localeCompare(a.textContent); // Urutkan descending
+                });
             }
 
+            // Menambahkan kembali item yang sudah diurutkan ke dalam list
+            items.forEach(item => {
+                list.appendChild(item);
+            });
         });
 
         document.getElementById('toggleSidebar').addEventListener('click', function() {
@@ -393,6 +379,9 @@
             // Set additional details for modal 2
             document.getElementById('landArea').textContent = "500 m²";  // Contoh data, ganti sesuai data yang ada
             document.getElementById('ownershipStatus').textContent = "Hak Milik"; // Contoh data, ganti sesuai data yang ada
+            document.getElementById('longtitude').textContent = "1212232.132";  // Contoh data, ganti sesuai data yang ada
+            document.getElementById('detailLandNumber').textContent = "001";
+            document.getElementById('numberSertif').textContent = "13423424134";
 
             // Show detail modal
             document.getElementById('detailModal').style.display = 'flex';

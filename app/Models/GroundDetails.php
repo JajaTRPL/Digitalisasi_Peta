@@ -15,6 +15,11 @@ class GroundDetails extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
+    public function luasAsset()
+    {
+        return $this->belongsTo(LuasAsset::class, 'luas_asset');
+    }
+
     public function statusKepemilikan()
     {
         return $this->belongsTo(StatusKepemilikan::class, 'status_kepemilikan_id');

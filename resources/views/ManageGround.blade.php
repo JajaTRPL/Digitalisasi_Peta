@@ -105,7 +105,7 @@
                                 <button
                                     type="button"
                                     class="text-gray-500 mx-1"
-                                    onclick="showDeleteModal('{{ route('GroundDestroy', $ground->ground_detail_id) }}', '{{ $ground->nama_asset }}', 'Alamat contoh untuk {{ $ground->nama_asset }}')"
+                                    onclick="showDeleteModal('{{ route('GroundDestroy', $ground->ground_detail_id) }}', '{{ $ground->nama_asset }}', ' {{ $ground->nama_asset }}')"
                                 >
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -190,8 +190,8 @@
         // Fungsi untuk mengisi data dinamis ke modal dan menampilkan modal
         function showDeleteModal(route, groundName, groundAddress) {
             modalDeleteForm.action = route; // Set form action
-            // modalGroundName.textContent = groundName; // Isi nama tanah
-            // modalGroundAddress.textContent = groundAddress; // Isi alamat tanah
+            modalGroundName.textContent = groundName; // Isi nama tanah
+            modalGroundAddress.textContent = groundAddress; // Isi alamat tanah
             toggleModal(); // Tampilkan modal
         }
     </script>

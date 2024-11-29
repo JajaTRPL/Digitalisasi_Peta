@@ -9,6 +9,7 @@ use App\Models\TipeTanah;
 use Illuminate\Support\Facades\DB;
 use App\Models\Point;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ShowMapController extends Controller
 {
@@ -46,8 +47,16 @@ class ShowMapController extends Controller
             $data = [
                 "$marker->latitude"."_"."$marker->longitude"=> $detail
             ];
+            
             $tipe_tanah = TipeTanah::findOrFail($marker->groundDetail->tipe_tanah_id);
             $data["$marker->latitude"."_"."$marker->longitude"]["tipe_tanah"] = $tipe_tanah->nama_tipe_tanah;
+
+            // Mengambil informasi ownership dari relasi statusKepemilikan
+            $ownership = $detail->statusKepemilikan ? $detail->statusKepemilikan->nama_status : null;  // Memastikan kita mengakses nama status kepemilikan jika relasi ada
+            $data["$marker->latitude"."_"."$marker->longitude"]["ownership"] = $ownership;
+
+            // Menambahkan longitude ke data, jika diperlukan
+            $data["$marker->latitude"."_"."$marker->longitude"]["longitude"] = $marker->longitude;
 
             return $data;
         });
@@ -60,7 +69,10 @@ class ShowMapController extends Controller
         $polygonGeoJson = json_encode($polygonGeoJsonData);
         $markerGeoJson = json_encode($markerGeoJsonData);
         $detailsJson = json_encode($detailsData);
+        $currentUser = Auth::user()->name;
+        
+        
 
-        return view('ViewPeta', compact('polygonGeoJson', 'markerGeoJson', 'detailsJson', 'dataGround'));
+        return view('ViewPeta', compact('polygonGeoJson', 'markerGeoJson', 'detailsJson', 'dataGround', 'currentUser'));
     }
 }
