@@ -27,7 +27,7 @@ class GroundController extends Controller
         ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
         ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
         ->join('users', 'ground_details.added_by', '=', 'users.id')
-        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at', 'users.name as added_by_name')
+        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at', 'users.name as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
         ->get();
 
         $photo = PhotoGround::all();

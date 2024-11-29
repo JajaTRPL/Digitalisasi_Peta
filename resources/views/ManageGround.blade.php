@@ -111,7 +111,7 @@
                                 </button>
                             </form>
 
-                            <a class="text-gray-500 mx-1" href="#">
+                            <a class="text-gray-500 mx-1" href="{{ url('/ViewPeta?lat='.$ground->latitude)."&long=".$ground->longitude }}">
                                 <i class="fas fa-eye"></i>
                             </a>
                         </td>

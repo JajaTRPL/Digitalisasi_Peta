@@ -341,6 +341,39 @@
         var markerlayer = L.geoJSON(JSON.parse(markerpolygon), {
             pointToLayer: function (feature, latlng) {
                 const marker = L.marker(latlng);
+
+                const params = new URLSearchParams(window.location.search);
+
+                const param_lat = params.get("lat");
+                const param_long = params.get("long");
+
+                let param_detail = detailsData.find(item => item.hasOwnProperty(`${param_lat}_${param_long}`))
+                let detailModal = document.getElementById('detailModal');
+                const displayValue = detailModal.style.display;
+
+                if(param_detail && (displayValue != "flex")){
+                    // Hide info modal
+                    const ground = param_detail[`${param_lat}_${param_long}`]
+
+                    document.getElementById('infoModal').style.display = 'none';
+
+                    // Set modal 2 content (detail modal)
+                    document.getElementById('detailLandPhoto').src = "storage/ground_image/"+ground.photoGround;
+                    document.getElementById('detailLandName').textContent = ground.nama_asset;
+                    document.getElementById('detailLandAddress').textContent = ground.alamat;
+                    document.getElementById('detailLandOwnership').textContent = ground.tipe_tanah;
+
+                    // Set additional details for modal 2
+                    document.getElementById('landArea').textContent = ground.luas_asset;  // Contoh data, ganti sesuai data yang ada
+                    document.getElementById('ownershipStatus').textContent = ground.tipe_tanah; // Contoh data, ganti sesuai data yang ada
+                    document.getElementById('longtitude').textContent = ground.longitude;  // Contoh data, ganti sesuai data yang ada
+                    document.getElementById('detailLandNumber').textContent = "001";
+                    document.getElementById('numberSertif').textContent = "13423424134";
+
+                    // Show detail modal
+                    document.getElementById('detailModal').style.display = 'flex';
+                }
+
                 marker.addEventListener('click', function(){
                     const result = detailsData.find(item => item.hasOwnProperty(`${latlng.lat}_${latlng.lng}`));
                     if(result){
@@ -349,6 +382,27 @@
                         document.getElementById('landName').textContent = ground.nama_asset;
                         document.getElementById('landAddress').textContent = ground.alamat;
                         document.getElementById('landOwnership').textContent = ground.tipe_tanah;
+
+                        document.querySelector('#infoModal button:nth-child(2)').addEventListener('click', () => {
+                            // Hide info modal
+                            document.getElementById('infoModal').style.display = 'none';
+
+                            // Set modal 2 content (detail modal)
+                            document.getElementById('detailLandPhoto').src = document.getElementById('landPhoto').src;
+                            document.getElementById('detailLandName').textContent = document.getElementById('landName').textContent;
+                            document.getElementById('detailLandAddress').textContent = document.getElementById('landAddress').textContent;
+                            document.getElementById('detailLandOwnership').textContent = document.getElementById('landOwnership').textContent;
+
+                            // Set additional details for modal 2
+                            document.getElementById('landArea').textContent = ground.luas_asset;  // Contoh data, ganti sesuai data yang ada
+                            document.getElementById('ownershipStatus').textContent = ground.tipe_tanah; // Contoh data, ganti sesuai data yang ada
+                            document.getElementById('longtitude').textContent = ground.longitude;  // Contoh data, ganti sesuai data yang ada
+                            document.getElementById('detailLandNumber').textContent = "001";
+                            document.getElementById('numberSertif').textContent = "13423424134";
+
+                            // Show detail modal
+                            document.getElementById('detailModal').style.display = 'flex';
+                        });
 
                         // Display modal
                         document.getElementById('infoModal').style.display = 'flex';
@@ -366,26 +420,7 @@
         });
 
         // Show detail modal and hide info modal
-        document.querySelector('#infoModal button:nth-child(2)').addEventListener('click', () => {
-            // Hide info modal
-            document.getElementById('infoModal').style.display = 'none';
-
-            // Set modal 2 content (detail modal)
-            document.getElementById('detailLandPhoto').src = document.getElementById('landPhoto').src;
-            document.getElementById('detailLandName').textContent = document.getElementById('landName').textContent;
-            document.getElementById('detailLandAddress').textContent = document.getElementById('landAddress').textContent;
-            document.getElementById('detailLandOwnership').textContent = document.getElementById('landOwnership').textContent;
-
-            // Set additional details for modal 2
-            document.getElementById('landArea').textContent = "500 m²";  // Contoh data, ganti sesuai data yang ada
-            document.getElementById('ownershipStatus').textContent = "Hak Milik"; // Contoh data, ganti sesuai data yang ada
-            document.getElementById('longtitude').textContent = "1212232.132";  // Contoh data, ganti sesuai data yang ada
-            document.getElementById('detailLandNumber').textContent = "001";
-            document.getElementById('numberSertif').textContent = "13423424134";
-
-            // Show detail modal
-            document.getElementById('detailModal').style.display = 'flex';
-        });
+        
 
         // Close detail modal
         document.getElementById('closeDetailModal').addEventListener('click', () => {
