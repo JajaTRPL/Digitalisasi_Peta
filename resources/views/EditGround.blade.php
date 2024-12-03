@@ -65,8 +65,8 @@
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset" type="text" id="nama_asset" value="{{$dataGround->nama_asset}}"/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Alamat</label>
-                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Alamat" type="text" id="alamat" value="{{$alamatGround->detail_alamat}}"/>
+                    <label class="block text-gray-700">Detail Alamat</label>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Detail Alamat" type="text" id="detail_alamat" value="{{$alamatGround->detail_alamat}}"/>
                 </div>
                 <div>
                     <label class="block text-gray-700">RT</label>
@@ -154,28 +154,6 @@
                         @endforeach
                     </select>
                 </div>
-
-                {{-- <div class="col-span-2">
-                    <label class="block text-gray-700 mb-1">Foto</label>
-                    <label for="foto" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4 3a2 2 0 012-2h8a2 2 0 012 2v6.586l1.707 1.707a1 1 0 01-1.414 1.414l-1.707-1.707V17a2 2 0 01-2 2H6a2 2 0 01-2-2V3zm4 9a1 1 0 011-1h4a1 1 0 010 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="mt-2 text-sm text-gray-600">Klik untuk unggah Foto</span>
-                        <input id="foto" name="foto" type="file" class="hidden"/>
-                    </label>
-                </div>
-
-                <div class="col-span-2">
-                    <label class="block text-gray-700 mb-1">Sertifikat</label>
-                    <label for="sertifikat" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4 3a2 2 0 012-2h8a2 2 0 012 2v6.586l1.707 1.707a1 1 0 01-1.414 1.414l-1.707-1.707V17a2 2 0 01-2 2H6a2 2 0 01-2-2V3zm4 9a1 1 0 011-1h4a1 1 0 010 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="mt-2 text-sm text-gray-600">Klik untuk unggah Sertifikat</span>
-                        <input id="sertifikat" name="sertifikat" type="file" class="hidden"/>
-                    </label>
-                </div> --}}
 
                 <div class="font-[sans-serif] max-w-md mx-auto">
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
@@ -339,17 +317,24 @@
                 const nama_asset = document.getElementById('nama_asset').value;
                 const status_kepemilikan = document.getElementById('status_kepemilikan').value;
                 const status_tanah = document.getElementById('status_tanah').value;
-                // const alamat = document.getElementById('alamat').value;
+                const detail_alamat = document.getElementById('detail_alamat').value;
+                const rt = document.getElementById('rt').value;
+                const rw = document.getElementById('rw').value;
+                const padukuhan = document.getElementById('padukuhan').value;
                 const tipe_tanah = document.getElementById('tipe_tanah').value;
                 const luas_asset = document.getElementById('luas_asset').value;
                 const formData = new FormData();
+                
                 formData.append('coordinates', coordinates);
                 formData.append('latitude', latitude);
                 formData.append('longitude', longitude);
                 formData.append('nama_asset', nama_asset);
                 formData.append('status_kepemilikan', status_kepemilikan);
                 formData.append('status_tanah', status_tanah);
-                // formData.append('alamat', alamat);
+                formData.append('detail_alamat', detail_alamat);
+                formData.append('rt', rt);
+                formData.append('rw', rw);
+                formData.append('padukuhan', padukuhan);
                 formData.append('tipe_tanah', tipe_tanah);
                 formData.append('luas_asset', luas_asset);
 

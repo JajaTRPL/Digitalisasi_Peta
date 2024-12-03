@@ -28,12 +28,13 @@ class GroundController extends Controller
         ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
         ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
         ->join('users', 'ground_details.added_by', '=', 'users.id')
-        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at', 'users.name as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
+        ->select('ground_details.id as ground_detail_id', 'ground_details.nama_asset', 'ground_details.updated_at', 'users.username as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
         ->get();
 
         $photo = PhotoGround::all();
 
-        $currentUser = Auth::user()->name;
+        $currentUser = Auth::user()->username;
+
         $groundJson = DB::table('ground_details')
         ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
         ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
@@ -43,7 +44,7 @@ class GroundController extends Controller
         ->join('tipe_tanah', 'ground_details.tipe_tanah_id', '=', 'tipe_tanah.id')
         ->join('ground_photos', 'ground_details.id', '=', 'ground_photos.ground_detail_id')
         ->join('ground_certificates', 'ground_details.id', '=', 'ground_certificates.ground_detail_id')
-        ->select('ground_details.id as ground_detail_id', 'ground_photos.name as photo', 'ground_certificates.name as certificate', 'ground_details.nama_asset','ground_details.luas_asset','nama_status_kepemilikan','nama_tipe_tanah', 'ground_details.alamat', 'ground_details.updated_at', 'users.name as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
+        ->select('ground_details.id as ground_detail_id', 'ground_photos.name as photo', 'ground_certificates.name as certificate', 'ground_details.nama_asset','ground_details.luas_asset','nama_status_kepemilikan','nama_tipe_tanah', 'ground_details.updated_at', 'users.username as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
         ->get();
         $groundJson = json_encode($groundJson);
 
@@ -67,7 +68,7 @@ class GroundController extends Controller
             'nama_asset' => 'required|string',
             'status_kepemilikan' => 'required|string',
             'status_tanah' => 'required|string',
-            'alamat' => 'required|string',
+            'detail_alamat' => 'required|string',
             'rt' => 'required|string',
             'rw' => 'required|string',
             'padukuhan' => 'required|string',
@@ -77,111 +78,124 @@ class GroundController extends Controller
             'sertifikat' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ]);
 
-        $groundAddressID = IdGenerator::generate([
-            'table' => 'ground_address',
-            'length' => 8,
-            'prefix' => 'GA-',
-        ]);
+        DB::beginTransaction();
 
-        $groundAddress = new GroundAddress();
-        $groundAddress->id = $groundAddressID;
-        $groundAddress->detail_alamat = $request->alamat;
-        $groundAddress->rt = $request->rt;
-        $groundAddress->rw = $request->rw;
-        $groundAddress->padukuhan = $request->padukuhan;
-        $groundAddress->save();
+        try {
+            $groundAddressID = IdGenerator::generate([
+                'table' => 'ground_address',
+                'length' => 8,
+                'prefix' => 'GA-',
+            ]);
 
-        $groundDetailsID = IdGenerator::generate([
-            'table' => 'ground_details',
-            'length' => 8,
-            'prefix' => 'GD-',
-        ]);
-
-        $currentUserID = Auth::user()->id;
+            $groundAddress = new GroundAddress();
+            $groundAddress->id = $groundAddressID;
+            $groundAddress->detail_alamat = $request->detail_alamat;
+            $groundAddress->rt = $request->rt;
+            $groundAddress->rw = $request->rw;
+            $groundAddress->padukuhan = $request->padukuhan;
+            $groundAddress->save();
 
 
-        // Membuat objek Ground baru
-        $information = new GroundDetails();
-        $information->id = $groundDetailsID;
-        $information->nama_asset = $request->nama_asset;
-        $information->alamat_id = $groundAddressID;
-        $information->luas_asset = $request->luas_asset;
-        $information->status_kepemilikan_id = $request->status_kepemilikan;
-        $information->status_tanah_id = $request->status_tanah;
-        $information->tipe_tanah_id = $request->tipe_tanah;
-        $information->added_by = $currentUserID;
-        $information->updated_by = $currentUserID;
-        $information->save();
+            $currentUserID = Auth::user()->id;
 
-        $photoGroundID = IdGenerator::generate([
-            'table' => 'ground_photos',
-            'length' => 8,
-            'prefix' => 'PG-',
-        ]);
 
-        if ($request->hasFile('foto_tanah')) {
-            $extension = $request->file('foto_tanah')->getClientOriginalExtension();
-            $basename = uniqid() . time();
-            $photoNameSimpan = "{$basename}.{$extension}";
-            $request->file('foto_tanah')->storeAs('ground_image', $photoNameSimpan);
+            $groundDetailsID = IdGenerator::generate([
+                'table' => 'ground_details',
+                'length' => 8,
+                'prefix' => 'GD-',
+            ]);
+
+            $information = new GroundDetails();
+            $information->id = $groundDetailsID;
+            $information->nama_asset = $request->nama_asset;
+            $information->alamat_id = $groundAddressID;
+            $information->luas_asset = $request->luas_asset;
+            $information->status_kepemilikan_id = $request->status_kepemilikan;
+            $information->status_tanah_id = $request->status_tanah;
+            $information->tipe_tanah_id = $request->tipe_tanah;
+            $information->added_by = $currentUserID;
+            $information->updated_by = $currentUserID;
+            $information->save();
+
+            $photoGroundID = IdGenerator::generate([
+                'table' => 'ground_photos',
+                'length' => 8,
+                'prefix' => 'PG-',
+            ]);
+
+            if ($request->hasFile('foto_tanah')) {
+                $extension = $request->file('foto_tanah')->getClientOriginalExtension();
+                $basename = uniqid() . time();
+                $photoNameSimpan = "{$basename}.{$extension}";
+                $request->file('foto_tanah')->storeAs('ground_image', $photoNameSimpan);
+            }
+
+            $photoGround = new PhotoGround();
+            $photoGround->id = $photoGroundID;
+            $photoGround->size = $request->file('foto_tanah')->getSize();
+            $photoGround->name = $photoNameSimpan;
+            $photoGround->ground_detail_id = $information->id;
+            $photoGround->save();
+
+            $sertificateGroundID = IdGenerator::generate([
+                'table' => 'ground_certificates',
+                'length' => 8,
+                'prefix' => 'SG-',
+            ]);
+
+            if ($request->hasFile('sertifikat')) {
+                $extension = $request->file('sertifikat')->getClientOriginalExtension();
+                $basename = uniqid() . time();
+                $sertifNameSimpan = "{$basename}.{$extension}";
+                $request->file('sertifikat')->storeAs('ground_sertificate', $sertifNameSimpan);
+            }
+
+            $sertificateGround = new SertificateGround();
+            $sertificateGround->id = $sertificateGroundID;
+            $sertificateGround->size = $request->file('sertifikat')->getSize();
+            $sertificateGround->name = $sertifNameSimpan;
+            $sertificateGround->ground_detail_id = $information->id;
+            $sertificateGround->save();
+
+            $groundMarkersID = IdGenerator::generate([
+                'table' => 'ground_markers',
+                'length' => 8,
+                'prefix' => 'GM-',
+            ]);
+
+            // Membuat GroundMarker dan kaitkan dengan GroundDetail
+            $marker = new GroundMarkers();
+            $marker->id = $groundMarkersID;
+            $marker->latitude = $request->latitude;
+            $marker->longitude = $request->longitude;
+            $marker->ground_detail_id = $information->id;
+            $marker->save();
+
+
+            $groundsID = IdGenerator::generate([
+                'table' => 'grounds',
+                'length' => 8,
+                'prefix' => 'G-',
+            ]);
+            // Membuat Ground dengan marker_id dari marker yang baru saja disimpan
+
+            $ground = new Ground();
+            $ground->id = $groundsID;
+            $ground->coordinates = $request->coordinates;
+            $ground->marker_id = $marker->id; // Memakai id yang dihasilkan dari id generator
+            $ground->save();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil ditambahkan.'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new HttpResponseException(response()->json(['error' => 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.'], 500));
         }
-
-        $photoGround = new PhotoGround();
-        $photoGround->id = $photoGroundID;
-        $photoGround->size = $request->file('foto_tanah')->getSize();
-        $photoGround->name = $photoNameSimpan;
-        $photoGround->ground_detail_id = $information->id;
-        $photoGround->save();
-
-        $sertificateGroundID = IdGenerator::generate([
-            'table' => 'ground_certificates',
-            'length' => 8,
-            'prefix' => 'SG-',
-        ]);
-
-        if ($request->hasFile('sertifikat')) {
-            $extension = $request->file('sertifikat')->getClientOriginalExtension();
-            $basename = uniqid() . time();
-            $sertifNameSimpan = "{$basename}.{$extension}";
-            $request->file('sertifikat')->storeAs('ground_sertificate', $sertifNameSimpan);
-        }
-
-        $sertificateGround = new SertificateGround();
-        $sertificateGround->id = $sertificateGroundID;
-        $sertificateGround->size = $request->file('sertifikat')->getSize();
-        $sertificateGround->name = $sertifNameSimpan;
-        $sertificateGround->ground_detail_id = $information->id;
-        $sertificateGround->save();
-
-        $groundMarkersID = IdGenerator::generate([
-            'table' => 'ground_markers',
-            'length' => 8,
-            'prefix' => 'GM-',
-        ]);
-
-        // Membuat GroundMarker dan kaitkan dengan GroundDetail
-        $marker = new GroundMarkers();
-        $marker->id = $groundMarkersID;
-        $marker->latitude = $request->latitude;
-        $marker->longitude = $request->longitude;
-        $marker->ground_detail_id = $information->id;
-        $marker->save();
-
-
-        $groundsID = IdGenerator::generate([
-            'table' => 'grounds',
-            'length' => 8,
-            'prefix' => 'G-',
-        ]);
-        // Membuat Ground dengan marker_id dari marker yang baru saja disimpan
-        $ground = new Ground();
-        $ground->id = $groundsID;
-        $ground->coordinates = $request->coordinates;
-        $ground->marker_id = $marker->id; // Menggunakan ID yang dihasilkan untuk marker_id
-        $ground->save();
-
-        // Mengembalikan response
-        return response()->json(['message' => 'Ground saved successfully!'], 201);
     }
 
     public function edit($id){
@@ -254,7 +268,10 @@ class GroundController extends Controller
             'nama_asset' => 'required|string',
             'status_kepemilikan' => 'required|string',
             'status_tanah' => 'required|string',
-            // 'alamat' => 'required|string',
+            'detail_alamat' => 'required|string',
+            'rt' => 'required|string',
+            'rw' => 'required|string',
+            'padukuhan' => 'required|string',
             'tipe_tanah' => 'required|string',
             'luas_asset' => 'required|numeric',
             'coordinates' => 'required|json',
@@ -268,8 +285,15 @@ class GroundController extends Controller
 
         try {
             $groundDetail = GroundDetails::findOrFail($id);
+
+            $groundAddress = GroundAddress::findOrFail($groundDetail->alamat_id);
+            $groundAddress->detail_alamat = $request->detail_alamat;
+            $groundAddress->rt = $request->rt;
+            $groundAddress->rw = $request->rw;
+            $groundAddress->padukuhan = $request->padukuhan;
+            $groundAddress->save();
+
             $groundDetail->nama_asset = $request->nama_asset;
-            // $groundDetail->alamat = $request->alamat;
             $groundDetail->status_kepemilikan_id = $request->status_kepemilikan;
             $groundDetail->status_tanah_id = $request->status_tanah;
             $groundDetail->luas_asset = $request->luas_asset;
@@ -332,12 +356,11 @@ class GroundController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Data berhasil diperbarui.',
-                'data' => $groundDetail
             ]);
         } catch (\Exception $error) {
             DB::rollBack();
             throw new HttpResponseException(response()->json([
-                'message' => 'Cannot update data due to a server error.',
+                'message' => 'Terjadi kesalahan saat memperbarui data. Silakan coba lagi.',
             ], 500));
         }
     }

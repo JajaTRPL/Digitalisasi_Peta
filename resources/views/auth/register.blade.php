@@ -15,13 +15,18 @@
 
             <!-- Name -->
             <div class="mb-4">
-            <input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Username" class="w-full p-3 border border-gray-300 rounded-lg">
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <input id="fullname" type="text" name="fullname" :value="old('fullname')" required autofocus autocomplete="name" placeholder="Nama Lengkap" class="w-full p-3 border border-gray-300 rounded-lg">
+                <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
+            <input id="username" type="text" name="username" :value="old('username')" required autofocus autocomplete="name" placeholder="Nama Pengguna" class="w-full p-3 border border-gray-300 rounded-lg">
+                <x-input-error :messages="$errors->get('username')" class="mt-2" />
             </div>
 
             <!-- Email Address -->
             <div class="mb-4">
-            <input id="email" name="email" type="email" placeholder="Email" :value="old('email')" required autofocus autocomplete="username" class="w-full p-3 border border-gray-300 rounded-lg">
+            <input id="email" name="email" type="email" placeholder="Email" :value="old('email')" required autofocus autocomplete="email" class="w-full p-3 border border-gray-300 rounded-lg">
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
@@ -55,11 +60,11 @@
 
             <div class="flex items-center justify-end mb-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
+                    {{ __('Sudah memiliki akun?') }}
                 </a>
 
                 <x-primary-button class="ms-4">
-                    {{ __('Login') }}
+                    {{ __('Daftar') }}
                 </x-primary-button>
             </div>
         </form>

@@ -311,7 +311,7 @@
             if(groundDetail){
                     document.getElementById('detailLandPhoto').src = groundDetail.photo;
                     document.getElementById('detailLandName').textContent = groundDetail.nama_asset;
-                    document.getElementById('detailLandAddress').textContent = groundDetail.alamat;
+                    // document.getElementById('detailLandAddress').textContent = groundDetail.alamat;
                     document.getElementById('detailLandOwnership').textContent = groundDetail.nama_tipe_tanah;
 
                     document.getElementById('landArea').textContent = groundDetail.luas_asset;  // Contoh data, ganti sesuai data yang ada

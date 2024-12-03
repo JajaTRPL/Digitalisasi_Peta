@@ -85,9 +85,9 @@
                     type="text" id="nama_asset" />
             </div>
             <div>
-                <label class="block text-gray-700">Alamat</label>
-                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Alamat"
-                    type="text" id="alamat" />
+                <label class="block text-gray-700">Detail Alamat</label>
+                <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Detail Alamat (Jalan, Blok, Nomor)"
+                    type="text" id="detail_alamat" />
             </div>
             <div>
                 <label class="block text-gray-700">RT</label>
@@ -194,12 +194,12 @@
             <div>
                 <label class="block text-gray-700">Longtitude</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude"
-                    type="text" id="longitude" />
+                    type="text" id="longitude" readonly />
             </div>
             <div>
                 <label class="block text-gray-700">Latitude</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Latitude"
-                    type="text" id="latitude" />
+                    type="text" id="latitude" readonly/>
             </div>
         </div>
 
@@ -426,7 +426,7 @@
                 formData.append('nama_asset', document.getElementById('nama_asset').value);
                 formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
                 formData.append('status_tanah', document.getElementById('status_tanah').value);
-                formData.append('alamat', document.getElementById('alamat').value);
+                formData.append('detail_alamat', document.getElementById('detail_alamat').value);
                 formData.append('rt', document.getElementById('rt').value);
                 formData.append('rw', document.getElementById('rw').value);
                 formData.append('padukuhan', document.getElementById('padukuhan').value);

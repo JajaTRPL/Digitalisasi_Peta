@@ -37,18 +37,18 @@
             </div>
 
             <div class="mb-4 mt-6 md:mt-10 lg:mt-14">
-                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">{{ __('Log in') }}</button>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">{{ __('Masuk') }}</button>
             </div>
 
             <div class="text-center">
-                <p class="text-sm">Don't have an account?
+                <p class="text-sm">Tidak memiliki akun?
 
                     @if (Route::has('register'))
                         <a
                             href="{{ route('register') }}"
                             class="text-blue-600 hover:underline"
                         >
-                            Register
+                            Daftar
                         </a>
                     @endif
                 </p>
