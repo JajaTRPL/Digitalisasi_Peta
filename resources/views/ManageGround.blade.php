@@ -5,6 +5,50 @@
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <style>
+        #map {
+            height: 100%;
+            width: 125%;
+            transform: translateX(-20%);
+            transition: width 0.3s ease-in-out;
+        }
+
+        /* Sidebar style */
+        #sidebar {
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #sidebar.closed {
+            transform: translateX(-80%);
+        }
+
+        #ground-list-container.closed {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body class="bg-green-50">
@@ -111,8 +155,8 @@
                                 </button>
                             </form>
 
-                            <a class="text-gray-500 mx-1" href="{{ url('/ViewPeta?lat='.$ground->latitude)."&long=".$ground->longitude }}">
-                                <i class="fas fa-eye"></i>
+                            <a class="text-gray-500 mx-1">
+                                <i class="fas fa-eye cursor-pointer" data-id="{{ $ground->ground_detail_id }}"></i>
                             </a>
                         </td>
                     </tr>
@@ -162,6 +206,58 @@
         </div>
     </div>
 
+    <div id="detailModal" class="modal">
+        <div class="modal-content bg-white rounded-lg shadow-lg overflow-hidden p-6">
+            <!-- Modal Header with Image -->
+            <div class="relative mb-4">
+                <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
+            </div>
+
+            <!-- Modal Body with Information -->
+            <h2 class="text-2xl font-semibold mb-4">Detail Informasi Tanah</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="font-semibold">Nama:</p>
+                    <p id="detailLandName">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Nomor Asset:</p>
+                    <p id="detailLandNumber">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Alamat:</p>
+                    <p id="detailLandAddress">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Status Kepemilikan:</p>
+                    <p id="ownershipStatus">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Tipe Tanah:</p>
+                    <p id="detailLandOwnership">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Luas Tanah:</p>
+                    <p id="landArea">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Longtitude:</p>
+                    <p id="longtitude">-</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Nomor Sertifikat:</p>
+                    <p id="numberSertif">-</p>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer with Close Button -->
+            <div class="flex justify-center mt-5">
+                <button id="closeDetailModal" class="px-4 py-2 bg-red-500 text-white rounded-md">Tutup</button>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         const avatar = document.querySelector('.profile-avatar');
@@ -203,6 +299,38 @@
     <script>
         $(document).ready( function () {
             $('#datatable').DataTable();
+
+            const groundJson = {!! $groundJson !!}
+
+            $(document).on('click', '.fas.fa-eye', function () {
+            // Ambil nilai atribut data-id
+            const dataId = $(this).data('id');
+            // Tampilkan di console
+            const groundDetail = groundJson.find(item => item.ground_detail_id == dataId)
+            console.log(groundDetail);
+            if(groundDetail){
+                    document.getElementById('detailLandPhoto').src = groundDetail.photo;
+                    document.getElementById('detailLandName').textContent = groundDetail.nama_asset;
+                    document.getElementById('detailLandAddress').textContent = groundDetail.alamat;
+                    document.getElementById('detailLandOwnership').textContent = groundDetail.nama_tipe_tanah;
+
+                    document.getElementById('landArea').textContent = groundDetail.luas_asset;  // Contoh data, ganti sesuai data yang ada
+                    document.getElementById('ownershipStatus').textContent = groundDetail.nama_status_kepemilikan; // Contoh data, ganti sesuai data yang ada
+                    document.getElementById('longtitude').textContent = groundDetail.longitude;  // Contoh data, ganti sesuai data yang ada
+                    document.getElementById('detailLandNumber').textContent = groundDetail.id;
+                    document.getElementById('numberSertif').textContent = groundDetail.certificate.substr(0, groundDetail.certificate.length - 4);
+
+                    // Show detail modal
+                    document.getElementById('detailModal').style.display = 'flex';
+
+            } else {
+                console.log('data salah')
+            }
+
+            document.getElementById('closeDetailModal').addEventListener('click', () => {
+                document.getElementById('detailModal').style.display = 'none';
+            });
+        });
         });
     </script>
 </body>

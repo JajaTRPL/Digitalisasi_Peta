@@ -397,8 +397,8 @@
                             document.getElementById('landArea').textContent = ground.luas_asset;  // Contoh data, ganti sesuai data yang ada
                             document.getElementById('ownershipStatus').textContent = ground.tipe_tanah; // Contoh data, ganti sesuai data yang ada
                             document.getElementById('longtitude').textContent = ground.longitude;  // Contoh data, ganti sesuai data yang ada
-                            document.getElementById('detailLandNumber').textContent = "001";
-                            document.getElementById('numberSertif').textContent = "13423424134";
+                            document.getElementById('detailLandNumber').textContent = ground.id;
+                            document.getElementById('numberSertif').textContent = ground.certificate.substr(0, ground.certificate.length-4);
 
                             // Show detail modal
                             document.getElementById('detailModal').style.display = 'flex';

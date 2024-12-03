@@ -42,7 +42,7 @@ class GroundDetails extends Model
 
     public function sertificateGround()
     {
-        return $this->belongsTo(SertificateGround::class, 'sertificate_ground_id');
+        return $this->hasOne(SertificateGround::class, 'ground_detail_id');
     }
 
     public function addedBy()

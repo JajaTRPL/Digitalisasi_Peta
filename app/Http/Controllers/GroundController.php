@@ -34,8 +34,20 @@ class GroundController extends Controller
         $photo = PhotoGround::all();
 
         $currentUser = Auth::user()->name;
+        $groundJson = DB::table('ground_details')
+        ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
+        ->join('grounds', 'ground_markers.id', '=', 'grounds.marker_id')
+        ->join('users', 'ground_details.added_by', '=', 'users.id')
+        ->join('status_tanah', 'ground_details.status_tanah_id', '=', 'status_tanah.id')
+        ->join('status_kepemilikan', 'ground_details.status_kepemilikan_id', '=', 'status_kepemilikan.id')
+        ->join('tipe_tanah', 'ground_details.tipe_tanah_id', '=', 'tipe_tanah.id')
+        ->join('ground_photos', 'ground_details.id', '=', 'ground_photos.ground_detail_id')
+        ->join('ground_certificates', 'ground_details.id', '=', 'ground_certificates.ground_detail_id')
+        ->select('ground_details.id as ground_detail_id', 'ground_photos.name as photo', 'ground_certificates.name as certificate', 'ground_details.nama_asset','ground_details.luas_asset','nama_status_kepemilikan','nama_tipe_tanah', 'ground_details.alamat', 'ground_details.updated_at', 'users.name as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
+        ->get();
+        $groundJson = json_encode($groundJson);
 
-        return view('ManageGround', compact('dataGround', 'photo', 'currentUser'));
+        return view('ManageGround', compact('dataGround', 'photo', 'currentUser', 'groundJson'));
     }
 
     public function create(){

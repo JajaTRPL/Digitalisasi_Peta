@@ -44,8 +44,10 @@ class ShowMapController extends Controller
             $detail = $marker->groundDetail;
             $photo = GroundDetails::findOrFail($detail->id)->photoGround->name;
             $luas_asset = GroundDetails::findOrFail($detail->id)->luas_asset;
+            $certificate = GroundDetails::findOrFail($detail->id)->sertificateGround->name;
             $detail->photoGround = $photo;
             $detail->luas_asset = $luas_asset;
+            $detail->certificate = $certificate;
             $data = [
                 "$marker->latitude"."_"."$marker->longitude"=> $detail
             ];
