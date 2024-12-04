@@ -360,7 +360,7 @@
                     // Set modal 2 content (detail modal)
                     document.getElementById('detailLandPhoto').src = "storage/ground_image/"+ground.photoGround;
                     document.getElementById('detailLandName').textContent = ground.nama_asset;
-                    document.getElementById('detailLandAddress').textContent = ground.alamat;
+                    document.getElementById('detailLandAddress').textContent = ground.detail_alamat;
                     document.getElementById('detailLandOwnership').textContent = ground.tipe_tanah;
 
                     // Set additional details for modal 2
@@ -380,7 +380,7 @@
                         const ground = result[`${latlng.lat}_${latlng.lng}`]
                         document.getElementById('landPhoto').src = "storage/ground_image/"+ground.photoGround;
                         document.getElementById('landName').textContent = ground.nama_asset;
-                        document.getElementById('landAddress').textContent = ground.alamat;
+                        document.getElementById('landAddress').textContent = ground.detail_alamat;
                         document.getElementById('landOwnership').textContent = ground.tipe_tanah;
 
                         document.querySelector('#infoModal button:nth-child(2)').addEventListener('click', () => {

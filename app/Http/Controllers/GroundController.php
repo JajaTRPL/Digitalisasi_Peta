@@ -44,7 +44,8 @@ class GroundController extends Controller
         ->join('tipe_tanah', 'ground_details.tipe_tanah_id', '=', 'tipe_tanah.id')
         ->join('ground_photos', 'ground_details.id', '=', 'ground_photos.ground_detail_id')
         ->join('ground_certificates', 'ground_details.id', '=', 'ground_certificates.ground_detail_id')
-        ->select('ground_details.id as ground_detail_id', 'ground_photos.name as photo', 'ground_certificates.name as certificate', 'ground_details.nama_asset','ground_details.luas_asset','nama_status_kepemilikan','nama_tipe_tanah', 'ground_details.updated_at', 'users.username as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
+        ->join('ground_address', 'ground_address.id', '=', 'ground_details.alamat_id')
+        ->select('ground_details.id as ground_detail_id', 'ground_details.id', 'ground_address.detail_alamat as alamat', 'ground_photos.name as photo', 'ground_certificates.name as certificate', 'ground_details.nama_asset','ground_details.luas_asset','nama_status_kepemilikan','nama_tipe_tanah', 'ground_details.updated_at', 'users.username as added_by_name', "ground_markers.latitude", "ground_markers.longitude")
         ->get();
         $groundJson = json_encode($groundJson);
 
@@ -353,16 +354,16 @@ class GroundController extends Controller
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Data berhasil diperbarui.',
-            ]);
+            session()->flash('success', 'Data berhasil diperbarui.');
+            return redirect()->route('ManageGround');
         } catch (\Exception $error) {
             DB::rollBack();
-            throw new HttpResponseException(response()->json([
-                'message' => 'Terjadi kesalahan saat memperbarui data. Silakan coba lagi.',
-            ], 500));
+
+            // Menggunakan session flash untuk pesan kesalahan
+            session()->flash('error', 'Terjadi kesalahan saat memperbarui data. Silakan coba lagi.');
+            return redirect()->route('ManageGround');
         }
+
     }
 
     public function destroy($id){

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ground;
+use App\Models\GroundAddress;
 use App\Models\GroundDetails;
 use App\Models\GroundMarkers;
 use App\Models\TipeTanah;
@@ -45,6 +46,8 @@ class ShowMapController extends Controller
             $photo = GroundDetails::findOrFail($detail->id)->photoGround->name;
             $luas_asset = GroundDetails::findOrFail($detail->id)->luas_asset;
             $certificate = GroundDetails::findOrFail($detail->id)->sertificateGround->name;
+            $alamat = GroundAddress::findOrFail($detail->alamat_id)->detail_alamat;
+            $detail->detail_alamat = $alamat;
             $detail->photoGround = $photo;
             $detail->luas_asset = $luas_asset;
             $detail->certificate = $certificate;

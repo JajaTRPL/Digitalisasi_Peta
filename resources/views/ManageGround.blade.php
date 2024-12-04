@@ -53,6 +53,18 @@
 
 <body class="bg-green-50">
 
+    @if(session('success'))
+    <div class="bg-green-100 text-green-800 border-l-4 border-green-500 p-4 mb-4 rounded-lg">
+        <p>{{ session('success') }}</p>
+    </div>
+    @endif
+
+    @if(session('error'))
+        <div class="bg-red-100 text-red-800 border-l-4 border-red-500 p-4 mb-4 rounded-lg">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
+
     <!-- Navbar -->
     <nav class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -96,6 +108,7 @@
             </div>
         </div>
     </nav>
+
     <div class="container mx-auto mt-10">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex items-center justify-between mb-4">
@@ -309,9 +322,9 @@
             const groundDetail = groundJson.find(item => item.ground_detail_id == dataId)
             console.log(groundDetail);
             if(groundDetail){
-                    document.getElementById('detailLandPhoto').src = groundDetail.photo;
+                    document.getElementById('detailLandPhoto').src = "/storage/ground_image/"+groundDetail.photo;
                     document.getElementById('detailLandName').textContent = groundDetail.nama_asset;
-                    // document.getElementById('detailLandAddress').textContent = groundDetail.alamat;
+                    document.getElementById('detailLandAddress').textContent = groundDetail.alamat;
                     document.getElementById('detailLandOwnership').textContent = groundDetail.nama_tipe_tanah;
 
                     document.getElementById('landArea').textContent = groundDetail.luas_asset;  // Contoh data, ganti sesuai data yang ada
