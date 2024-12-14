@@ -56,7 +56,7 @@ class GroundController extends Controller
         $statusKepemilikan = StatusKepemilikan::all();
         $statusTanah = StatusTanah::all();
         $tipeTanah = TipeTanah::all();
-        $currentUser = Auth::user()->name;
+        $currentUser = Auth::user()->username;
 
         return view('AddGround', compact('statusKepemilikan', 'statusTanah', 'tipeTanah', 'currentUser'));
     }

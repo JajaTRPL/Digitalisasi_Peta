@@ -185,7 +185,7 @@
             <div id="map" class="w-full h-96 border border-gray-300 rounded-md mt-6"></div>
 
             <div>
-                <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="{{$dataGround->coordinates}}" >
+                <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="{{$dataGround->coordinates}}" style="display: none">
             </div>
 
 
@@ -324,7 +324,7 @@
                 const tipe_tanah = document.getElementById('tipe_tanah').value;
                 const luas_asset = document.getElementById('luas_asset').value;
                 const formData = new FormData();
-                
+
                 formData.append('coordinates', coordinates);
                 formData.append('latitude', latitude);
                 formData.append('longitude', longitude);
