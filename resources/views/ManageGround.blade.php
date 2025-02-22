@@ -6,6 +6,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <style>
+        table.dataTable th.dt-type-numeric,table.dataTable th.dt-type-date,table.dataTable td.dt-type-numeric,table.dataTable td.dt-type-date {
+    text-align: left;
+}
         #map {
             height: 100%;
             width: 125%;
@@ -199,10 +202,10 @@
                         <h3 class="font-semibold">Nama Tanah</h3>
                         <p class="text-gray-500" id="modalGroundName">Tanah 1</p>
                     </div>
-                    <div>
+                    {{-- <div>
                         <h3 class="font-semibold">Alamat</h3>
                         <p class="text-gray-500" id="modalGroundAddress">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer interdum dui vel arcu efficitur</p>
-                    </div>
+                    </div> --}}
                 </div>
                 <!-- Tombol Aksi -->
                 <div class="flex justify-center mt-4 space-x-4">
@@ -300,7 +303,7 @@
         function showDeleteModal(route, groundName, groundAddress) {
             modalDeleteForm.action = route; // Set form action
             modalGroundName.textContent = groundName; // Isi nama tanah
-            modalGroundAddress.textContent = groundAddress; // Isi alamat tanah
+            //modalGroundAddress.textContent = groundAddress; // Isi alamat tanah
             toggleModal(); // Tampilkan modal
         }
     </script>

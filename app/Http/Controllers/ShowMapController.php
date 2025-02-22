@@ -54,7 +54,7 @@ class ShowMapController extends Controller
             $data = [
                 "$marker->latitude"."_"."$marker->longitude"=> $detail
             ];
-
+            
             $tipe_tanah = TipeTanah::findOrFail($marker->groundDetail->tipe_tanah_id);
             $data["$marker->latitude"."_"."$marker->longitude"]["tipe_tanah"] = $tipe_tanah->nama_tipe_tanah;
 
@@ -77,8 +77,8 @@ class ShowMapController extends Controller
         $markerGeoJson = json_encode($markerGeoJsonData);
         $detailsJson = json_encode($detailsData);
         $currentUser = Auth::user()->username;
-
-
+        
+        
 
         return view('ViewPeta', compact('polygonGeoJson', 'markerGeoJson', 'detailsJson', 'dataGround', 'currentUser'));
     }
