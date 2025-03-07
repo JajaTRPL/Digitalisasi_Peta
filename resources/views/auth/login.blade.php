@@ -34,6 +34,7 @@
                     </svg>
                 </span>
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                
             </div>
 
             <div class="mb-4 mt-6 md:mt-10 lg:mt-14">
