@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,9 +9,12 @@ class GroundDetails extends Model
 {
     use HasFactory;
 
-    protected $table ='ground_details';
+    protected $table = 'ground_details';
+
     protected $fillable = ['nama_asset', 'alamat', 'luas_asset', 'id'];
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     public function luasAsset()
@@ -59,5 +61,4 @@ class GroundDetails extends Model
     {
         return $this->belongsTo(GroundAddress::class, 'alamat_id');
     }
-
 }

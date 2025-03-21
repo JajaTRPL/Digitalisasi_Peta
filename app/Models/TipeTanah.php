@@ -9,10 +9,11 @@ class TipeTanah extends Model
 {
     use HasFactory;
 
-    protected $table ='tipe_tanah';
+    protected $table = 'tipe_tanah';
 
     protected $fillable = ['nama_tipe_tanah'];
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 }

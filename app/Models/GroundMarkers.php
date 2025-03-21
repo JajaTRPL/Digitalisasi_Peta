@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +14,7 @@ class GroundMarkers extends Model
     protected $fillable = ['latitude', 'longitude', 'id', 'ground_detail_id'];
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     public function groundDetail()

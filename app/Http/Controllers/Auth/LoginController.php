@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function show(){
+    public function show()
+    {
         return view('register');
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $request->validate([
             'email' => 'required|email',
             'name' => 'required',
@@ -21,15 +23,17 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password', 'name');
 
-        if(Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
             return redirect()->intended('dashboard');
         }
 
         return redirect()->back()->withInput()->withErrors(['email' => 'Mohon masukkan data yang benar']);
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
+
         return redirect('/');
     }
 }

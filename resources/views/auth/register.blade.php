@@ -3,12 +3,12 @@
 @section('title', 'Register')
 
 @section('content')
-<div class="flex justify-center items-center min-h-screen bg-gray-100 ">
+<div class="flex justify-center items-center min-h-screen bg-[#F6F9EE] ">
     <div class="bg-white p-8 rounded-lg shadow-lg w-auto">
         <div class="flex flex-col items-center justify-center">
+            <p class="text-[#000000] text-[30px] font-bold mb-4 font-poppins">Daftar</p>
             <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="w-20 mb-2">
-            <h1 class="text-2xl font-semibold mb-2">Peta Digital Kelurahan Umbulharjo</h1>
-            <p class="text-gray-500 mb-6">Daftar Admin</p>
+            <h1 class="text-[#262B43E5] text-2xl font-semibold mb-2 font-poppis">Peta Digital Kelurahan Umbulharjo</h1>
         </div>
         <form method="POST" action="{{ route('register') }}">
             @csrf
@@ -57,36 +57,51 @@
                 </span>
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
+            <button class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700">
+                {{ __('Daftar') }}
+            </button>
 
-            <div class="flex items-center justify-end mb-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+            <div class="flex items-center justify-center mb-4 mt-4 text-center">
+                <a class="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">
                     {{ __('Sudah memiliki akun?') }}
                 </a>
-
-                <x-primary-button class="ms-4">
-                    {{ __('Daftar') }}
-                </x-primary-button>
+                <a class="text-sm text-[#666CFF] hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                    {{ __('Masuk') }}
+                </a>
             </div>
         </form>
     </div>
 </div>
 
-<script>
-    function togglePassword(inputId, eyeId, slashId) {
-        const passwordInput = document.getElementById(inputId);
-        const eyeIcon = document.getElementById(eyeId);
-        const eyeSlash = document.getElementById(slashId);
+function togglePassword(inputId, eyeId, slashId) {
+    // Cari elemen input password, ikon mata terbuka, dan ikon mata tertutup
+    const passwordInput = document.getElementById(inputId);
+    const eyeIcon = document.getElementById(eyeId);
+    const eyeSlash = document.getElementById(slashId);
 
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            eyeSlash.style.display = "block";
-            eyeIcon.style.display = "none";
-        } else {
-            passwordInput.type = 'password';
-            eyeSlash.style.display = "none";
-            eyeIcon.style.display = "block";
-        }
+    // Debugging: Log ID dan elemen yang ditemukan
+    console.log("Memanggil togglePassword dengan:");
+    console.log("Input ID:", inputId, "Elemen:", passwordInput);
+    console.log("Eye Icon ID:", eyeId, "Elemen:", eyeIcon);
+    console.log("Eye Slash ID:", slashId, "Elemen:", eyeSlash);
+
+    // Jika elemen tidak ditemukan, tampilkan pesan error dan hentikan fungsi
+    if (!passwordInput || !eyeIcon || !eyeSlash) {
+        console.error("Error: Salah satu elemen tidak ditemukan!");
+        return;
     }
-</script>
+
+    // Toggle visibility password
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text'; // Tampilkan password
+        eyeSlash.style.display = "block"; // Tampilkan ikon mata tertutup
+        eyeIcon.style.display = "none"; // Sembunyikan ikon mata terbuka
+    } else {
+        passwordInput.type = 'password'; // Sembunyikan password
+        eyeSlash.style.display = "none"; // Sembunyikan ikon mata tertutup
+        eyeIcon.style.display = "block"; // Tampilkan ikon mata terbuka
+    }
+}
+
 
 @endsection

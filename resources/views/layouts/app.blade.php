@@ -9,6 +9,7 @@
 <body>
     <div>
         @yield('content')
+        <script src="{{ asset('js/auth.js') }}"></script>
     </div>
 </body>
 </html>

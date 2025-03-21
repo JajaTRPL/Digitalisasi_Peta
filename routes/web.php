@@ -41,4 +41,8 @@ Route::get('/admin', function () {
     return view('admin');
 })->middleware(['auth', 'verified', 'role:superAdmin'])->name('admin.dashboard');
 
+Route::get('/restore-data', function () {
+    return view('RestoreData');
+})->name('data.restore');
+
 require __DIR__.'/auth.php';

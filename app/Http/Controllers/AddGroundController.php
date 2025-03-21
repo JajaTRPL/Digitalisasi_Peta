@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AddGroundController extends Controller
 {
-    public function show(){
+    public function show()
+    {
 
         $statusKepemilikan = StatusKepemilikan::all();
         $statusTanah = StatusTanah::all();
@@ -48,7 +49,7 @@ class AddGroundController extends Controller
             'prefix' => 'PG-',
         ]);
 
-        $photoGround = new PhotoGround();
+        $photoGround = new PhotoGround;
         $photoGround->id = $photoGroundID;
 
         $name = $request->file('foto_tanah')->getClientOriginalName();
@@ -64,7 +65,7 @@ class AddGroundController extends Controller
             'prefix' => 'SG-',
         ]);
 
-        $sertificateGround = new SertificateGround();
+        $sertificateGround = new SertificateGround;
         $sertificateGround->id = $sertificateGroundID;
         $sertificateGround->size = $request->file('sertifikat')->getSize();
         $name = $request->file('sertifikat')->getClientOriginalName();
@@ -80,7 +81,7 @@ class AddGroundController extends Controller
         $currentUserID = Auth::user()->id;
 
         // Membuat objek Ground baru
-        $information = new GroundDetails();
+        $information = new GroundDetails;
         $information->id = $groundDetailsID;
         $information->nama_asset = $request->nama_asset;
         $information->alamat = $request->alamat;
@@ -93,7 +94,6 @@ class AddGroundController extends Controller
         $information->added_by = $currentUserID;
         $information->save();
 
-
         $groundMarkersID = IdGenerator::generate([
             'table' => 'ground_markers',
             'length' => 8,
@@ -101,13 +101,12 @@ class AddGroundController extends Controller
         ]);
 
         // Membuat GroundMarker dan kaitkan dengan GroundDetail
-        $marker = new GroundMarkers();
+        $marker = new GroundMarkers;
         $marker->id = $groundMarkersID;
         $marker->latitude = $request->latitude;
         $marker->longitude = $request->longitude;
         $marker->ground_detail_id = $information->id;
         $marker->save();
-
 
         $groundsID = IdGenerator::generate([
             'table' => 'grounds',
@@ -115,7 +114,7 @@ class AddGroundController extends Controller
             'prefix' => 'G-',
         ]);
         // Membuat Ground dengan marker_id dari marker yang baru saja disimpan
-        $ground = new Ground();
+        $ground = new Ground;
         $ground->id = $groundsID;
         $ground->coordinates = $request->coordinates;
         $ground->marker_id = $marker->id; // Menggunakan ID yang dihasilkan untuk marker_id

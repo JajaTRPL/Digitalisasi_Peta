@@ -18,6 +18,7 @@ class AuthenticatedSessionController extends Controller
     {
         return view('auth.login');
     }
+
     /**
      * Handle an incoming authentication request.
      */
@@ -27,11 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if(Auth::user()->hasRole('admin')){
+        if (Auth::user()->hasRole('admin')) {
             return redirect()->to('dashboard');
         }
 
-        if(Auth::user()->hasRole('superAdmin')){
+        if (Auth::user()->hasRole('superAdmin')) {
             return redirect()->to('dashboard');
         }
 

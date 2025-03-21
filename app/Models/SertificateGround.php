@@ -10,7 +10,10 @@ class SertificateGround extends Model
     use HasFactory;
 
     protected $table = 'ground_certificates';
+
     protected $fillable = ['name', 'size'];
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 }
