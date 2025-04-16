@@ -3,105 +3,11 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>
-    Daftar Pengguna Website
+      Daftar Pengguna Website
     </title>
-    <script src="https://cdn.tailwindcss.com">
-    </script>
+    @vite(['resources/css/Admin.css'])
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <style>
-        /* Popup Styles */
-        .popup-overlay {
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0,0,0,0.5);
-          z-index: 1000;
-        }
-        
-        .popup-container {
-          position: fixed;
-          top: 0;
-          right: 0;
-          width: 400px;
-          height: 100%;
-          background-color: white;
-          box-shadow: -2px 0 5px rgba(0,0,0,0.2);
-          overflow-y: auto;
-          transform: translateX(100%);
-          transition: transform 0.3s ease-out;
-        }
-        
-        .popup-header {
-          padding: 15px;
-          border-bottom: 1px solid #eee;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .popup-content {
-          padding: 20px;
-        }
-        
-        .close-btn {
-          background: none;
-          border: none;
-          font-size: 20px;
-          cursor: pointer;
-          color: #777;
-        }
-        
-        .form-group {
-          margin-bottom: 15px;
-        }
-        
-        .form-group label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: bold;
-        }
-        
-        .form-group input {
-          width: 100%;
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          box-sizing: border-box;
-        }
-        
-        .form-actions {
-          display: flex;
-          justify-content: flex-end;
-          gap: 10px;
-          margin-top: 20px;
-        }
-        
-        .btn {
-          padding: 8px 15px;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        
-        .btn-submit {
-          background-color: #4CAF50;
-          color: white;
-          border: none;
-        }
-        
-        .btn-cancel {
-          background-color: #f44336;
-          color: white;
-          border: none;
-        }
-        
-        /* When popup is active */
-        .popup-active {
-          transform: translateX(0);
-        }
-      </style>
 </head>
  <body class="bg-[#F6F9EE]">
     <!-- Navbar -->
@@ -110,25 +16,25 @@
     <div class="container mx-auto p-4">
         <div class="bg-white p-4 rounded-lg shadow">
             <div class="flex items-center justify-between mb-4">
-            <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-5 py-2 rounded">
-            Tambah Admin
-            </button>
-            <div class="flex items-center space-x-2">
-            <label class="text-gray-700" for="entries">
-            Tampilkan:
-            </label>
-            <select class="border border-gray-300 rounded px-3 py-2" id="entries">
-            <option value="10">
-                10
-            </option>
-            <option value="25">
-                25
-            </option>
-            <option value="50">
-                50
-            </option>
-            </select>
-            <input class="border border-gray-300 rounded px-2 py-1" placeholder="Cari Admin" type="text"/>
+              <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-5 py-2 rounded">
+                Tambah Admin
+              </button>
+              <div class="flex items-center space-x-2">
+                <label class="text-gray-700" for="entries">
+                  Tampilkan:
+                </label>
+                <select class="border border-gray-300 rounded px-3 py-2" id="entries">
+                  <option value="10">
+                      10
+                  </option>
+                  <option value="25">
+                      25
+                  </option>
+                  <option value="50">
+                      50
+                  </option>
+                </select>
+                <input class="border border-gray-300 rounded px-2 py-1" placeholder="Cari Admin" type="text"/>
             </div>
         </div>
         <table class="w-full text-left">
@@ -430,6 +336,42 @@
     </div>
   </div>
 
+    <div class="popup-overlay z-[999999]" id="editPopupOverlay">
+      <div class="popup-container" id="editPopupContainer">
+          <div class="popup-header">
+              <h2>Edit Admin</h2>
+              <button class="close-btn" id="closeEditPopupBtn">&times;</button>
+          </div>
+          <div class="popup-content">
+              <form id="editAdminForm">
+                  <div class="form-group">
+                      <label for="editName">Nama</label>
+                      <input type="text" id="editName" name="name" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="editEmail">Email</label>
+                      <input type="email" id="editEmail" name="email" required>
+                  </div>
+                  <div class="form-group">
+                      <label for="editRole">Peran</label>
+                      <select id="editRole" name="role" class="w-full p-2 border border-gray-300 rounded">
+                          <option value="admin">Admin</option>
+                          <option value="super admin">Super Admin</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="editPassword">Password (Biarkan kosong jika tidak ingin mengubah)</label>
+                      <input type="password" id="editPassword" name="password">
+                  </div>
+                  <div class="form-actions">
+                      <button type="button" class="btn btn-cancel" id="cancelEditBtn">Batal</button>
+                      <button type="submit" class="btn btn-submit">Simpan Perubahan</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+
   <script>
     // Get DOM elements
     const tambahAdminBtn = document.getElementById('tambahAdminBtn');
@@ -484,6 +426,82 @@
         alert('Admin berhasil ditambahkan!');
         adminForm.reset();
         closePopup();
+    });
+
+    // Edit Popup functionality
+    const editButtons = document.querySelectorAll('.fa-edit');
+    const editPopupOverlay = document.getElementById('editPopupOverlay');
+    const editPopupContainer = document.getElementById('editPopupContainer');
+    const closeEditPopupBtn = document.getElementById('closeEditPopupBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const editAdminForm = document.getElementById('editAdminForm');
+    
+    // Function to open edit popup with user data
+    function openEditPopup(userData) {
+        document.getElementById('editName').value = userData.name;
+        document.getElementById('editEmail').value = userData.email;
+        document.getElementById('editRole').value = userData.role.toLowerCase();
+        
+        editPopupOverlay.style.display = 'block';
+        setTimeout(() => {
+            editPopupContainer.classList.add('popup-active');
+        }, 10);
+    }
+    
+    // Close edit popup functions
+    function closeEditPopup() {
+        editPopupContainer.classList.remove('popup-active');
+        setTimeout(() => {
+            editPopupOverlay.style.display = 'none';
+        }, 300);
+    }
+    
+    // Add click event to all edit buttons
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Get user data from the table row
+            const row = this.closest('tr');
+            const userData = {
+                name: row.querySelector('.font-bold').textContent.trim(),
+                email: row.querySelector('.text-gray-500').textContent.trim(),
+                role: row.querySelector('td:nth-child(3)').textContent.trim()
+            };
+            
+            openEditPopup(userData);
+        });
+    });
+    
+    // Close edit popup when close button is clicked
+    closeEditPopupBtn.addEventListener('click', closeEditPopup);
+    
+    // Close edit popup when cancel button is clicked
+    cancelEditBtn.addEventListener('click', closeEditPopup);
+    
+    // Close edit popup when clicking outside the popup
+    editPopupOverlay.addEventListener('click', function(e) {
+        if (e.target === editPopupOverlay) {
+            closeEditPopup();
+        }
+    });
+    
+    // Edit form submission
+    editAdminForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Here you would typically send the updated data to a server
+        const formData = {
+            name: document.getElementById('editName').value,
+            email: document.getElementById('editEmail').value,
+            role: document.getElementById('editRole').value,
+            password: document.getElementById('editPassword').value
+        };
+        
+        console.log('Edit form submitted:', formData);
+        alert('Perubahan berhasil disimpan!');
+        editAdminForm.reset();
+        closeEditPopup();
+        
+        // In a real application, you would update the table row here
     });
 </script>
  </body>
