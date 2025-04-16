@@ -5,53 +5,7 @@
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-    <style>
-        table.dataTable th.dt-type-numeric,table.dataTable th.dt-type-date,table.dataTable td.dt-type-numeric,table.dataTable td.dt-type-date {
-    text-align: left;
-}
-        #map {
-            height: 100%;
-            width: 125%;
-            transform: translateX(-20%);
-            transition: width 0.3s ease-in-out;
-        }
-
-        /* Sidebar style */
-        #sidebar {
-            z-index: 1000;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        #sidebar.closed {
-            transform: translateX(-80%);
-        }
-
-        #ground-list-container.closed {
-            display: none;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-    </style>
+    @vite(['resources/css/ManageGround.css'])
 </head>
 
 <body class="bg-[#F6F9EE]">

@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="bg-white shadow-md">
+<nav class="bg-white shadow-md sticky top-0 z-[999999]">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
         <div class="flex items-center space-x-4">
             <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 ">

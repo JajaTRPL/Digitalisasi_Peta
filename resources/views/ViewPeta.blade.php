@@ -5,52 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peta Kelurahan Umbulharjo</title>
+    @vite(['resources/css/ViewPeta.css'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <style>
-        #map {
-            height: 100%;
-            width: 125%;
-            transform: translateX(-20%);
-            transition: width 0.3s ease-in-out;
-        }
-
-        /* Sidebar style */
-        #sidebar {
-            z-index: 1000;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        #sidebar.closed {
-            transform: translateX(-80%);
-        }
-
-        #ground-list-container.closed {
-            display: none;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 50;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-    </style>
+    
 </head>
 
 <body class="bg-black relative">
