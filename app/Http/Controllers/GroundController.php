@@ -32,7 +32,7 @@ class GroundController extends Controller
 
         $photo = PhotoGround::all();
 
-        $currentUser = Auth::user()->username;
+        // $currentUser = Auth::user()->username;
 
         $groundJson = DB::table('ground_details')
             ->join('ground_markers', 'ground_details.id', '=', 'ground_markers.ground_detail_id')
@@ -48,7 +48,7 @@ class GroundController extends Controller
             ->get();
         $groundJson = json_encode($groundJson);
 
-        return view('ManageGround', compact('dataGround', 'photo', 'currentUser', 'groundJson'));
+        return view('ManageGround', compact('dataGround', 'photo', 'groundJson'));
     }
 
     public function create()

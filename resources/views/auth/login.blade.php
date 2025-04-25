@@ -3,6 +3,7 @@
 @section('title', 'Login')
 
 @section('content')
+
 <div class="flex justify-center items-center min-h-screen bg-[#F6F9EE]">
     <div class="bg-white p-8 rounded-lg shadow-lg w-auto">
         <div class="flex flex-col items-center justify-center">
@@ -10,7 +11,8 @@
             <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="w-20 mb-2">
             <h1 class="text-[#262B43E5] text-2xl font-semibold mb-3 mt-4 font-poppins">Peta Digital Kalurahan Umbulharjo</h1>
         </div>
-        <form method="POST" action="{{ route('login') }}">
+        <form id="loginForm">
+            {{-- method="POST" action="{{ route(name: 'login') }}" --}}
             @csrf
 
             {{-- <div class="mb-4">
@@ -37,7 +39,7 @@
             </div>
 
             <div class="mb-4 mt-6 md:mt-10 lg:mt-4">
-                <button type="submit" class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700">{{ __('Masuk') }}</button>
+                <button type="submit" class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700">Masuk</button>
             </div>
 
             <div class="text-center">
@@ -52,12 +54,51 @@
                         </a>
                     @endif
                 </p>
-
-
-
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    $('#loginForm').submit(function(e) {
+        e.preventDefault(); // Supaya form gak reload halaman
+
+        let email = $('input[name="email"]').val();
+        let password = $('input[name="password"]').val();
+
+        console.log('Email:', email);
+        console.log('Password:', password);
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/login',
+            type: 'POST',
+            data: JSON.stringify({
+                email: email,
+                password: password
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success: function(response) {
+                console.log('Login berhasil!', response);
+                localStorage.setItem('token', response.access_token);
+                window.location.href = 'dashboard';
+            },
+            error: function(xhr) {
+                let errorMessage = 'Login gagal';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    errorMessage = xhr.responseText || 'An error occurred';
+                }
+                console.log('Login gagal:', errorMessage);
+            }
+        });
+
+    });
+</script>
 
 @endsection

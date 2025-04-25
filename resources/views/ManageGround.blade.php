@@ -36,8 +36,8 @@
                     <img src="/images/DB.png" alt="Icon" class="w-5 h-5">
                 </button>
             </div>
-            
-            <table class="min-w-full bg-white table-auto" id="datatable">
+
+            <table class="min-w-full bg-white table-auto" id="groundTable">
                 <thead>
                     <tr>
                         <th class="py-2 px-4 border-b text-left">
@@ -57,11 +57,11 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody></tbody>
+                {{-- <tbody>
                     @foreach ($dataGround as $ground)
                     <tr class="border-t">
-                        <td class="py-2 px-4">
-                            {{$ground->ground_detail_id}}
+                        <td class="py-2 px-4" id="namaGround">
                         </td>
                         <td class="py-2 px-4">
                             {{$ground->nama_asset}}
@@ -95,7 +95,7 @@
                         </td>
                     </tr>
                     @endforeach
-                </tbody>
+                </tbody> --}}
             </table>
         </div>
     </div>
@@ -192,6 +192,8 @@
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
     <script>
         const avatar = document.querySelector('.profile-avatar');
@@ -225,10 +227,6 @@
             toggleModal(); // Tampilkan modal
         }
     </script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 
     <script>
         $(document).ready( function () {
@@ -266,6 +264,56 @@
             });
         });
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('userData'));
+
+
+        $('#groundTable').DataTable(); // inisialisasi dulu baru append data
+
+        if (token) {
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/get-ground',
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function (response) {
+                    console.log('Full API response:', response);
+
+                    if (response.status === 'success') {
+                        const table = $('#groundTable').DataTable();
+
+                        response.data.forEach(item => {
+                            table.row.add([
+                                item.detail_tanah_id,
+                                item.nama_tanah,
+                                item.added_by ?? '-',
+                                item.updated_at ?? '-',
+                                `
+                                <a class="text-gray-500 mx-1" href="/EditPeta/${item.ground_detail_id}">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <button type="button" class="text-gray-500 mx-1"
+                                    onclick="showDeleteModal('/GroundDestroy/${item.ground_detail_id}', '${item.nama_tanah}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <a class="text-gray-500 mx-1">
+                                    <i class="fas fa-eye cursor-pointer" data-id="${item.ground_detail_id}"></i>
+                                </a>
+                                `
+                            ]).draw(false);
+                        });
+                    }
+                }
+            });
+        } else {
+            console.log('Token tidak ditemukan di localStorage');
+        }
+    });
+
     </script>
 </body>
 

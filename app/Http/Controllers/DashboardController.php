@@ -41,9 +41,9 @@ class DashboardController extends Controller
             'data' => [$disewakanCount, $tersewaCount],
         ];
 
-        $currentUser = Auth::user()->username;
+        // $currentUser = Auth::user()->username;
 
         // Kirim data ke view
-        return view('dashboard', compact('groundData', 'ownershipData', 'statusData', 'currentUser'));
+        return view('dashboard', compact('groundData', 'ownershipData', 'statusData'));
     }
 }
