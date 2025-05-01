@@ -46,7 +46,7 @@
             <div>
                 <label class="block text-gray-700">Nama Aset</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset"
-                    type="text" id="nama_asset" />
+                    type="text" id="nama_tanah" />
             </div>
             <div>
                 <label class="block text-gray-700">Detail Alamat</label>
@@ -111,33 +111,21 @@
             <div>
                 <label class="block text-gray-700">Status Kepemilikan</label>
                 <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_kepemilikan">
-                    <option value="" disabled selected>Status Kepemilikan</option>
-                    @foreach ($statusKepemilikan as $option)
-                    <option value="{{$option->id}}">{{$option->nama_status_kepemilikan}}</option>
-                    @endforeach
                 </select>
             </div>
             <div>
                 <label class="block text-gray-700">Status Tanah</label>
                 <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_tanah">
-                    <option value="" disabled selected>Status Tanah</option>
-                    @foreach ($statusTanah as $option)
-                    <option value="{{$option->id}}">{{$option->nama_status_tanah}}</option>
-                    @endforeach
                 </select>
             </div>
             <div>
                 <label class="block text-gray-700">Luas Aset Tanah</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Luas Tanah"
-                    type="text" id="luas_asset" />
+                    type="text" id="luas_tanah" />
             </div>
             <div>
                 <label class="block text-gray-700">Tipe Tanah</label>
                 <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="tipe_tanah">
-                    <option value="" disabled selected>Tipe Tanah</option>
-                    @foreach ($tipeTanah as $option)
-                    <option value="{{$option->id}}">{{$option->nama_tipe_tanah}}</option>
-                    @endforeach
                 </select>
             </div>
             <div class="font-[sans-serif] max-w-md mx-auto">
@@ -152,7 +140,7 @@
                 <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                 <input type="file"
                   class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                  id="sertifikat" name="sertifikat"/>
+                  id="sertifikat_tanah" name="sertifikat"/>
                 <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
             </div>
             <div>
@@ -330,7 +318,7 @@
         let centerMarker;
 
         map.on(L.Draw.Event.CREATED, function (event) {
-    // Clear previous layers
+            // Clear previous layers
             if (drawnItems.getLayers().length > 0) {
                 drawnItems.clearLayers(); // Clear old polygons
             }
@@ -375,52 +363,122 @@
             document.getElementById('longitude').value = center[1];
         }
 
+    </script>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('submit').addEventListener('click', function(e) {
-                e.preventDefault();
+    <script>
+        $(document).ready(function () {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('userData'));
 
-                const formData = new FormData();
-                const foto_tanah = document.querySelector('#foto_tanah');
-                const sertifikat = document.querySelector('#sertifikat');
+            console.log(token);
 
-                formData.append('coordinates', document.getElementById('polygon').value);
-                formData.append('latitude', document.getElementById('latitude').value);
-                formData.append('longitude', document.getElementById('longitude').value);
-                formData.append('nama_asset', document.getElementById('nama_asset').value);
-                formData.append('status_kepemilikan',document.getElementById('status_kepemilikan').value);
-                formData.append('status_tanah', document.getElementById('status_tanah').value);
-                formData.append('detail_alamat', document.getElementById('detail_alamat').value);
-                formData.append('rt', document.getElementById('rt').value);
-                formData.append('rw', document.getElementById('rw').value);
-                formData.append('padukuhan', document.getElementById('padukuhan').value);
-                formData.append('tipe_tanah', document.getElementById('tipe_tanah').value);
-                formData.append('luas_asset', document.getElementById('luas_asset').value);
-                formData.append('foto_tanah', foto_tanah.files[0]);
-                formData.append('sertifikat', sertifikat.files[0]);
-                formData.append('_token', '{{ csrf_token() }}');
+            if (token) {
+                $("#submit").click(function (e) {
+                    e.preventDefault();
 
-                // Kirim request menggunakan axios
-                axios.post('{{ route('SaveGround') }}', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(response => {
-                    alert(response.data.message);
-                    // Redirect ke halaman setelah sukses
-                    window.location.href = '{{ route('ManageGround') }}';
-                })
-                .catch(error => {
-                    if (error.response) {
-                        alert('Error: ' + error.response.data.message || error.response.statusText);
-                    } else {
-                        alert('An error occurred');
-                    }
+                    var formData = new FormData();
+                    formData.append('coordinates', document.getElementById('polygon').value);
+                    formData.append('latitude', document.getElementById('latitude').value);
+                    formData.append('longitude', document.getElementById('longitude').value);
+                    formData.append('nama_tanah', document.getElementById('nama_tanah').value);
+                    formData.append('status_kepemilikan_id', document.getElementById('status_kepemilikan').value);
+                    formData.append('status_tanah_id', document.getElementById('status_tanah').value);
+                    formData.append('detail_alamat', document.getElementById('detail_alamat').value);
+                    formData.append('rt', document.getElementById('rt').value);
+                    formData.append('rw', document.getElementById('rw').value);
+                    formData.append('padukuhan', document.getElementById('padukuhan').value);
+                    formData.append('tipe_tanah_id', document.getElementById('tipe_tanah').value);
+                    formData.append('luas_tanah', document.getElementById('luas_tanah').value);
+
+                    // file handling
+                    const foto = document.getElementById('foto_tanah').files[0];
+                    const sertifikat = document.getElementById('sertifikat_tanah').files[0];
+                    if (foto) formData.append('foto_tanah', foto);
+                    if (sertifikat) formData.append('sertifikat_tanah', sertifikat);
+
+                    $.ajax({
+                        url: 'http://127.0.0.1:8000/api/create-ground',
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        success: function (response) {
+                            console.log("Data berhasil dikirim:", response);
+                            alert("Data berhasil disimpan!");
+                            window.location.href = 'ManageGround';
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Gagal mengirim data:", xhr.responseText);
+                            alert("Terjadi kesalahan saat menyimpan data.");
+                        }
+                    });
                 });
-            });
+            } else {
+                console.log('Token tidak ditemukan di localStorage');
+            }
         });
+    </script>
 
+
+    <script>
+        $(document).ready(function(){
+            const token = localStorage.getItem('token');
+
+            $.when(
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/tipe-tanah',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }),
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/status-tanah',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }),
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/status-kepemilikan',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }),
+            ).done(function(tipeTanahVal, statusTanahVal, statusKepemilikanVal) {
+                const tipeTanah = tipeTanahVal[0].data;
+                const statusTanah = statusTanahVal[0].data;
+                const statusKepemilikan = statusKepemilikanVal[0].data;
+
+                console.log(tipeTanah);
+                console.log(statusTanah);
+                console.log(statusKepemilikan);
+
+                itemDropdown('#tipe_tanah', tipeTanah, 'id', 'nama_tipe_tanah');
+                itemDropdown('#status_tanah', statusTanah, 'id', 'nama_status_tanah');
+                itemDropdown('#status_kepemilikan', statusKepemilikan, 'id', 'nama_status_kepemilikan');
+
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Error ambil data:', textStatus);
+            });
+
+            function itemDropdown(selector, data, valueKey, textKey){
+                const dropdown = $(selector);
+
+                dropdown.empty();
+                dropdown.append(`<option disabled selected>Pilih</option>`);
+                data.forEach(item => {
+                    dropdown.append(`<option value="${item[valueKey]}">${item[textKey]}</option>`);
+                });
+            }
+        })
     </script>
 </body>
 

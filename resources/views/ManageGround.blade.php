@@ -57,45 +57,9 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody></tbody>
-                {{-- <tbody>
-                    @foreach ($dataGround as $ground)
-                    <tr class="border-t">
-                        <td class="py-2 px-4" id="namaGround">
-                        </td>
-                        <td class="py-2 px-4">
-                            {{$ground->nama_asset}}
-                        </td>
-                        <td class="py-2 px-4">
-                            {{$ground->added_by_name}}
-                        </td>
-                        <td class="py-2 px-4">
-                            {{$ground->updated_at}}
-                        </td>
-                        <td class="py-2 px-4">
-                            <a class="text-gray-500 mx-1" href="{{route('EditPeta', $ground->ground_detail_id)}}">
-                                <i class="fas fa-pen"></i>
-                            </a>
-
-                            <form action="{{route('GroundDestroy', $ground->ground_detail_id)}}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button
-                                    type="button"
-                                    class="text-gray-500 mx-1"
-                                    onclick="showDeleteModal('{{ route('GroundDestroy', $ground->ground_detail_id) }}', '{{ $ground->nama_asset }}', ' {{ $ground->nama_asset }}')"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-
-                            <a class="text-gray-500 mx-1">
-                                <i class="fas fa-eye cursor-pointer" data-id="{{ $ground->ground_detail_id }}"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody> --}}
+                <tbody>
+                    {{-- append from ajax --}}
+                </tbody>
             </table>
         </div>
     </div>
@@ -130,9 +94,7 @@
                     <!-- Tombol Batal -->
                     <button class="px-4 py-2 w-full border border-gray-300 rounded-lg text-gray-500 h-10" onclick="toggleModal()">Batal</button>
                     <!-- Tombol Hapus -->
-                    <form id="modalDeleteForm" method="POST" class="w-full">
-                        @csrf
-                        @method('DELETE')
+                    <form id="modalDeleteForm" class="w-full">
                         <button type="submit" class="px-4 py-2 w-full bg-red-500 text-white rounded-lg">Hapus</button>
                     </form>
                 </div>
@@ -220,11 +182,11 @@
         }
 
         // Fungsi untuk mengisi data dinamis ke modal dan menampilkan modal
-        function showDeleteModal(route, groundName, groundAddress) {
-            modalDeleteForm.action = route; // Set form action
-            modalGroundName.textContent = groundName; // Isi nama tanah
-            //modalGroundAddress.textContent = groundAddress; // Isi alamat tanah
-            toggleModal(); // Tampilkan modal
+        function showDeleteModal(groundId, groundName, groundAddress) {
+            selectedGroundId = groundId;
+            modalGroundName.textContent = groundName;
+            // modalGroundAddress.textContent = groundAddress;
+            toggleModal();
         }
     </script>
 
@@ -263,8 +225,9 @@
                 document.getElementById('detailModal').style.display = 'none';
             });
         });
-        });
+    });
     </script>
+
     <script>
         $(document).ready(function () {
         const token = localStorage.getItem('token');
@@ -293,11 +256,11 @@
                                 item.added_by ?? '-',
                                 item.updated_at ?? '-',
                                 `
-                                <a class="text-gray-500 mx-1" href="/EditPeta/${item.ground_detail_id}">
+                                <a class="text-gray-500 mx-1" href="/EditPeta/${item.detail_tanah_id}">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <button type="button" class="text-gray-500 mx-1"
-                                    onclick="showDeleteModal('/GroundDestroy/${item.ground_detail_id}', '${item.nama_tanah}')">
+                                    onclick="showDeleteModal('${item.detail_tanah_id}', '${item.nama_tanah}', '${item.detail_alamat}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                                 <a class="text-gray-500 mx-1">
@@ -308,6 +271,41 @@
                         });
                     }
                 }
+            });
+
+            $('#modalDeleteForm').on('submit', function(e) {
+                e.preventDefault();
+
+                const token = localStorage.getItem('token');
+
+                if (!selectedGroundId) {
+                    alert('ID tanah tidak ditemukan!');
+                    return;
+                }
+
+                if (!token) {
+                    alert('Token tidak ditemukan!');
+                    return;
+                }
+
+                console.log(selectedGroundId);
+
+                $.ajax({
+                    url: `http://127.0.0.1:8000/api/delete-ground/${selectedGroundId}`,
+                    type: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function (response) {
+                        alert('Data berhasil dihapus!');
+                        toggleModal(); // Tutup modal
+                        location.reload(); // Refresh data
+                    },
+                    error: function (xhr) {
+                        console.error('Gagal menghapus data:', xhr.responseText);
+                        alert('Gagal menghapus data.');
+                    }
+                });
             });
         } else {
             console.log('Token tidak ditemukan di localStorage');

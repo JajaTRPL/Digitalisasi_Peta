@@ -31,7 +31,7 @@ Route::get('/ManageGround', [GroundController::class, 'showData'])->name('Manage
 
 Route::delete('/ManageGround/{id}', [GroundController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
 
-Route::get('/AddGround', [GroundController::class, 'create'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('AddGround');
+Route::get('/AddGround', [GroundController::class, 'create'])->name('AddGround');
 
 Route::post('/SaveGround', [GroundController::class, 'store'])->name('SaveGround');
 
