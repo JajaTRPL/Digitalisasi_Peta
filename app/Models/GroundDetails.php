@@ -9,7 +9,7 @@ class GroundDetails extends Model
 {
     use HasFactory;
 
-    protected $table = 'ground_details';
+    protected $table = 'detail_tanah';
 
     protected $fillable = ['nama_asset', 'alamat', 'luas_asset', 'id'];
 

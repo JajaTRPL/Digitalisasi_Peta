@@ -11,7 +11,7 @@
 <body class="bg-[#F6F9EE]">
     @include('components.navbar')
 
-    <main class="container mx-auto p-4">
+    <div class="container mx-auto p-4">
         <section class="mb-8">
             <h2 class="text-2xl font-bold mb-4">
             Jumlah Pengunjung
@@ -85,17 +85,49 @@
             </div>
        </section>
 
-    </main>
+    </div>
 
-    <div class="container">
-        <h3>Statistik Tipe Tanah</h3>
-        <canvas id="tipeTanahChart" width="400" height="200"></canvas>
+    <div class="container mx-auto p-4">
+        <!-- Bagian Jumlah Pengunjung (sudah ada) -->
+        
+        <!-- Bagian Chart yang diperbaiki -->
+        <section class="mb-8 mt-8">
+            <h2 class="text-2xl font-bold mb-4">Statistik Data Tanah</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Chart Tipe Tanah -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold mb-4 text-center">Tipe Tanah</h3>
+                    <div class="flex justify-center">
+                        <div class="chart-container" style="position: relative; height:250px; width:250px;">
+                            <canvas id="tipeTanahChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="tipeTanahChart-legend" class="mt-5 flex justify-center flex-wrap gap-x-4"></div>
+                </div>
 
-        <h3 class="mt-4">Status Kepemilikan</h3>
-        <canvas id="statusKepemilikanChart" width="400" height="200"></canvas>
+                <!-- Chart Status Kepemilikan -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold mb-4 text-center">Status Kepemilikan</h3>
+                    <div class="flex justify-center">
+                        <div class="chart-container" style="position: relative; height:250px; width:250px;">
+                            <canvas id="statusKepemilikanChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="statusKepemilikanChart-legend" class="mt-5 flex justify-center flex-wrap gap-x-4"></div>
+                </div>
 
-        <h3 class="mt-4">Status Tanah</h3>
-        <canvas id="statusTanahChart" width="400" height="200"></canvas>
+                <!-- Chart Status Tanah -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold mb-4 text-center">Status Tanah</h3>
+                    <div class="flex justify-center">
+                        <div class="chart-container" style="position: relative; height:250px; width:250px;">
+                            <canvas id="statusTanahChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="statusTanahChart-legend" class="mt-5 flex justify-center flex-wrap gap-x-4"></div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -113,9 +145,7 @@
                 dropdown.classList.add('hidden');
             }
         });
-    </script>
-
-    <script>
+    
         $(document).ready(function () {
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('userData'));
@@ -163,9 +193,7 @@
                 console.log('Token tidak ditemukan di localStorage');
             }
         });
-    </script>
-
-    <script>
+    
         $(document).ready(function(){
             const token = localStorage.getItem('token');
 
@@ -216,40 +244,47 @@
             }
 
             function renderChart(canvasId, labels, data) {
-                new Chart(document.getElementById(canvasId), {
-                    type: 'pie',
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                const chart = new Chart(ctx, {
+                    type: 'doughnut',
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Jumlah',
                             data: data,
-                            backgroundColor: [
-                                '#4e73df',
-                                '#1cc88a',
-                                '#36b9cc',
-                                '#f6c23e'
-                            ],
+                            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
                             borderColor: '#fff',
-                            borderWidth: 1
+                            borderWidth: 2
                         }]
                     },
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false,
                         plugins: {
                             legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(tooltipItem) {
-                                        let total = data.reduce((sum, value) => sum + value, 0);
-                                        let percentage = (tooltipItem.raw / total * 100).toFixed(2);
-                                        return tooltipItem.label + ': ' + tooltipItem.raw + ' (' + percentage + '%)';
-                                    }
-                                }
+                                display: false // Nonaktifkan legend default
                             }
-                        }
+                        },
+                        cutout: '60%' // Untuk doughnut chart
                     }
+                });
+
+                // Render custom legend
+                const legendContainer = document.getElementById(canvasId + '-legend');
+                labels.forEach((label, i) => {
+                    const legendItem = document.createElement('div');
+                    legendItem.className = 'flex items-center mb-2';
+                    
+                    const colorBox = document.createElement('div');
+                    colorBox.className = 'w-4 h-4 mr-2 rounded-full';
+                    colorBox.style.backgroundColor = chart.data.datasets[0].backgroundColor[i];
+                    
+                    const text = document.createElement('span');
+                    text.className = 'text-sm';
+                    text.textContent = `${label}: ${data[i]}`;
+                    
+                    legendItem.appendChild(colorBox);
+                    legendItem.appendChild(text);
+                    legendContainer.appendChild(legendItem);
                 });
             }
         });
