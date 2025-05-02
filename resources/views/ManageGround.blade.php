@@ -105,9 +105,9 @@
     <div id="detailModal" class="modal">
         <div class="modal-content bg-white rounded-lg shadow-lg overflow-hidden p-6">
             <!-- Modal Header with Image -->
-            <div class="relative mb-4">
+            {{-- <div class="relative mb-4">
                 <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
-            </div>
+            </div> --}}
 
             <!-- Modal Body with Information -->
             <h2 class="text-2xl font-semibold mb-4">Detail Informasi Tanah</h2>
@@ -115,10 +115,6 @@
                 <div>
                     <p class="font-semibold">Nama:</p>
                     <p id="detailLandName">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Nomor Asset:</p>
-                    <p id="detailLandNumber">-</p>
                 </div>
                 <div>
                     <p class="font-semibold">Alamat:</p>
@@ -139,10 +135,6 @@
                 <div>
                     <p class="font-semibold">Longtitude:</p>
                     <p id="longtitude">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Nomor Sertifikat:</p>
-                    <p id="numberSertif">-</p>
                 </div>
 
             </div>
@@ -190,44 +182,6 @@
         }
     </script>
 
-    {{-- <script>
-        $(document).ready( function () {
-            $('#datatable').DataTable();
-
-            const groundJson = {!! $groundJson !!}
-
-            $(document).on('click', '.fas.fa-eye', function () {
-            // Ambil nilai atribut data-id
-            const dataId = $(this).data('id');
-            // Tampilkan di console
-            const groundDetail = groundJson.find(item => item.ground_detail_id == dataId)
-            console.log(groundDetail);
-            if(groundDetail){
-                    document.getElementById('detailLandPhoto').src = "/storage/ground_image/"+groundDetail.photo;
-                    document.getElementById('detailLandName').textContent = groundDetail.nama_asset;
-                    document.getElementById('detailLandAddress').textContent = groundDetail.alamat;
-                    document.getElementById('detailLandOwnership').textContent = groundDetail.nama_tipe_tanah;
-
-                    document.getElementById('landArea').textContent = groundDetail.luas_asset;  // Contoh data, ganti sesuai data yang ada
-                    document.getElementById('ownershipStatus').textContent = groundDetail.nama_status_kepemilikan; // Contoh data, ganti sesuai data yang ada
-                    document.getElementById('longtitude').textContent = groundDetail.longitude;  // Contoh data, ganti sesuai data yang ada
-                    document.getElementById('detailLandNumber').textContent = groundDetail.id;
-                    document.getElementById('numberSertif').textContent = groundDetail.certificate.substr(0, groundDetail.certificate.length - 4);
-
-                    // Show detail modal
-                    document.getElementById('detailModal').style.display = 'flex';
-
-            } else {
-                console.log('data salah')
-            }
-
-            document.getElementById('closeDetailModal').addEventListener('click', () => {
-                document.getElementById('detailModal').style.display = 'none';
-            });
-        });
-    });
-    </script> --}}
-
     <script>
         $(document).ready(function () {
         const token = localStorage.getItem('token');
@@ -263,8 +217,9 @@
                                     onclick="showDeleteModal('${item.detail_tanah_id}', '${item.nama_tanah}', '${item.detail_alamat}')">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                                <a class="text-gray-500 mx-1">
-                                    <i class="fas fa-eye cursor-pointer" data-id="${item.ground_detail_id}"></i>
+                                <a class="text-gray-500 mx-1"
+                                    onclick="showDetailModal('${item.detail_tanah_id}')">
+                                    <i class="fas fa-eye cursor-pointer"></i>
                                 </a>
                                 `
                             ]).draw(false);
@@ -272,6 +227,13 @@
                     }
                 }
             });
+
+
+        // Tutup modal detail
+        $('#closeDetailModal').on('click', function () {
+            $('#detailModal').addClass('hidden').removeClass('flex');
+        });
+
 
             $('#modalDeleteForm').on('submit', function(e) {
                 e.preventDefault();
@@ -312,6 +274,40 @@
         }
     });
 
+    function showDetailModal(id) {
+
+        const token = localStorage.getItem('token');
+
+        $.ajax({
+            url: `http://127.0.0.1:8000/api/get/ground/${id}`,
+            type: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (response) {
+                if (response.status === 'success') {
+                    const data = response.data;
+
+                    // Isi data ke elemen modal
+                    $('#detailLandName').text(data.nama_tanah ?? '-');
+                    $('#detailLandAddress').text(data.alamat ?? '-');
+                    $('#ownershipStatus').text(data.nama_status_kepemilikan ?? '-');
+                    $('#detailLandOwnership').text(data.nama_tipe_tanah ?? '-');
+                    $('#landArea').text(data.luas_tanah ?? '-');
+                    $('#longtitude').text(data.longitude ?? '-');
+
+                    // Tampilkan modal
+                    $('#detailModal').removeClass('hidden').addClass('flex');
+                } else {
+                    alert('Gagal memuat detail tanah.');
+                }
+            },
+            error: function (xhr) {
+                console.error('Error fetching detail:', xhr.responseText);
+                alert('Terjadi kesalahan saat mengambil detail.');
+            }
+        });
+    }
     </script>
 </body>
 

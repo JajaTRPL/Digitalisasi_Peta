@@ -146,54 +146,6 @@
             }
         });
 
-        $(document).ready(function () {
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('userData'));
-
-
-        $('#groundTable').DataTable(); // inisialisasi dulu baru append data
-
-            if (token) {
-                $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/ground',
-                    type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    success: function (response) {
-                        console.log('Full API response:', response);
-
-                        if (response.status === 'success') {
-                            const table = $('#groundTable').DataTable();
-
-                            response.data.forEach(item => {
-                                table.row.add([
-                                    item.detail_tanah_id,
-                                    item.nama_tanah,
-                                    item.added_by ?? '-',
-                                    item.updated_at ?? '-',
-                                    `
-                                    <a class="text-gray-500 mx-1" href="/EditPeta/${item.ground_detail_id}">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                    <button type="button" class="text-gray-500 mx-1"
-                                        onclick="showDeleteModal('/GroundDestroy/${item.ground_detail_id}', '${item.nama_tanah}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <a class="text-gray-500 mx-1">
-                                        <i class="fas fa-eye cursor-pointer" data-id="${item.ground_detail_id}"></i>
-                                    </a>
-                                    `
-                                ]).draw(false);
-                            });
-                        }
-                    }
-                });
-            } else {
-                console.log('Token tidak ditemukan di localStorage');
-            }
-        });
-
         $(document).ready(function(){
             const token = localStorage.getItem('token');
 
