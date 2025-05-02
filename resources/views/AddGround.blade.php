@@ -397,7 +397,7 @@
                     if (sertifikat) formData.append('sertifikat_tanah', sertifikat);
 
                     $.ajax({
-                        url: 'http://127.0.0.1:8000/api/create-ground',
+                        url: 'http://127.0.0.1:8000/api/create/ground',
                         type: 'POST',
                         headers: {
                             'Authorization': 'Bearer ' + token

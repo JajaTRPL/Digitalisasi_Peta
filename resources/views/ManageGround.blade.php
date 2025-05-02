@@ -190,7 +190,7 @@
         }
     </script>
 
-    <script>
+    {{-- <script>
         $(document).ready( function () {
             $('#datatable').DataTable();
 
@@ -226,7 +226,7 @@
             });
         });
     });
-    </script>
+    </script> --}}
 
     <script>
         $(document).ready(function () {
@@ -238,7 +238,7 @@
 
         if (token) {
             $.ajax({
-                url: 'http://127.0.0.1:8000/api/get-ground',
+                url: 'http://127.0.0.1:8000/api/get/ground',
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -291,7 +291,7 @@
                 console.log(selectedGroundId);
 
                 $.ajax({
-                    url: `http://127.0.0.1:8000/api/delete-ground/${selectedGroundId}`,
+                    url: `http://127.0.0.1:8000/api/delete/ground/${selectedGroundId}`,
                     type: 'DELETE',
                     headers: {
                         'Authorization': 'Bearer ' + token

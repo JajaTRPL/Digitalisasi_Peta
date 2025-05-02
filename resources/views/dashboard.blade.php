@@ -89,7 +89,7 @@
 
     <div class="container mx-auto p-4">
         <!-- Bagian Jumlah Pengunjung (sudah ada) -->
-        
+
         <!-- Bagian Chart yang diperbaiki -->
         <section class="mb-8 mt-8">
             <h2 class="text-2xl font-bold mb-4">Statistik Data Tanah</h2>
@@ -145,7 +145,7 @@
                 dropdown.classList.add('hidden');
             }
         });
-    
+
         $(document).ready(function () {
         const token = localStorage.getItem('token');
         const user = JSON.parse(localStorage.getItem('userData'));
@@ -155,7 +155,7 @@
 
             if (token) {
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get-ground',
+                    url: 'http://127.0.0.1:8000/api/get/ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
@@ -193,13 +193,13 @@
                 console.log('Token tidak ditemukan di localStorage');
             }
         });
-    
+
         $(document).ready(function(){
             const token = localStorage.getItem('token');
 
             if(token){
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get-ground',
+                    url: 'http://127.0.0.1:8000/api/get/ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
@@ -273,15 +273,15 @@
                 labels.forEach((label, i) => {
                     const legendItem = document.createElement('div');
                     legendItem.className = 'flex items-center mb-2';
-                    
+
                     const colorBox = document.createElement('div');
                     colorBox.className = 'w-4 h-4 mr-2 rounded-full';
                     colorBox.style.backgroundColor = chart.data.datasets[0].backgroundColor[i];
-                    
+
                     const text = document.createElement('span');
                     text.className = 'text-sm';
                     text.textContent = `${label}: ${data[i]}`;
-                    
+
                     legendItem.appendChild(colorBox);
                     legendItem.appendChild(text);
                     legendContainer.appendChild(legendItem);

@@ -27,7 +27,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::get('/ViewPeta', [ShowMapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
 
-Route::get('/ManageGround', [GroundController::class, 'showData'])->name('ManageGround');
+Route::get('/ManageGround', function(){
+    return view('ManageGround');
+})->name('ManageGround');
 
 Route::delete('/ManageGround/{id}', [GroundController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
 
