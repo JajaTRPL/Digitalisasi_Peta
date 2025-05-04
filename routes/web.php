@@ -42,8 +42,8 @@ Route::get('/EditPeta/{id}', [GroundController::class, 'edit'])->middleware(['au
 Route::put('/UpdatePeta/{id}', [GroundController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('UpdatePeta');
 
 Route::get('/admin', function () {
-    return view('admin');
-})->middleware(['auth', 'verified', 'role:superAdmin'])->name('admin.dashboard');
+    return view('manageAdmin');
+})->name('manageAdmin');
 
 Route::get('/restore-data', function () {
     return view('RestoreData');

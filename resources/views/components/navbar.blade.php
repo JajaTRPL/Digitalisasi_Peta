@@ -75,7 +75,7 @@
         <div id="navLinks" class="items-center flex space-x-4">
             <a id="dashboard" href="{{route('dashboard')}}" class="text-[#666CFF] hover:text-black ">Dashboard</a>
             <a id="viewPeta" href="{{route('ViewPeta')}}" class="text-[#666CFF] hover:text-black ">Maps</a>
-            <a id="manageAdmin" href="{{route('admin.dashboard')}}" class="text-[#666CFF] hover:text-black hidden">Manage Admin</a>
+            <a id="manageAdmin" href="{{route('manageAdmin')}}" class="text-[#666CFF] hover:text-black hidden">Manage Admin</a>
             <a id="manageGround" href="{{route('ManageGround')}}" class="text-[#666CFF] hover:text-black hidden">Manage Ground</a>
             <div class="relative inline-block text-left">
                 <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">

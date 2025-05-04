@@ -10,14 +10,12 @@
             <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="w-20 mb-2">
             <h1 class="text-[#262B43E5] text-2xl font-semibold mb-2 font-poppis">Peta Digital Kelurahan Umbulharjo</h1>
         </div>
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
-
+        <form id="regisForm">
             <!-- Name -->
-            <div class="mb-4">
+            {{-- <div class="mb-4">
             <input id="fullname" type="text" name="fullname" :value="old('fullname')" required autofocus autocomplete="name" placeholder="Nama Lengkap" class="w-full p-3 border border-gray-300 rounded-lg">
                 <x-input-error :messages="$errors->get('fullname')" class="mt-2" />
-            </div>
+            </div> --}}
 
             <div class="mb-4">
             <input id="username" type="text" name="username" :value="old('username')" required autofocus autocomplete="name" placeholder="Nama Pengguna" class="w-full p-3 border border-gray-300 rounded-lg">
@@ -57,15 +55,15 @@
                 </span>
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
-            <button class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700">
-                {{ __('Daftar') }}
+            <button class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700" type="submit">
+                Daftar
             </button>
 
             <div class="flex items-center justify-center mb-4 mt-4 text-center">
                 <a class="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mr-2">
                     {{ __('Sudah memiliki akun?') }}
                 </a>
-                <a class="text-sm text-[#666CFF] hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+                <a class="text-sm text-[#666CFF] hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     {{ __('Masuk') }}
                 </a>
             </div>
@@ -73,35 +71,87 @@
     </div>
 </div>
 
-function togglePassword(inputId, eyeId, slashId) {
-    // Cari elemen input password, ikon mata terbuka, dan ikon mata tertutup
-    const passwordInput = document.getElementById(inputId);
-    const eyeIcon = document.getElementById(eyeId);
-    const eyeSlash = document.getElementById(slashId);
+<script>
+    function togglePassword(inputId, eyeId, slashId) {
+        // Cari elemen input password, ikon mata terbuka, dan ikon mata tertutup
+        const passwordInput = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(eyeId);
+        const eyeSlash = document.getElementById(slashId);
 
-    // Debugging: Log ID dan elemen yang ditemukan
-    console.log("Memanggil togglePassword dengan:");
-    console.log("Input ID:", inputId, "Elemen:", passwordInput);
-    console.log("Eye Icon ID:", eyeId, "Elemen:", eyeIcon);
-    console.log("Eye Slash ID:", slashId, "Elemen:", eyeSlash);
+        // Debugging: Log ID dan elemen yang ditemukan
+        console.log("Memanggil togglePassword dengan:");
+        console.log("Input ID:", inputId, "Elemen:", passwordInput);
+        console.log("Eye Icon ID:", eyeId, "Elemen:", eyeIcon);
+        console.log("Eye Slash ID:", slashId, "Elemen:", eyeSlash);
 
-    // Jika elemen tidak ditemukan, tampilkan pesan error dan hentikan fungsi
-    if (!passwordInput || !eyeIcon || !eyeSlash) {
-        console.error("Error: Salah satu elemen tidak ditemukan!");
-        return;
+        // Jika elemen tidak ditemukan, tampilkan pesan error dan hentikan fungsi
+        if (!passwordInput || !eyeIcon || !eyeSlash) {
+            console.error("Error: Salah satu elemen tidak ditemukan!");
+            return;
+        }
+
+        // Toggle visibility password
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text'; // Tampilkan password
+            eyeSlash.style.display = "block"; // Tampilkan ikon mata tertutup
+            eyeIcon.style.display = "none"; // Sembunyikan ikon mata terbuka
+        } else {
+            passwordInput.type = 'password'; // Sembunyikan password
+            eyeSlash.style.display = "none"; // Sembunyikan ikon mata tertutup
+            eyeIcon.style.display = "block"; // Tampilkan ikon mata terbuka
+        }
     }
+</script>
 
-    // Toggle visibility password
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text'; // Tampilkan password
-        eyeSlash.style.display = "block"; // Tampilkan ikon mata tertutup
-        eyeIcon.style.display = "none"; // Sembunyikan ikon mata terbuka
-    } else {
-        passwordInput.type = 'password'; // Sembunyikan password
-        eyeSlash.style.display = "none"; // Sembunyikan ikon mata tertutup
-        eyeIcon.style.display = "block"; // Tampilkan ikon mata terbuka
-    }
-}
+<script>
+    $('#regisForm').submit(function(e) {
+        e.preventDefault();
+
+        let username = $('input[name="username"]').val();
+        let email = $('input[name="email"]').val();
+        let password = $('input[name="password"]').val();
+        let confirmPassword = $('input[name="password_confirmation"]').val();
+
+        console.log('username: ', username);
+        console.log('email: ', email);
+
+        if(password === confirmPassword){
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/register/guest',
+                type: 'POST',
+                data: JSON.stringify({
+                    name: username,
+                    email: email,
+                    password: password
+                }),
+                contentType: 'application/json',
+                dataType: 'json',
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function(response){
+                    console.log('Regis berhasil!', response);
+                    localStorage.setItem('token', response.access_token);
+                    window.location.href = 'login';
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Registrasi gagal';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        errorMessage = xhr.responseText || 'An error occurred';
+                    }
+                    console.log('Login gagal:', errorMessage);
+                }
+            })
+        } else {
+            alert("password yang dimasukkan tidak cocok")
+        }
+
+    })
+</script>
+
 
 
 @endsection
