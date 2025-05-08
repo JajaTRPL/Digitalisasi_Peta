@@ -90,3 +90,53 @@
   .popup-active {
     transform: translateX(0);
   }
+
+  /* Right side modal styles */
+  .modal-right {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    bottom: 0;
+    width: 400px;
+    max-width: 100%;
+    background-color: white;
+    z-index: 60;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease-in-out;
+    overflow-y: auto;
+}
+
+.modal-right.open {
+    right: 0;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+    display: none;
+}
+
+.modal-overlay.open {
+    display: block;
+}
+
+.modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+#adminTable tbody td:first-child {
+  text-align: left !important;
+}

@@ -112,44 +112,84 @@
         let password = $('input[name="password"]').val();
         let confirmPassword = $('input[name="password_confirmation"]').val();
 
-        console.log('username: ', username);
-        console.log('email: ', email);
-
-        if(password === confirmPassword){
-            $.ajax({
-                url: 'http://127.0.0.1:8000/api/register/guest',
-                type: 'POST',
-                data: JSON.stringify({
-                    name: username,
-                    email: email,
-                    password: password
-                }),
-                contentType: 'application/json',
-                dataType: 'json',
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function(response){
-                    console.log('Regis berhasil!', response);
-                    localStorage.setItem('token', response.access_token);
-                    window.location.href = 'login';
-                },
-                error: function(xhr) {
-                    let errorMessage = 'Registrasi gagal';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    } else if (xhr.responseText) {
-                        errorMessage = xhr.responseText || 'An error occurred';
-                    }
-                    console.log('Login gagal:', errorMessage);
-                }
-            })
-        } else {
-            alert("password yang dimasukkan tidak cocok")
+        // Validasi panjang password
+        if(password.length < 8) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Password Terlalu Pendek',
+                text: 'Password harus memiliki minimal 8 karakter',
+                confirmButtonColor: '#666CFF',
+            });
+            return false;
         }
 
-    })
+        // Validasi kesesuaian password
+        if(password !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Password Tidak Cocok',
+                text: 'Password dan Konfirmasi Password harus sama',
+                confirmButtonColor: '#666CFF',
+            });
+            return false;
+        }
+
+        $.ajax({
+            url: 'http://127.0.0.1:8000/api/register/guest',
+            type: 'POST',
+            data: JSON.stringify({
+                name: username,
+                email: email,
+                password: password
+            }),
+            contentType: 'application/json',
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            crossDomain: true,
+            success: function(response){
+                console.log('Regis berhasil!', response);
+                localStorage.setItem('token', response.access_token);
+                
+                // Tampilkan toast sukses
+                Toastify({
+                    text: "Registrasi berhasil! Mengarahkan ke halaman login...",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#4CAF50",
+                    stopOnFocus: true,
+                }).showToast();
+                
+                // Redirect setelah 3 detik
+                setTimeout(function() {
+                    window.location.href = 'login';
+                }, 3000);
+            },
+            error: function(xhr) {
+            let errorMessage = 'Registrasi gagal';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMessage = xhr.responseJSON.message;
+            } else if (xhr.responseText) {
+                errorMessage = xhr.responseText || 'Terjadi kesalahan';
+            }
+
+            console.log('Registrasi gagal:', errorMessage);
+
+            Toastify({
+                text: errorMessage,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#f44336",
+                stopOnFocus: true,
+            }).showToast();
+        }
+        });
+    });
 </script>
 
 

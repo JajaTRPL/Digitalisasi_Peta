@@ -61,13 +61,10 @@
 
 <script>
     $('#loginForm').submit(function(e) {
-        e.preventDefault(); // Supaya form gak reload halaman
+        e.preventDefault();
 
         let email = $('input[name="email"]').val();
         let password = $('input[name="password"]').val();
-
-        console.log('Email:', email);
-        console.log('Password:', password);
 
         $.ajax({
             url: 'http://127.0.0.1:8000/api/login',
@@ -85,19 +82,44 @@
             success: function(response) {
                 console.log('Login berhasil!', response);
                 localStorage.setItem('token', response.access_token);
-                window.location.href = 'dashboard';
+                
+                // Success toast
+                Toastify({
+                    text: "Login berhasil! Mengarahkan ke dashboard...",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#4CAF50",
+                    stopOnFocus: true,
+                }).showToast();
+                
+                // Redirect after 3 seconds
+                setTimeout(function() {
+                    window.location.href = 'dashboard';
+                }, 3000);
             },
             error: function(xhr) {
-                let errorMessage = 'Login gagal';
+                let errorMessage = 'Login Gagal';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
                 } else if (xhr.responseText) {
                     errorMessage = xhr.responseText || 'An error occurred';
                 }
                 console.log('Login gagal:', errorMessage);
+                
+                // Error toast
+                Toastify({
+                    text: errorMessage,
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#f44336",
+                    stopOnFocus: true,
+                }).showToast();
             }
         });
-
     });
 </script>
 

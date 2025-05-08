@@ -29,10 +29,10 @@
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex items-center mb-4 gap-5">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="window.location.href='/AddGround'">
-                    + Add Ground
+                    <p>+ Add Ground</p>
                 </button>
-                <button class="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-1" onclick="window.location.href='/restore-data'">
-                    Pulihkan Data
+                <button class="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2" onclick="window.location.href='/restore-data'">
+                    <p>Pulihkan Data</p>
                     <img src="/images/DB.png" alt="Icon" class="w-5 h-5">
                 </button>
             </div>
@@ -40,19 +40,19 @@
             <table class="min-w-full bg-white table-auto" id="groundTable">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 border-b text-left">
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">
                             ID
                         </th>
-                        <th class="py-2 px-4 border-b text-left">
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">
                             NAMA ASSET
                         </th>
-                        <th class="py-2 px-4 border-b text-left">
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">
                             DIBUAT OLEH
                         </th>
-                        <th class="py-2 px-4 border-b text-left">
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">
                             DIPERBARUI PADA
                         </th>
-                        <th class="py-2 px-4 border-b text-left">
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">
                             AKSI
                         </th>
                     </tr>
@@ -210,17 +210,19 @@
                                 item.added_by ?? '-',
                                 item.updated_at ?? '-',
                                 `
-                                <a class="text-gray-500 mx-1" href="/EditPeta/${item.detail_tanah_id}">
-                                    <i class="fas fa-pen"></i>
-                                </a>
-                                <button type="button" class="text-gray-500 mx-1"
-                                    onclick="showDeleteModal('${item.detail_tanah_id}', '${item.nama_tanah}', '${item.detail_alamat}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <a class="text-gray-500 mx-1"
-                                    onclick="showDetailModal('${item.detail_tanah_id}')">
-                                    <i class="fas fa-eye cursor-pointer"></i>
-                                </a>
+                                <div class="flex items-center justify-start ">
+                                    <button type="button" class="text-gray-500 mx-1"
+                                        onclick="showDeleteModal('${item.detail_tanah_id}', '${item.nama_tanah}', '${item.detail_alamat}')">
+                                        <img src="/images/DeleteBtn.png" alt="Delete" >
+                                    </button>
+                                    <a class="text-gray-500 mx-1" href="/EditPeta/${item.detail_tanah_id}">
+                                        <img src="/images/UpdateBtn.png" alt="Update" >
+                                    </a>
+                                    <a class="text-gray-500 mx-1"
+                                        onclick="showDetailModal('${item.detail_tanah_id}')">
+                                        <img src="/images/InfoBtn.png" alt="Information" >
+                                    </a>
+                                </div>
                                 `
                             ]).draw(false);
                         });
