@@ -23,9 +23,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', function(){
+    return view('dashboard');
+})->name('dashboard');
 
-Route::get('/ViewPeta', [ShowMapController::class, 'showMap'])->middleware(['auth', 'verified', 'role:guest|superAdmin|admin'])->name('ViewPeta');
+Route::get('/ViewPeta', function() {
+    return view('ViewPeta');
+})->name('ViewPeta');
 
 Route::get('/ManageGround', function(){
     return view('ManageGround');
@@ -37,9 +41,12 @@ Route::get('/AddGround', [GroundController::class, 'create'])->name('AddGround')
 
 Route::post('/SaveGround', [GroundController::class, 'store'])->name('SaveGround');
 
-Route::get('/EditPeta/{id}', [GroundController::class, 'edit'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('EditPeta');
+Route::get('/EditGround/{id}', function($id){
+    return view('EditGround', ['id' => $id]);
+})->name('EditGround');
 
-Route::put('/UpdatePeta/{id}', [GroundController::class, 'update'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('UpdatePeta');
+
+// Route::put('/UpdatePeta/{id}', [GroundController::class, 'update'])->name('UpdatePeta');
 
 Route::get('/admin', function () {
     return view('manageAdmin');

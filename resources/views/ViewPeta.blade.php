@@ -8,7 +8,7 @@
     @vite(['resources/css/ViewPeta.css'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    
+
 </head>
 
 <body class="bg-black relative">
@@ -41,10 +41,8 @@
             </div>
 
             <div class="overflow-y-auto flex-1">
-                <ul id="ground-list">
-                    @foreach ($dataGround as $ground)
-                    <li class="p-4 border-b cursor-pointer hover:bg-gray-100">{{ $ground->nama_asset }}</li>
-                    @endforeach
+                <ul id="groundList">
+                    {{-- Memasukkan data lewat js --}}
                 </ul>
             </div>
         </div>
@@ -152,7 +150,7 @@
         document.getElementById('sort').addEventListener('change', function() {
             const list = document.getElementById('ground-list');
             const items = Array.from(list.children); // Ambil semua item dalam list
-            
+
             // Tentukan urutan pengurutan berdasarkan pilihan
             const sortOrder = this.value;
 
@@ -227,109 +225,139 @@
         L.control.layers(baseLayers).addTo(map);
 
 
-
-        // Mengambil data JSON dari PHP dan parsing sebagai objek JavaScript
-        var polygon = @json($polygonGeoJson);
-        var markerpolygon = @json($markerGeoJson)
-
-
-
-        // Parsing data GeoJSON dan tambahkan layer ke peta
-        var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
-
-
-        var detailsData = {!! $detailsJson !!}
-
-
-        var markerlayer = L.geoJSON(JSON.parse(markerpolygon), {
-            pointToLayer: function (feature, latlng) {
-                const marker = L.marker(latlng);
-
-                const params = new URLSearchParams(window.location.search);
-
-                const param_lat = params.get("lat");
-                const param_long = params.get("long");
-
-                let param_detail = detailsData.find(item => item.hasOwnProperty(`${param_lat}_${param_long}`))
-                let detailModal = document.getElementById('detailModal');
-                const displayValue = detailModal.style.display;
-
-                if(param_detail && (displayValue != "flex")){
-                    // Hide info modal
-                    const ground = param_detail[`${param_lat}_${param_long}`]
-
-                    document.getElementById('infoModal').style.display = 'none';
-
-                    // Set modal 2 content (detail modal)
-                    document.getElementById('detailLandPhoto').src = "storage/ground_image/"+ground.photoGround;
-                    document.getElementById('detailLandName').textContent = ground.nama_asset;
-                    document.getElementById('detailLandAddress').textContent = ground.detail_alamat;
-                    document.getElementById('detailLandOwnership').textContent = ground.tipe_tanah;
-
-                    // Set additional details for modal 2
-                    document.getElementById('landArea').textContent = ground.luas_asset;  // Contoh data, ganti sesuai data yang ada
-                    document.getElementById('ownershipStatus').textContent = ground.tipe_tanah; // Contoh data, ganti sesuai data yang ada
-                    document.getElementById('longtitude').textContent = ground.longitude;  // Contoh data, ganti sesuai data yang ada
-                    document.getElementById('detailLandNumber').textContent = "001";
-                    document.getElementById('numberSertif').textContent = "13423424134";
-
-                    // Show detail modal
-                    document.getElementById('detailModal').style.display = 'flex';
-                }
-
-                marker.addEventListener('click', function(){
-                    const result = detailsData.find(item => item.hasOwnProperty(`${latlng.lat}_${latlng.lng}`));
-                    if(result){
-                        const ground = result[`${latlng.lat}_${latlng.lng}`]
-                        document.getElementById('landPhoto').src = "storage/ground_image/"+ground.photoGround;
-                        document.getElementById('landName').textContent = ground.nama_asset;
-                        document.getElementById('landAddress').textContent = ground.detail_alamat;
-                        document.getElementById('landOwnership').textContent = ground.tipe_tanah;
-
-                        document.querySelector('#infoModal button:nth-child(2)').addEventListener('click', () => {
-                            // Hide info modal
-                            document.getElementById('infoModal').style.display = 'none';
-
-                            // Set modal 2 content (detail modal)
-                            document.getElementById('detailLandPhoto').src = document.getElementById('landPhoto').src;
-                            document.getElementById('detailLandName').textContent = document.getElementById('landName').textContent;
-                            document.getElementById('detailLandAddress').textContent = document.getElementById('landAddress').textContent;
-                            document.getElementById('detailLandOwnership').textContent = document.getElementById('landOwnership').textContent;
-
-                            // Set additional details for modal 2
-                            document.getElementById('landArea').textContent = ground.luas_asset;  // Contoh data, ganti sesuai data yang ada
-                            document.getElementById('ownershipStatus').textContent = ground.tipe_tanah; // Contoh data, ganti sesuai data yang ada
-                            document.getElementById('longtitude').textContent = ground.longitude;  // Contoh data, ganti sesuai data yang ada
-                            document.getElementById('detailLandNumber').textContent = ground.id;
-                            document.getElementById('numberSertif').textContent = ground.certificate.substr(0, ground.certificate.length-4);
-
-                            // Show detail modal
-                            document.getElementById('detailModal').style.display = 'flex';
-                        });
-
-                        // Display modal
-                        document.getElementById('infoModal').style.display = 'flex';
-                    } else {
-                        console.log('data salah')
-                    }
-                })
-                return marker
-            }
-        }).addTo(map);
-
         // Close modal
         document.getElementById('closeModal').addEventListener('click', () => {
             document.getElementById('infoModal').style.display = 'none';
         });
 
         // Show detail modal and hide info modal
-        
+
 
         // Close detail modal
         document.getElementById('closeDetailModal').addEventListener('click', () => {
             document.getElementById('detailModal').style.display = 'none';
         });
 
+        $(document).ready(function () {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('userData'));
+
+            if (token) {
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/ground',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function (response) {
+                        console.log('Full API response:', response);
+                        const groundList = document.getElementById('groundList');
+
+                        if (!Array.isArray(response.data)) {
+                            console.warn('Data kosong atau bukan array');
+                            return;
+                        }
+
+                        response.data.forEach(tanah => {
+
+
+                            // side bar daftar tanah
+                            const li = document.createElement('li');
+                            li.className = 'p-4 border-b cursor-pointer hover:bg-gray-100';
+                            li.textContent = tanah.nama_tanah;
+
+                            li.addEventListener('click', function () {
+                                showInfoModal(tanah);
+                            });
+
+                            groundList.appendChild(li);
+
+
+
+                            // Tambahkan marker
+                            if (tanah.latitude && tanah.longitude) {
+                                const marker = L.marker([tanah.latitude, tanah.longitude]).addTo(map);
+
+                                marker.on('click', function () {
+                                    showInfoModal(tanah);
+                                });
+                            }
+
+                            // tambah polygon
+                            if (tanah.coordinates) {
+                                let parsedData;
+                                try {
+                                    parsedData = JSON.parse(tanah.coordinates);
+                                } catch (e) {
+                                    console.error('Gagal parse JSON dari coordinates:', tanah.coordinates, e);
+                                    return;
+                                }
+
+                                if (parsedData.geometry && parsedData.geometry.coordinates) {
+                                    const geoType = parsedData.geometry.type;
+                                    const coords = parsedData.geometry.coordinates;
+
+                                    if (geoType === 'Polygon' && Array.isArray(coords)) {
+                                        // Ambil ring pertama (biasanya index 0)
+                                        const firstRing = coords[0];
+
+                                        if (Array.isArray(firstRing) && firstRing.length > 0) {
+                                            // Convert jadi [lat, lng]
+                                            const formattedCoords = firstRing.map(coord => [coord[1], coord[0]]);
+
+                                            const polygon = L.polygon(formattedCoords, {
+                                                color: 'blue',
+                                                fillColor: '#1e90ff',
+                                                fillOpacity: 0.5
+                                            }).addTo(map);
+
+                                            polygon.on('click', function () {
+                                                showInfoModal(tanah);
+                                            });
+                                        } else {
+                                            console.warn('First ring polygon kosong:', firstRing);
+                                        }
+                                    } else {
+                                        console.warn('Geometry bukan Polygon atau invalid:', geoType, coords);
+                                    }
+                                } else {
+                                    console.warn('Tidak ada geometry.coordinates di parsedData:', parsedData);
+                                }
+                            }
+                        })
+                    },
+
+                });
+            } else {
+                console.log('Token tidak ditemukan di localStorage');
+            }
+        });
+
+        function showInfoModal(ground) {
+            document.getElementById('landPhoto').src = "storage/ground_image/" + ground.photoGround;
+            document.getElementById('landName').textContent = ground.nama_tanah;
+            document.getElementById('landAddress').textContent = ground.alamat;
+            document.getElementById('landOwnership').textContent = ground.nama_tipe_tanah;
+
+            document.querySelector('#infoModal button:nth-child(2)').onclick = () => showDetailModal(ground);
+
+            document.getElementById('infoModal').style.display = 'flex';
+        }
+
+        function showDetailModal(ground) {
+            document.getElementById('infoModal').style.display = 'none';
+            document.getElementById('detailModal').style.display = 'flex';
+
+            document.getElementById('detailLandPhoto').src = "storage/ground_image/" + ground.foto_tanah;
+            document.getElementById('detailLandName').textContent = ground.nama_tanah;
+            document.getElementById('detailLandAddress').textContent = ground.alamat;
+            document.getElementById('detailLandOwnership').textContent = ground.nama_tipe_tanah;
+            document.getElementById('landArea').textContent = ground.luas_tanah;
+            document.getElementById('ownershipStatus').textContent = ground.nama_status_kepemilikan;
+            document.getElementById('longtitude').textContent = ground.longitude;
+            document.getElementById('detailLandNumber').textContent = ground.id;
+            document.getElementById('numberSertif').textContent = ground.sertifikat_tanah.substr(0, ground.certificate.length - 4) ?? '';
+        }
     </script>
 </body>
 

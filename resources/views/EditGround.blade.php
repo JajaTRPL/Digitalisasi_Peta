@@ -58,30 +58,30 @@
     </nav>
 
     <div class="max-w-7xl mx-auto p-6 bg-white mt-6 shadow-md rounded-md">
-        <form method="post">
+        <form>
             <div class="grid grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-700">Nama Aset</label>
-                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset" type="text" id="nama_asset" value="{{$dataGround->nama_asset}}"/>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset" type="text" id="nama_tanah" value=""/>
                 </div>
                 <div>
                     <label class="block text-gray-700">Detail Alamat</label>
-                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Detail Alamat" type="text" id="detail_alamat" value="{{$alamatGround->detail_alamat}}"/>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Detail Alamat" type="text" id="detail_alamat" value=""/>
                 </div>
                 <div>
                     <label class="block text-gray-700">RT</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RT"
-                        type="text" id="rt" value="{{$alamatGround->rt}}"/>
+                        type="text" id="rt" value=""/>
                 </div>
                 <div>
                     <label class="block text-gray-700">RW</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RW"
-                        type="text" id="rw" value="{{$alamatGround->rw}}"/>
+                        type="text" id="rw" value=""/>
                 </div>
                 <div>
                     <label class="block text-gray-700">Padukuhan</label>
                     <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="padukuhan">
-                        <option value="{{$alamatGround->padukuhan}}" disabled selected>{{$alamatGround->padukuhan}}</option>
+                        <option value=""></option>
                         <option value="Palemsari">Palemsari</option>
                         <option value="Pangukrejo">Pangukrejo</option>
                         <option value="Gondang">Gondang</option>
@@ -126,32 +126,25 @@
                 <div>
                     <label class="block text-gray-700">Status Kepemilikan</label>
                     <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_kepemilikan">
-                        @foreach ($statusKepemilikan as $option)
-                        <option value="{{$option->id}}" {{ $option->id == $dataGround->status_kepemilikan_id ? 'selected' : '' }}>
-                            {{$option->nama_status_kepemilikan}}
+                        <option value="">
                         </option>
-                        @endforeach
                     </select>
                 </div>
                 <div>
                     <label class="block text-gray-700">Status Tanah</label>
                     <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_tanah">
-                        @foreach ($statusTanah as $option)
-                        <option value="{{$option->id}}" {{$option->id == $dataGround->status_tanah_id ? 'selected' : ''}}>{{$option->nama_status_tanah}}</option>
-                        @endforeach
+                        <option value=""></option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-gray-700">Luas Aset Tanah</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Luas Tanah"
-                        type="text" id="luas_asset" value="{{$dataGround->luas_asset}}"/>
+                        type="text" id="luas_tanah" value=""/>
                 </div>
                 <div>
                     <label class="block text-gray-700">Tipe Tanah</label>
                     <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="tipe_tanah">
-                        @foreach ($tipeTanah as $option)
-                        <option value="{{$option->id}}" {{$option->id == $dataGround->tipe_tanah_id ? 'selected' : ''}}>{{$option->nama_tipe_tanah}}</option>
-                        @endforeach
+                        <option value=""></option>
                     </select>
                 </div>
 
@@ -159,7 +152,7 @@
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                     <input type="file"
                     class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                    id="foto_tanah" name="foto_tanah" value="{{asset('storage/ground_image/' . $photoGround->name)}}"/>
+                    id="foto_tanah" name="foto_tanah" value=""/>
                     <p class="text-xs text-gray-400 mt-2">Foto Tanah PNG JPG</p>
                 </div>
 
@@ -167,17 +160,17 @@
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                     <input type="file"
                     class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                    id="sertifikat" name="sertifikat" value="{{ asset('storage/ground_sertificate/' . $sertifikatGround->name)}}"/>
+                    id="sertifikat" name="sertifikat" value=""/>
                     <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
                 </div>
 
                 <div>
                     <label class="block text-gray-700">Longtitude</label>
-                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude" type="text" id="longitude" value="{{$dataGround->longitude}}"/>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude" type="text" id="longitude" value=""/>
                 </div>
                 <div>
                     <label class="block text-gray-700">Latitude</label>
-                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Latitude" type="text" id="latitude" value="{{$dataGround->latitude}}"/>
+                    <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Latitude" type="text" id="latitude" value=""/>
                 </div>
             </div>
 
@@ -185,7 +178,7 @@
             <div id="map" class="w-full h-96 border border-gray-300 rounded-md mt-6"></div>
 
             <div>
-                <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="{{$dataGround->coordinates}}" style="display: none">
+                <input id="polygon" type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md" name="polygon" value="" style="display: none">
             </div>
 
 
@@ -227,156 +220,146 @@
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        var polygon = @json($polygon);
-        var markerpolygon = @json($marker);
 
-        var polygonlayer = L.geoJSON(JSON.parse(polygon)).addTo(map);
-        var markerlayer = L.geoJSON(JSON.parse(markerpolygon), {
-            pointToLayer: function(feature, latlng) {
-                return L.marker(latlng);
-            }
-        }).addTo(map);
+        $(document).ready(function() {
+            var path = window.location.pathname;
+            var id = path.split('/').pop();
+
+            const token = localStorage.getItem('token');
+
+            console.log(id);
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/get/ground/' + id,
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token  // Pastikan kalau API pakai token
+                },
+                success: function(response) {
+                    $('#nama_tanah').val(response.data.nama_tanah);
+                    $('#detail_alamat').val(response.data.alamat);
+                    $('#rt').val(response.data.rt);
+                    $('#rw').val(response.data.rw);
+                    $('#luas_tanah').val(response.data.luas_tanah);
+                    $('#latitude').val(response.data.latitude);
+                    $('#longitude').val(response.data.longitude);
 
 
-        var drawnItems = new L.FeatureGroup();
-        var markerGroup = new L.FeatureGroup();
+                    if (response.data.latitude && response.data.longitude) {
+                        const marker = L.marker([response.data.latitude, response.data.longitude]).addTo(map);
 
-        drawnItems.addLayer(polygonlayer);
-        drawnItems.addLayer(markerlayer);
-
-        map.addLayer(markerGroup);
-        map.addLayer(drawnItems);
-
-        var drawControl = new L.Control.Draw({
-            edit: {
-            featureGroup: drawnItems
-            },
-            draw: {
-            polygon: true,
-            marker: true,
-            polyline: true,
-            rectangle: true,
-            circle: true,
-            }
-        });
-        map.addControl(drawControl);
-
-        let centerMarker;
-
-        map.on(L.Draw.Event.CREATED, function (event) {
-
-            if (drawnItems.getLayers().length > 0) {
-                const layers = drawnItems.getLayers();
-                drawnItems.clearLayers();    // Hapus polygon lama  // Hapus marker lama
-            }
-
-            markerGroup.clearLayers();
-
-            var type = event.layerType;
-            var layer = event.layer;
-            polygon = layer;
-            drawnItems.addLayer(polygon);
-
-            const geoJsonData = layer.toGeoJSON(); // Definisi geoJsonData ada di sini
-            console.log(JSON.stringify(geoJsonData));
-
-            addMarker(geoJsonData);
-        });
-
-        map.on('draw:edited', function(event) {
-            event.layers.eachLayer(function(layer) {
-                const geoJsonData = layer.toGeoJSON();
-                $('#polygon').val(JSON.stringify(geoJsonData)); // Update koordinat ke input
-                addMarker(geoJsonData); // Update marker pusat (centroid) jika diperlukan
-            });
-        });
-
-        function addMarker(geoJsonData){
-            $('#polygon').val(JSON.stringify(geoJsonData));
-
-            const centroid = turf.centroid(geoJsonData);
-            const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
-
-            if (centerMarker) {
-                markerGroup.removeLayer(centerMarker); // Ensure it's removed first
-            }
-            centerMarker = L.marker(center);
-            markerGroup.addLayer(centerMarker);
-
-            document.getElementById('latitude').value = center[0];
-            document.getElementById('longitude').value = center[1];
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('perbarui').addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const coordinates = document.getElementById('polygon').value;
-                const latitude = document.getElementById('latitude').value;
-                const longitude = document.getElementById('longitude').value;
-                const nama_asset = document.getElementById('nama_asset').value;
-                const status_kepemilikan = document.getElementById('status_kepemilikan').value;
-                const status_tanah = document.getElementById('status_tanah').value;
-                const detail_alamat = document.getElementById('detail_alamat').value;
-                const rt = document.getElementById('rt').value;
-                const rw = document.getElementById('rw').value;
-                const padukuhan = document.getElementById('padukuhan').value;
-                const tipe_tanah = document.getElementById('tipe_tanah').value;
-                const luas_asset = document.getElementById('luas_asset').value;
-                const formData = new FormData();
-
-                formData.append('coordinates', coordinates);
-                formData.append('latitude', latitude);
-                formData.append('longitude', longitude);
-                formData.append('nama_asset', nama_asset);
-                formData.append('status_kepemilikan', status_kepemilikan);
-                formData.append('status_tanah', status_tanah);
-                formData.append('detail_alamat', detail_alamat);
-                formData.append('rt', rt);
-                formData.append('rw', rw);
-                formData.append('padukuhan', padukuhan);
-                formData.append('tipe_tanah', tipe_tanah);
-                formData.append('luas_asset', luas_asset);
-
-                const fotoTanah = document.querySelector('#foto_tanah').files[0];
-                if (fotoTanah) {
-                    formData.append('foto_tanah', fotoTanah);
-                }
-                const sertifikat = document.querySelector('#sertifikat').files[0];
-                if (sertifikat) {
-                    formData.append('sertifikat', sertifikat);
-                }
-                formData.append('_method', 'PUT');
-
-                console.log(formData);
-
-                // for (const [key, value] of formData.entries()) {
-                //     console.log(`${key}:`, value);
-                // }
-
-                const config = {
-                    headers: { 'content-type': 'multipart/form-data' }
-                }
-
-                axios.post(`/UpdatePeta/{{$dataGround->ground_detail_id}}`, formData, config)
-                .then(response => {
-                    alert(response.data.message);
-                    window.location.href = '{{ route('ManageGround') }}';
-                })
-                .catch(error => {
-                    console.log(error.reponse);
-                    if (error.response?.data?.errors) {
-                        const errors = error.response.data.errors;
-                        let errorMessage = 'Validation Errors:\n';
-                        for (const [field, messages] of Object.entries(errors)) {
-                            errorMessage += `${field}: ${messages.join(', ')}\n`;
-                        }
-                        alert(errorMessage);
-                    } else {
-                        alert('Error: ' + (error.response?.data?.message || error.message));
+                        
                     }
-                });
+
+                    if (response.data.coordinates) {
+                        let parsedData;
+                        try {
+                            parsedData = JSON.parse(response.data.coordinates);
+                        } catch (e) {
+                            console.error('Gagal parse JSON dari coordinates:', response.data.coordinates, e);
+                            return;
+                        }
+
+                        if (parsedData.geometry && parsedData.geometry.coordinates) {
+                            const geoType = parsedData.geometry.type;
+                            const coords = parsedData.geometry.coordinates;
+
+                            if (geoType === 'Polygon' && Array.isArray(coords)) {
+                                // Ambil ring pertama (biasanya index 0)
+                                const firstRing = coords[0];
+
+                                if (Array.isArray(firstRing) && firstRing.length > 0) {
+                                    // Convert jadi [lat, lng]
+                                    const formattedCoords = firstRing.map(coord => [coord[1], coord[0]]);
+
+                                    const polygon = L.polygon(formattedCoords, {
+                                        color: 'blue',
+                                        fillColor: '#1e90ff',
+                                        fillOpacity: 0.5
+                                    }).addTo(map);
+
+                                    polygon.on('click', function () {
+                                        showInfoModal(tanah);
+                                    });
+                                } else {
+                                    console.warn('First ring polygon kosong:', firstRing);
+                                }
+                            } else {
+                                console.warn('Geometry bukan Polygon atau invalid:', geoType, coords);
+                            }
+                        } else {
+                            console.warn('Tidak ada geometry.coordinates di parsedData:', parsedData);
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    alert('Gagal load data');
+                }
             });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            const token = localStorage.getItem('token');
+            var id = window.location.pathname.split('/').pop();
+
+            // Ambil semua dropdown & detail data sekaligus
+            $.when(
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/tipe-tanah',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }),
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/status-tanah',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }),
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/status-kepemilikan',
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                }),
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/api/get/ground/' + id,
+                    type: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
+            ).done(function(tipeTanahVal, statusTanahVal, statusKepemilikanVal, groundDetailVal) {
+                const tipeTanah = tipeTanahVal[0].data;
+                const statusTanah = statusTanahVal[0].data;
+                const statusKepemilikan = statusKepemilikanVal[0].data;
+                const detail = groundDetailVal[0].data;
+
+                console.log(tipeTanah, statusTanah, statusKepemilikan, detail);
+
+                // Populate option
+                itemDropdown('#tipe_tanah', tipeTanah, 'id', 'nama_tipe_tanah', detail.tipe_tanah_id);
+                itemDropdown('#status_tanah', statusTanah, 'id', 'nama_status_tanah', detail.status_tanah_id);
+                itemDropdown('#status_kepemilikan', statusKepemilikan, 'id', 'nama_status_kepemilikan', detail.status_kepemilikan_id);
+
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                console.error('Error ambil data:', textStatus);
+            });
+
+            // Modify itemDropdown to support selected value
+            function itemDropdown(selector, data, valueKey, textKey, selectedVal){
+                const dropdown = $(selector);
+                dropdown.empty();
+                dropdown.append(`<option disabled>Pilih</option>`);
+                data.forEach(item => {
+                    const selected = item[valueKey] == selectedVal ? 'selected' : '';
+                    dropdown.append(`<option value="${item[valueKey]}" ${selected}>${item[textKey]}</option>`);
+                });
+            }
         });
 
     </script>

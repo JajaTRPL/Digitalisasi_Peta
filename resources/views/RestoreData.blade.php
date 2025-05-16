@@ -39,7 +39,7 @@
                 <div class="flex-1">
                     <h2 class="text-xl font-semibold">Pulihkan Data Tanah</h2>
                 </div>
-                
+
             </div>
 
             <table class="min-w-full bg-white table-auto" id="deletedGroundTable">
@@ -127,7 +127,7 @@
                 success: function (response) {
                     console.log('Detail response:', response);
                     if (response.status === 'success') {
-                        const data = response.data;
+                        const data = response.data[0];
 
                         $('#detailLandName').text(data.nama_tanah ?? '-');
                         $('#detailLandAddress').text(data.alamat ?? '-');
@@ -137,8 +137,6 @@
                         $('#longtitude').text(data.longitude ?? '-');
 
                         $('#detailModal').removeClass('hidden');
-                    } else {
-                        alert('Gagal memuat detail tanah.');
                     }
                 },
                 error: function (xhr) {
@@ -156,9 +154,9 @@
             if (!confirm('Apakah Anda yakin ingin memulihkan data ini?')) return;
 
             const token = localStorage.getItem('token');
-            
+
             $.ajax({
-                url: `http://127.0.0.1:8000/api/restore/ground/${id}`,
+                url: `http://127.0.0.1:8000/api/restore/deleted-ground/${id}`,
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -169,8 +167,6 @@
                     if (response.status === 'success') {
                         alert('Data berhasil dipulihkan!');
                         location.reload();
-                    } else {
-                        alert('Gagal memulihkan data: ' + response.message);
                     }
                 },
                 error: function(xhr) {
@@ -197,13 +193,13 @@
                 },
                 "responsive": true
             });
-            
+
             // Tambahkan event handler untuk tombol restore dan detail menggunakan delegasi event
             $('#deletedGroundTable').on('click', '.restore-btn', function() {
                 const id = $(this).data('id');
                 restoreData(id);
             });
-            
+
             $('#deletedGroundTable').on('click', '.detail-btn', function() {
                 const id = $(this).data('id');
                 showDetailModal(id);
@@ -212,7 +208,7 @@
             if (token) {
                 // Tambahkan log untuk debugging
                 console.log('Token retrieved:', token ? 'Yes' : 'No');
-                
+
                 $.ajax({
                     url: 'http://127.0.0.1:8000/api/get/deleted-ground',
                     type: 'GET',
@@ -229,11 +225,11 @@
                             response.data.forEach((item, index) => {
                                 const restoreButton = `<button type="button" class="text-blue-500 mx-1 restore-btn" data-id="${item.detail_tanah_id}"><i class="fas fa-undo"></i></button>`;
                                 const detailButton = `<button type="button" class="text-gray-500 mx-1 detail-btn" data-id="${item.detail_tanah_id}"><i class="fas fa-info-circle"></i></button>`;
-                                
+
                                 table.row.add([
                                     index + 1,
                                     item.nama_tanah,
-                                    item.deleted_by_user ? item.deleted_by_user.name : 'System',
+                                    item.deleted_by_name ? item.deleted_by_name: 'System',
                                     item.deleted_at ? new Date(item.deleted_at).toLocaleString('id-ID') : '-',
                                     `<div class="flex items-center justify-start">${restoreButton}${detailButton}</div>`
                                 ]).draw(false);

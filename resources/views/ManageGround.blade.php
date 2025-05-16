@@ -207,7 +207,7 @@
                             table.row.add([
                                 item.detail_tanah_id,
                                 item.nama_tanah,
-                                item.added_by ?? '-',
+                                item.added_by_name ?? '-',
                                 item.updated_at ?? '-',
                                 `
                                 <div class="flex items-center justify-start ">
@@ -215,7 +215,7 @@
                                         onclick="showDeleteModal('${item.detail_tanah_id}', '${item.nama_tanah}', '${item.detail_alamat}')">
                                         <img src="/images/DeleteBtn.png" alt="Delete" >
                                     </button>
-                                    <a class="text-gray-500 mx-1" href="/EditPeta/${item.detail_tanah_id}">
+                                    <a class="text-gray-500 mx-1" href="/EditGround/${item.detail_tanah_id}">
                                         <img src="/images/UpdateBtn.png" alt="Update" >
                                     </a>
                                     <a class="text-gray-500 mx-1"
@@ -277,20 +277,22 @@
     });
 
     function showDetailModal(id) {
-
         const token = localStorage.getItem('token');
+
+        console.log('Ambil detail ID:', id);
+        console.log('Token:', token);
 
         $.ajax({
             url: `http://127.0.0.1:8000/api/get/ground/${id}`,
             type: 'GET',
             headers: {
-                'Authorization': 'Bearer ' + token
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
             },
             success: function (response) {
                 if (response.status === 'success') {
                     const data = response.data;
 
-                    // Isi data ke elemen modal
                     $('#detailLandName').text(data.nama_tanah ?? '-');
                     $('#detailLandAddress').text(data.alamat ?? '-');
                     $('#ownershipStatus').text(data.nama_status_kepemilikan ?? '-');
@@ -298,7 +300,6 @@
                     $('#landArea').text(data.luas_tanah ?? '-');
                     $('#longtitude').text(data.longitude ?? '-');
 
-                    // Tampilkan modal
                     $('#detailModal').removeClass('hidden').addClass('flex');
                 } else {
                     alert('Gagal memuat detail tanah.');
@@ -306,10 +307,18 @@
             },
             error: function (xhr) {
                 console.error('Error fetching detail:', xhr.responseText);
-                alert('Terjadi kesalahan saat mengambil detail.');
+                if (xhr.status === 401) {
+                    alert('Session anda telah habis. Silakan login kembali.');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('userData');
+                    window.location.href = '/login';
+                } else {
+                    alert('Terjadi kesalahan saat mengambil detail.');
+                }
             }
         });
     }
+
     </script>
 </body>
 

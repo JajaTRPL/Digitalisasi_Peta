@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-    
+
 </head>
 
 <body class="bg-[#F6F9EE]">
@@ -25,7 +25,7 @@
             <p>{{ session('error') }}</p>
         </div>
     @endif
-    
+
     <!-- Navbar -->
     @include('components.navbar')
 
@@ -152,13 +152,13 @@
             $('#modalOverlay').addClass('open');
             $('#tambahAdminModal').addClass('open');
         }
-        
+
         function closeTambahModal() {
             $('#modalOverlay').removeClass('open');
             $('#tambahAdminModal').removeClass('open');
             $('#tambahAdminForm')[0].reset();
         }
-        
+
         function openEditModal(id, name, email, role) {
             $('#editUserId').val(id);
             $('#editName').val(name);
@@ -168,18 +168,18 @@
             $('#modalOverlay').addClass('open');
             $('#editAdminModal').addClass('open');
         }
-        
+
         function closeEditModal() {
             $('#modalOverlay').removeClass('open');
             $('#editAdminModal').removeClass('open');
             $('#editAdminForm')[0].reset();
         }
-        
+
         function deleteAdmin(id) {
             if (!confirm('Apakah Anda yakin ingin menghapus admin ini?')) return;
-            
+
             const token = localStorage.getItem('token');
-            
+
             $.ajax({
                 url: `http://127.0.0.1:8000/api/delete/admin/${id}`,
                 type: 'DELETE',
@@ -223,16 +223,15 @@
                     "lengthMenu": "Tampilkan _MENU_ entri",
                     "search": "Cari:",
                     "zeroRecords": "Tidak ditemukan data yang sesuai"
-                    
                 },
                 "responsive": true
             });
-            
+
             // Tambah event listener untuk tombol tambah admin
             $('#tambahAdminBtn').on('click', function() {
                 openTambahModal();
             });
-            
+
             // Event handler untuk tombol edit dan delete menggunakan delegasi event
             $('#adminTable').on('click', '.edit-btn', function() {
                 const id = $(this).data('id');
@@ -241,7 +240,7 @@
                 const role = $(this).data('role');
                 openEditModal(id, name, email, role);
             });
-            
+
             $('#adminTable').on('click', '.delete-btn', function() {
                 const id = $(this).data('id');
                 deleteAdmin(id);
@@ -252,7 +251,7 @@
                 if (token) {
                     // Tambahkan log untuk debugging
                     console.log('Token retrieved:', token ? 'Yes' : 'No');
-                    
+
                     $.ajax({
                         url: 'http://127.0.0.1:8000/api/get/admin',
                         type: 'GET',
@@ -269,7 +268,7 @@
                                 response.data.forEach((item, index) => {
                                     const editButton = `<button type="button" class="text-blue-500 mx-1 edit-btn" data-id="${item.id}" data-name="${item.name}" data-email="${item.email}" data-role="${item.roles}"><i class="fas fa-pen"></i></button>`;
                                     const deleteButton = `<button type="button" class="text-red-500 mx-1 delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>`;
-                                    
+
                                     table.row.add([
                                         index + 1,
                                         item.name,
@@ -297,10 +296,10 @@
                     window.location.href = '/login';
                 }
             };
-            
+
             // Load admin data initially
             loadAdminData();
-            
+
             // Handle Tambah Admin form submission
             $('#tambahAdminForm').submit(function(e) {
                 e.preventDefault();
@@ -346,7 +345,7 @@
                     alert("Password yang dimasukkan tidak cocok");
                 }
             });
-            
+
             // Handle Edit Admin form submission
             $('#editAdminForm').submit(function(e) {
                 e.preventDefault();
@@ -356,14 +355,14 @@
                 const email = $('#editEmail').val();
                 const role = $('#editRole').val();
                 const password = $('#editPassword').val();
-                
+
                 // Prepare data object
                 const data = {
                     name: name,
                     email: email,
                     role: role
                 };
-                
+
                 // Include password only if provided
                 if (password) {
                     data.password = password;
