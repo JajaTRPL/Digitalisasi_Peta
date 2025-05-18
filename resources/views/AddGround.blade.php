@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <style>
         #map {
             width: 100%;
@@ -24,6 +25,12 @@
             z-index: 9999;
             display: hidden;
             background-color: black;
+        }
+
+        .toastify {
+            font-family: 'Roboto', sans-serif;
+            border-radius: 4px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         }
     </style>
 </head>
@@ -182,19 +189,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js"></script>
 
     <script>
-        //user drop down
-        const avatar = document.querySelector('.profile-avatar');
-        const dropdown = document.querySelector('.dropdown-content');
-
-        avatar.addEventListener('click', function() {
-            dropdown.classList.toggle('hidden');
-        });
-
-        window.addEventListener('click', function(event) {
-            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
 
         // map
         var map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15);
@@ -366,63 +360,107 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            const token = localStorage.getItem('token');
-            const user = JSON.parse(localStorage.getItem('userData'));
+       $(document).ready(function () {
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('userData'));
 
-            console.log(token);
+    if (token) {
+        $("#submit").click(function (e) {
+            e.preventDefault();
 
-            if (token) {
-                $("#submit").click(function (e) {
-                    e.preventDefault();
+            var formData = new FormData();
+            formData.append('coordinates', document.getElementById('polygon').value);
+            formData.append('latitude', document.getElementById('latitude').value);
+            formData.append('longitude', document.getElementById('longitude').value);
+            formData.append('nama_tanah', document.getElementById('nama_tanah').value);
+            formData.append('status_kepemilikan_id', document.getElementById('status_kepemilikan').value);
+            formData.append('status_tanah_id', document.getElementById('status_tanah').value);
+            formData.append('detail_alamat', document.getElementById('detail_alamat').value);
+            formData.append('rt', document.getElementById('rt').value);
+            formData.append('rw', document.getElementById('rw').value);
+            formData.append('padukuhan', document.getElementById('padukuhan').value);
+            formData.append('tipe_tanah_id', document.getElementById('tipe_tanah').value);
+            formData.append('luas_tanah', document.getElementById('luas_tanah').value);
 
-                    var formData = new FormData();
-                    formData.append('coordinates', document.getElementById('polygon').value);
-                    formData.append('latitude', document.getElementById('latitude').value);
-                    formData.append('longitude', document.getElementById('longitude').value);
-                    formData.append('nama_tanah', document.getElementById('nama_tanah').value);
-                    formData.append('status_kepemilikan_id', document.getElementById('status_kepemilikan').value);
-                    formData.append('status_tanah_id', document.getElementById('status_tanah').value);
-                    formData.append('detail_alamat', document.getElementById('detail_alamat').value);
-                    formData.append('rt', document.getElementById('rt').value);
-                    formData.append('rw', document.getElementById('rw').value);
-                    formData.append('padukuhan', document.getElementById('padukuhan').value);
-                    formData.append('tipe_tanah_id', document.getElementById('tipe_tanah').value);
-                    formData.append('luas_tanah', document.getElementById('luas_tanah').value);
+            // file handling
+            const foto = document.getElementById('foto_tanah').files[0];
+            const sertifikat = document.getElementById('sertifikat_tanah').files[0];
+            if (foto) formData.append('foto_tanah', foto);
+            if (sertifikat) formData.append('sertifikat_tanah', sertifikat);
 
-                    // file handling
-                    const foto = document.getElementById('foto_tanah').files[0];
-                    const sertifikat = document.getElementById('sertifikat_tanah').files[0];
-                    if (foto) formData.append('foto_tanah', foto);
-                    if (sertifikat) formData.append('sertifikat_tanah', sertifikat);
+            // Show loading indicator
+            const submitBtn = document.getElementById('submit');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+            submitBtn.disabled = true;
 
-                    $.ajax({
-                        url: 'http://127.0.0.1:8000/api/create/ground',
-                        type: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        },
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        success: function (response) {
-                            console.log("Data berhasil dikirim:", response);
-                            alert("Data berhasil disimpan!");
-                            window.location.href = 'ManageGround';
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Gagal mengirim data:", xhr.responseText);
-                            alert("Terjadi kesalahan saat menyimpan data.");
-                        }
-                    });
-                });
-            } else {
-                console.log('Token tidak ditemukan di localStorage');
-            }
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/create/ground',
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (response) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    Toastify({
+                        text: "✓ Data tanah berhasil ditambahkan",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                        stopOnFocus: true,
+                    }).showToast();
+
+                    setTimeout(function() {
+                        window.location.href = 'ManageGround';
+                    }, 2000);
+                },
+                error: function (xhr, status, error) {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    
+                    let errorMessage = "Terjadi kesalahan saat menyimpan data";
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    
+                    Toastify({
+                        text: errorMessage,
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                        stopOnFocus: true,
+                    }).showToast();
+                }
+            });
         });
+        } else {
+            Toastify({
+                text: "✗ Sesi telah berakhir, silakan login kembali",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#F44336",
+                stopOnFocus: true,
+            }).showToast();
+            
+            setTimeout(function() {
+                window.location.href = '/login';
+            }, 2000);
+        }
+    });
     </script>
 
 

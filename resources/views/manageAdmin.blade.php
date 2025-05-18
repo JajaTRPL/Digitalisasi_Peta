@@ -32,13 +32,10 @@
     <div class="container mx-auto mt-10">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex items-center mb-4 gap-5">
-                <button id="tambahAdminBtn" class="bg-blue-500 text-white px-4 py-2 rounded">
+                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded">
                     <i class="fas fa-plus mr-2"></i>
                     Tambah Admin
                 </button>
-                <div class="flex-1">
-                    <h2 class="text-xl font-semibold">Daftar Pengguna Website</h2>
-                </div>
             </div>
 
             <table class="min-w-full bg-white table-auto" id="adminTable">
@@ -99,7 +96,7 @@
                 </div>
                 <div class="flex space-x-3 justify-end pt-4">
                     <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-md" onclick="closeTambahModal()">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Tambah</button>
+                    <button type="submit" class="px-4 py-2 bg-[#666CFF] text-white rounded-md">Tambah</button>
                 </div>
             </form>
         </div>
@@ -137,7 +134,7 @@
                 </div>
                 <div class="flex space-x-3 justify-end pt-4">
                     <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-md" onclick="closeEditModal()">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Simpan Perubahan</button>
+                    <button type="submit" class="px-4 py-2 bg-[#666CFF] text-white rounded-md">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -220,11 +217,12 @@
                     "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
                     "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
                     "infoFiltered": "(difilter dari total _MAX_ entri)",
-                    "lengthMenu": "Tampilkan _MENU_ entri",
-                    "search": "Cari:",
+                    "lengthMenu": "Tampilkan:_MENU_ ",
+                    "search": "",
                     "zeroRecords": "Tidak ditemukan data yang sesuai"
                 },
                 "responsive": true
+                
             });
 
             // Tambah event listener untuk tombol tambah admin

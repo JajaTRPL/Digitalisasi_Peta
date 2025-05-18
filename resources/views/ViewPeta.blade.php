@@ -8,7 +8,7 @@
     @vite(['resources/css/ViewPeta.css'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="bg-black relative">
@@ -35,8 +35,8 @@
                 <select
                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                     id="sort" name="sort">
-                    <option value="asc">Asc</option>
-                    <option value="desc">Desc</option>
+                    <option value="asc">Asc (A-Z)</option>
+                    <option value="desc">Desc (Z-A)</option>
                 </select>
             </div>
 
@@ -111,7 +111,6 @@
                     <p class="font-semibold">Nomor Sertifikat:</p>
                     <p id="numberSertif">-</p>
                 </div>
-
             </div>
 
             <!-- Modal Footer with Close Button -->
@@ -121,8 +120,6 @@
         </div>
     </div>
 
-
-
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
@@ -131,38 +128,29 @@
 
     <!-- Script to handle interactivity -->
     <script>
-        // Dropdown functionality
-        const avatar = document.querySelector('.profile-avatar');
-        const dropdown = document.querySelector('.dropdown-content');
-
-        avatar.addEventListener('click', function(event) {
-            event.stopPropagation(); // Prevent event bubbling
-            dropdown.classList.toggle('hidden');
-        });
-
-        window.addEventListener('click', function(event) {
-            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // Fungsi Ascending Descending
+        // Fungsi Ascending Descending yang sudah diperbaiki
         document.getElementById('sort').addEventListener('change', function() {
-            const list = document.getElementById('ground-list');
-            const items = Array.from(list.children); // Ambil semua item dalam list
+            const list = document.getElementById('groundList');
+            const items = Array.from(list.getElementsByTagName('li')); // Ambil semua elemen li dalam list
 
             // Tentukan urutan pengurutan berdasarkan pilihan
             const sortOrder = this.value;
 
-            // Mengurutkan berdasarkan nama_asset
-            if(sortOrder === 'asc') {
-                items.sort((a, b) => {
-                    return a.textContent.localeCompare(b.textContent); // Urutkan ascending
-                });
-            } else {
-                items.sort((a, b) => {
-                    return b.textContent.localeCompare(a.textContent); // Urutkan descending
-                });
+            // Mengurutkan berdasarkan nama_tanah
+            items.sort((a, b) => {
+                const textA = a.textContent.trim().toLowerCase();
+                const textB = b.textContent.trim().toLowerCase();
+                
+                if (sortOrder === 'asc') {
+                    return textA.localeCompare(textB); // Urutkan ascending
+                } else {
+                    return textB.localeCompare(textA); // Urutkan descending
+                }
+            });
+
+            // Menghapus semua item dari list
+            while (list.firstChild) {
+                list.removeChild(list.firstChild);
             }
 
             // Menambahkan kembali item yang sudah diurutkan ke dalam list
@@ -176,13 +164,10 @@
             const glist = document.getElementById('select-container');
             sidebar.classList.toggle('closed');
             glist.classList.toggle('hidden');
-            // Update map container width
-
         });
 
-
         // Initialize the Leaflet map
-        const map = L.map('map', {zoomControl: false }).setView([-7.614555267905213, 110.43468152673236], 15); // Umbulharjo coordinates with zoom level 15
+        const map = L.map('map', {zoomControl: false }).setView([-7.614555267905213, 110.43468152673236], 15);
 
         // Menambahkan kembali kontrol zoom di bawah kontrol layer
         L.control.zoom({ position: 'topright' }).addTo(map);
@@ -198,14 +183,11 @@
             attribution: '© OpenTopoMap'
         });
 
-        // Mengganti layer topoLayer dengan Esri Satellite
         const esriSatelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 18,
             attribution: 'Esri, © OpenStreetMap contributors'
         });
 
-
-        // Mengganti layer topoLayer dengan CartoDB Positron
         const cartoDBPositronLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
             maxZoom: 18,
             attribution: '© CartoDB, © OpenStreetMap contributors'
@@ -224,14 +206,10 @@
 
         L.control.layers(baseLayers).addTo(map);
 
-
         // Close modal
         document.getElementById('closeModal').addEventListener('click', () => {
             document.getElementById('infoModal').style.display = 'none';
         });
-
-        // Show detail modal and hide info modal
-
 
         // Close detail modal
         document.getElementById('closeDetailModal').addEventListener('click', () => {
@@ -259,8 +237,6 @@
                         }
 
                         response.data.forEach(tanah => {
-
-
                             // side bar daftar tanah
                             const li = document.createElement('li');
                             li.className = 'p-4 border-b cursor-pointer hover:bg-gray-100';
@@ -271,8 +247,6 @@
                             });
 
                             groundList.appendChild(li);
-
-
 
                             // Tambahkan marker
                             if (tanah.latitude && tanah.longitude) {
@@ -324,9 +298,11 @@
                                     console.warn('Tidak ada geometry.coordinates di parsedData:', parsedData);
                                 }
                             }
-                        })
+                        });
                     },
-
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching ground data:', error);
+                    }
                 });
             } else {
                 console.log('Token tidak ditemukan di localStorage');
@@ -356,9 +332,8 @@
             document.getElementById('ownershipStatus').textContent = ground.nama_status_kepemilikan;
             document.getElementById('longtitude').textContent = ground.longitude;
             document.getElementById('detailLandNumber').textContent = ground.id;
-            document.getElementById('numberSertif').textContent = ground.sertifikat_tanah.substr(0, ground.certificate.length - 4) ?? '';
+            document.getElementById('numberSertif').textContent = ground.sertifikat_tanah ? ground.sertifikat_tanah.substr(0, ground.sertifikat_tanah.length - 4) : '';
         }
     </script>
 </body>
-
 </html>

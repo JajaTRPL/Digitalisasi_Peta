@@ -12,13 +12,7 @@
             <h1 class="text-[#262B43E5] text-2xl font-semibold mb-3 mt-4 font-poppins">Peta Digital Kalurahan Umbulharjo</h1>
         </div>
         <form id="loginForm">
-            {{-- method="POST" action="{{ route(name: 'login') }}" --}}
             @csrf
-
-            {{-- <div class="mb-4">
-                <input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Username" class="w-full p-3 border border-gray-300 rounded-lg">
-                <x-input-error :messages="$errors->get('name')" class="mt-2" />
-            </div> --}}
 
             <div class="mb-4">
                 <input id="email" name="email" type="email" placeholder="Email" :value="old('email')" required autofocus autocomplete="username" class="w-full p-3 border border-gray-300 rounded-lg ">
@@ -38,19 +32,29 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
-            <div class="mb-4 mt-6 md:mt-10 lg:mt-4">
-                <button type="submit" class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700">Masuk</button>
+            <div class="mb-4 mt-6 md:mt-10 lg:mt-4 relative">
+                <button type="submit" id="loginButton" class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                    <span id="loginText">Masuk</span>
+                    <span id="loginSpinner" class="hidden absolute inset-0 flex items-center justify-center">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
+                </button>
             </div>
 
             <div class="text-center">
                 <p class="text-sm">Tidak memiliki akun?
-
                     @if (Route::has('register'))
-                        <a
-                            href="{{ route('register') }}"
-                            class="text-blue-600 hover:underline"
-                        >
-                            Daftar
+                        <a href="{{ route('register') }}" id="registerLink" class="text-blue-600 hover:underline transition-colors duration-300 relative">
+                            <span id="registerText">Daftar</span>
+                            <span id="registerSpinner" class="hidden absolute inset-0 flex items-center justify-center">
+                                <svg class="animate-spin h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
                         </a>
                     @endif
                 </p>
@@ -59,9 +63,60 @@
     </div>
 </div>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+        <svg class="animate-spin h-12 w-12 text-[#666CFF] mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-lg font-semibold">Mengarahkan...</p>
+    </div>
+</div>
+
 <script>
+    // Toggle password visibility
+    function togglePassword(inputId, eyeIconId, eyeSlashId) {
+        const input = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(eyeIconId);
+        const eyeSlash = document.getElementById(eyeSlashId);
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeIcon.style.display = 'none';
+            eyeSlash.style.display = 'block';
+        } else {
+            input.type = 'password';
+            eyeIcon.style.display = 'block';
+            eyeSlash.style.display = 'none';
+        }
+    }
+
+    // Add animation to register link
+    document.getElementById('registerLink')?.addEventListener('click', function(e) {
+        const link = e.currentTarget;
+        const text = link.querySelector('#registerText');
+        const spinner = link.querySelector('#registerSpinner');
+        
+        text.classList.add('opacity-0');
+        spinner.classList.remove('hidden');
+        
+        // Show loading overlay
+        document.getElementById('loadingOverlay').classList.remove('hidden');
+    });
+
+    // Login form submission
     $('#loginForm').submit(function(e) {
         e.preventDefault();
+
+        // Show loading state on button
+        const loginButton = document.getElementById('loginButton');
+        const loginText = document.getElementById('loginText');
+        const loginSpinner = document.getElementById('loginSpinner');
+        
+        loginText.classList.add('opacity-0');
+        loginSpinner.classList.remove('hidden');
+        loginButton.disabled = true;
 
         let email = $('input[name="email"]').val();
         let password = $('input[name="password"]').val();
@@ -83,6 +138,9 @@
                 console.log('Login berhasil!', response);
                 localStorage.setItem('token', response.access_token);
                 
+                // Show loading overlay
+                document.getElementById('loadingOverlay').classList.remove('hidden');
+                
                 // Success toast
                 Toastify({
                     text: "Login berhasil! Mengarahkan ke dashboard...",
@@ -90,7 +148,7 @@
                     close: true,
                     gravity: "top",
                     position: "right",
-                    backgroundColor: "#4CAF50",
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                     stopOnFocus: true,
                 }).showToast();
                 
@@ -100,6 +158,11 @@
                 }, 3000);
             },
             error: function(xhr) {
+                // Reset button state
+                loginText.classList.remove('opacity-0');
+                loginSpinner.classList.add('hidden');
+                loginButton.disabled = false;
+                
                 let errorMessage = 'Login Gagal';
                 if (xhr.responseJSON && xhr.responseJSON.message) {
                     errorMessage = xhr.responseJSON.message;
@@ -115,12 +178,34 @@
                     close: true,
                     gravity: "top",
                     position: "right",
-                    backgroundColor: "#f44336",
+                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
                     stopOnFocus: true,
                 }).showToast();
             }
         });
     });
 </script>
+
+<style>
+    /* Smooth transitions for the button states */
+    #loginButton, #registerLink {
+        transition: all 0.3s ease;
+    }
+    
+    /* Loading spinner animation */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+    
+    /* Smooth opacity transitions */
+    #loginText, #registerText {
+        transition: opacity 0.3s ease;
+    }
+</style>
 
 @endsection

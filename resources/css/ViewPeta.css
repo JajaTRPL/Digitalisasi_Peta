@@ -40,3 +40,35 @@
     width: 100%;
     text-align: center;
 }
+
+/* Fix untuk Zoom Control Leaflet */
+.leaflet-control-zoom {
+    position: absolute !important;
+    right: 10px !important;
+    top: 10px !important;
+    z-index: 1000 !important;
+    border: 2px solid rgba(0,0,0,0.2) !important;
+    background-color: white !important;
+    border-radius: 4px !important;
+}
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    font-size: 18px !important;
+    display: block !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    color: black !important;
+}
+
+.leaflet-control-zoom-in {
+    border-bottom: 1px solid #ccc !important;
+    border-radius: 4px 4px 0 0 !important;
+}
+
+.leaflet-control-zoom-out {
+    border-radius: 0 0 4px 4px !important;
+}
