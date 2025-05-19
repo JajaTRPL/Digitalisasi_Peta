@@ -5,6 +5,8 @@
     </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <!-- Add Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @vite(['resources/css/ManageGround.css'])
 </head>
 
@@ -84,10 +86,6 @@
                         <h3 class="font-semibold">Nama Tanah</h3>
                         <p class="text-gray-500" id="modalGroundName">Tanah 1</p>
                     </div>
-                    {{-- <div>
-                        <h3 class="font-semibold">Alamat</h3>
-                        <p class="text-gray-500" id="modalGroundAddress">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer interdum dui vel arcu efficitur</p>
-                    </div> --}}
                 </div>
                 <!-- Tombol Aksi -->
                 <div class="flex justify-center mt-4 space-x-4">
@@ -104,11 +102,6 @@
 
     <div id="detailModal" class="modal">
         <div class="modal-content bg-white rounded-lg shadow-lg overflow-hidden p-6">
-            <!-- Modal Header with Image -->
-            {{-- <div class="relative mb-4">
-                <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
-            </div> --}}
-
             <!-- Modal Body with Information -->
             <h2 class="text-2xl font-semibold mb-4">Detail Informasi Tanah</h2>
             <div class="grid grid-cols-2 gap-4">
@@ -136,7 +129,6 @@
                     <p class="font-semibold">Longtitude:</p>
                     <p id="longtitude">-</p>
                 </div>
-
             </div>
 
             <!-- Modal Footer with Close Button -->
@@ -148,178 +140,247 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <!-- Add Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
-        const avatar = document.querySelector('.profile-avatar');
-        const dropdown = document.querySelector('.dropdown-content');
+        // Toast notification functions
+        function showSuccessToast(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#4CAF50",
+                stopOnFocus: true,
+                className: "toast-success"
+            }).showToast();
+        }
 
-        avatar.addEventListener('click', function() {
-            dropdown.classList.toggle('hidden');
-        });
+        function showErrorToast(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#F44336",
+                stopOnFocus: true,
+                className: "toast-error"
+            }).showToast();
+        }
 
-        window.addEventListener('click', function(event) {
-            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
+        // Global variables for modals
+        let selectedGroundId = null;
         const deleteModal = document.getElementById('deleteModal');
         const modalDeleteForm = document.getElementById('modalDeleteForm');
         const modalGroundName = document.getElementById('modalGroundName');
-        const modalGroundAddress = document.getElementById('modalGroundAddress');
 
-        // Fungsi untuk membuka/menutup modal
+        // Modal functions
         function toggleModal() {
             deleteModal.classList.toggle('hidden');
         }
 
-        // Fungsi untuk mengisi data dinamis ke modal dan menampilkan modal
-        function showDeleteModal(groundId, groundName, groundAddress) {
+        function showDeleteModal(groundId, groundName) {
             selectedGroundId = groundId;
             modalGroundName.textContent = groundName;
-            // modalGroundAddress.textContent = groundAddress;
             toggleModal();
         }
     </script>
 
     <script>
         $(document).ready(function () {
-        const token = localStorage.getItem('token');
-        const user = JSON.parse(localStorage.getItem('userData'));
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('userData'));
 
+            $('#groundTable').DataTable(); // Initialize DataTable
 
-        $('#groundTable').DataTable(); // inisialisasi dulu baru append data
-
-        if (token) {
-            $.ajax({
-                url: 'http://127.0.0.1:8000/api/get/ground',
-                type: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function (response) {
-                    console.log('Full API response:', response);
-
-                    if (response.status === 'success') {
-                        const table = $('#groundTable').DataTable();
-
-                        response.data.forEach(item => {
-                            table.row.add([
-                                item.detail_tanah_id,
-                                item.nama_tanah,
-                                item.added_by_name ?? '-',
-                                item.updated_at ?? '-',
-                                `
-                                <div class="flex items-center justify-start ">
-                                    <button type="button" class="text-gray-500 mx-1"
-                                        onclick="showDeleteModal('${item.detail_tanah_id}', '${item.nama_tanah}', '${item.detail_alamat}')">
-                                        <img src="/images/DeleteBtn.png" alt="Delete" >
-                                    </button>
-                                    <a class="text-gray-500 mx-1" href="/EditGround/${item.detail_tanah_id}">
-                                        <img src="/images/UpdateBtn.png" alt="Update" >
-                                    </a>
-                                    <a class="text-gray-500 mx-1"
-                                        onclick="showDetailModal('${item.detail_tanah_id}')">
-                                        <img src="/images/InfoBtn.png" alt="Information" >
-                                    </a>
-                                </div>
-                                `
-                            ]).draw(false);
-                        });
-                    }
-                }
-            });
-
-
-        // Tutup modal detail
-        $('#closeDetailModal').on('click', function () {
-            $('#detailModal').addClass('hidden').removeClass('flex');
-        });
-
-
-            $('#modalDeleteForm').on('submit', function(e) {
-                e.preventDefault();
-
-                const token = localStorage.getItem('token');
-
-                if (!selectedGroundId) {
-                    alert('ID tanah tidak ditemukan!');
-                    return;
-                }
-
-                if (!token) {
-                    alert('Token tidak ditemukan!');
-                    return;
-                }
-
-                console.log(selectedGroundId);
-
+            if (token) {
                 $.ajax({
-                    url: `http://127.0.0.1:8000/api/delete/ground/${selectedGroundId}`,
-                    type: 'DELETE',
+                    url: 'http://127.0.0.1:8000/api/get/ground',
+                    type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     },
                     success: function (response) {
-                        alert('Data berhasil dihapus!');
-                        toggleModal(); // Tutup modal
-                        location.reload(); // Refresh data
-                    },
-                    error: function (xhr) {
-                        console.error('Gagal menghapus data:', xhr.responseText);
-                        alert('Gagal menghapus data.');
+                        console.log('Full API response:', response);
+
+                        if (response.status === 'success') {
+                            const table = $('#groundTable').DataTable();
+
+                            response.data.forEach(item => {
+                                table.row.add([
+                                    item.detail_tanah_id,
+                                    item.nama_tanah,
+                                    item.added_by_name ?? '-',
+                                    item.updated_at ?? '-',
+                                    `
+                                    <div class="flex items-center justify-start">
+                                        <button type="button" class="text-gray-500 mx-1 delete-btn"
+                                            data-id="${item.detail_tanah_id}" 
+                                            data-name="${item.nama_tanah}">
+                                            <img src="/images/DeleteBtn.png" alt="Delete">
+                                        </button>
+                                        <a class="text-gray-500 mx-1" href="/EditGround/${item.detail_tanah_id}">
+                                            <img src="/images/UpdateBtn.png" alt="Update">
+                                        </a>
+                                        <button type="button" class="text-gray-500 mx-1 detail-btn"
+                                            data-id="${item.detail_tanah_id}">
+                                            <img src="/images/InfoBtn.png" alt="Information">
+                                        </button>
+                                    </div>
+                                    `
+                                ]).draw(false);
+                            });
+                        }
                     }
                 });
-            });
-        } else {
-            console.log('Token tidak ditemukan di localStorage');
-        }
-    });
 
-    function showDetailModal(id) {
-        const token = localStorage.getItem('token');
+                // Close detail modal
+                $('#closeDetailModal').on('click', function () {
+                    $('#detailModal').addClass('hidden').removeClass('flex');
+                });
 
-        console.log('Ambil detail ID:', id);
-        console.log('Token:', token);
+                // Delete button click handler
+                $(document).on('click', '.delete-btn', function() {
+                    const groundId = $(this).data('id');
+                    const groundName = $(this).data('name');
+                    showDeleteModal(groundId, groundName);
+                });
 
-        $.ajax({
-            url: `http://127.0.0.1:8000/api/get/ground/${id}`,
-            type: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Accept': 'application/json'
-            },
-            success: function (response) {
-                if (response.status === 'success') {
-                    const data = response.data;
+                // Detail button click handler
+                $(document).on('click', '.detail-btn', function() {
+                    const id = $(this).data('id');
+                    showDetailModal(id);
+                });
 
-                    $('#detailLandName').text(data.nama_tanah ?? '-');
-                    $('#detailLandAddress').text(data.alamat ?? '-');
-                    $('#ownershipStatus').text(data.nama_status_kepemilikan ?? '-');
-                    $('#detailLandOwnership').text(data.nama_tipe_tanah ?? '-');
-                    $('#landArea').text(data.luas_tanah ?? '-');
-                    $('#longtitude').text(data.longitude ?? '-');
+                // Delete form submission
+                $('#modalDeleteForm').on('submit', function(e) {
+                    e.preventDefault();
 
-                    $('#detailModal').removeClass('hidden').addClass('flex');
-                } else {
-                    alert('Gagal memuat detail tanah.');
-                }
-            },
-            error: function (xhr) {
-                console.error('Error fetching detail:', xhr.responseText);
-                if (xhr.status === 401) {
-                    alert('Session anda telah habis. Silakan login kembali.');
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('userData');
-                    window.location.href = '/login';
-                } else {
-                    alert('Terjadi kesalahan saat mengambil detail.');
-                }
+                    if (!selectedGroundId) {
+                        showErrorToast('ID tanah tidak ditemukan!');
+                        return;
+                    }
+
+                    if (!token) {
+                        showErrorToast('Token tidak ditemukan!');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: `http://127.0.0.1:8000/api/delete/ground/${selectedGroundId}`,
+                        type: 'DELETE',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        success: function (response) {
+                            showSuccessToast('Data berhasil dihapus!');
+                            toggleModal();
+                            location.reload();
+                        },
+                        error: function (xhr) {
+                            console.error('Gagal menghapus data:', xhr.responseText);
+                            showErrorToast('Gagal menghapus data.');
+                        }
+                    });
+                });
+            } else {
+                console.log('Token tidak ditemukan di localStorage');
+                showErrorToast('Silakan login kembali');
+                window.location.href = '/login';
             }
         });
-    }
 
+        function showDetailModal(id) {
+            const token = localStorage.getItem('token');
+
+            $.ajax({
+                url: `http://127.0.0.1:8000/api/get/ground/${id}`,
+                type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json'
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        const data = response.data;
+
+                        $('#detailLandName').text(data.nama_tanah ?? '-');
+                        $('#detailLandAddress').text(data.alamat ?? '-');
+                        $('#ownershipStatus').text(data.nama_status_kepemilikan ?? '-');
+                        $('#detailLandOwnership').text(data.nama_tipe_tanah ?? '-');
+                        $('#landArea').text(data.luas_tanah ?? '-');
+                        $('#longtitude').text(data.longitude ?? '-');
+
+                        $('#detailModal').removeClass('hidden').addClass('flex');
+                    } else {
+                        showErrorToast('Gagal memuat detail tanah.');
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching detail:', xhr.responseText);
+                    if (xhr.status === 401) {
+                        showErrorToast('Session anda telah habis. Silakan login kembali.');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userData');
+                        window.location.href = '/login';
+                    } else {
+                        showErrorToast('Terjadi kesalahan saat mengambil detail.');
+                    }
+                }
+            });
+        }
     </script>
-</body>
 
+    <style>
+        /* Toastify custom styles */
+        .toast-success {
+            background: #4CAF50 !important;
+            color: white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+            font-family: inherit !important;
+            padding: 12px 20px !important;
+        }
+
+        .toast-error {
+            background: #F44336 !important;
+            color: white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+            font-family: inherit !important;
+            padding: 12px 20px !important;
+        }
+
+        .toastify-close {
+            color: white !important;
+            opacity: 0.8 !important;
+            padding-left: 10px !important;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+        }
+    </style>
+</body>
 </html>

@@ -141,3 +141,44 @@
   text-align: left !important;
 }
 
+/* Toastify custom styles */
+        .toast-success {
+            background: #4CAF50 !important;
+            color: white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+            font-family: inherit !important;
+            padding: 12px 20px !important;
+        }
+
+        .toast-error {
+            background: #F44336 !important;
+            color: white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+            font-family: inherit !important;
+            padding: 12px 20px !important;
+        }
+
+        .toastify-close {
+            color: white !important;
+            opacity: 0.8 !important;
+            padding-left: 10px !important;
+        }
+
+        /* Modal overlay styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-overlay.open {
+            display: block;
+        }
+

@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <!-- Add Toastify CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @vite(['resources/css/ManageGround.css'])
 </head>
 
@@ -39,27 +41,16 @@
                 <div class="flex-1">
                     <h2 class="text-xl font-semibold">Pulihkan Data Tanah</h2>
                 </div>
-
             </div>
 
             <table class="min-w-full bg-white table-auto" id="deletedGroundTable">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">
-                            NO
-                        </th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">
-                            NAMA TANAH
-                        </th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">
-                            DIHAPUS OLEH
-                        </th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">
-                            TANGGAL DIHAPUS
-                        </th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">
-                            AKSI
-                        </th>
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">NO</th>
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">NAMA TANAH</th>
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">DIHAPUS OLEH</th>
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">TANGGAL DIHAPUS</th>
+                        <th class="py-2 px-4 border-b text-left bg-gray-200">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,14 +103,43 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <!-- Add Toastify JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
+        // Toast notification functions
+        function showSuccessToast(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#4CAF50",
+                stopOnFocus: true,
+                className: "toast-success"
+            }).showToast();
+        }
+
+        function showErrorToast(message) {
+            Toastify({
+                text: message,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                backgroundColor: "#F44336",
+                stopOnFocus: true,
+                className: "toast-error"
+            }).showToast();
+        }
+
         // Definisikan fungsi di global scope
         function showDetailModal(id) {
             const token = localStorage.getItem('token');
 
             $.ajax({
-                url: `http://127.0.0.1:8000/api/get/deleted-ground/${id}`, // Perubahan endpoint untuk mengambil data yang dihapus
+                url: `http://127.0.0.1:8000/api/get/deleted-ground/${id}`,
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -141,7 +161,7 @@
                 },
                 error: function (xhr) {
                     console.error('Error fetching detail:', xhr.responseText);
-                    alert('Terjadi kesalahan saat mengambil detail.');
+                    showErrorToast('Terjadi kesalahan saat mengambil detail.');
                 }
             });
         }
@@ -165,13 +185,15 @@
                 success: function(response) {
                     console.log('Restore response:', response);
                     if (response.status === 'success') {
-                        alert('Data berhasil dipulihkan!');
+                        showSuccessToast('Data berhasil dipulihkan!');
                         location.reload();
+                    } else {
+                        showErrorToast(response.message || 'Gagal memulihkan data');
                     }
                 },
                 error: function(xhr) {
                     console.error('Error during restore:', xhr.responseText);
-                    alert('Terjadi kesalahan saat memulihkan data');
+                    showErrorToast('Terjadi kesalahan saat memulihkan data');
                 }
             });
         }
@@ -206,9 +228,6 @@
             });
 
             if (token) {
-                // Tambahkan log untuk debugging
-                console.log('Token retrieved:', token ? 'Yes' : 'No');
-
                 $.ajax({
                     url: 'http://127.0.0.1:8000/api/get/deleted-ground',
                     type: 'GET',
@@ -229,29 +248,62 @@
                                 table.row.add([
                                     index + 1,
                                     item.nama_tanah,
-                                    item.deleted_by_name ? item.deleted_by_name: 'System',
+                                    item.deleted_by_name ? item.deleted_by_name : 'System',
                                     item.deleted_at ? new Date(item.deleted_at).toLocaleString('id-ID') : '-',
                                     `<div class="flex items-center justify-start">${restoreButton}${detailButton}</div>`
                                 ]).draw(false);
                             });
                         } else {
                             console.error('Error in API response:', response.message);
-                            alert('Gagal memuat data yang dihapus: ' + response.message);
+                            showErrorToast('Gagal memuat data yang dihapus: ' + response.message);
                         }
                     },
                     error: function(xhr) {
                         console.error('AJAX error:', xhr.responseText);
-                        alert('Terjadi kesalahan saat mengambil data');
+                        showErrorToast('Terjadi kesalahan saat mengambil data');
+                        if (xhr.status === 401) {
+                            window.location.href = '/login';
+                        }
                     }
                 });
             } else {
                 console.error('Token not found');
-                alert('Tidak dapat mengakses data. Silakan login kembali.');
-                // Redirect to login page
+                showErrorToast('Tidak dapat mengakses data. Silakan login kembali.');
                 window.location.href = '/login';
             }
         });
     </script>
-</body>
 
+    <style>
+        /* Toastify custom styles */
+        .toast-success {
+            background: #4CAF50 !important;
+            color: white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+            font-family: inherit !important;
+            padding: 12px 20px !important;
+        }
+
+        .toast-error {
+            background: #F44336 !important;
+            color: white !important;
+            border-radius: 4px !important;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
+            font-family: inherit !important;
+            padding: 12px 20px !important;
+        }
+
+        .toastify-close {
+            color: white !important;
+            opacity: 0.8 !important;
+            padding-left: 10px !important;
+        }
+
+        /* Modal styles */
+        #detailModal {
+            display: none;
+        }
+    </style>
+</body>
 </html>
