@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",function(){const e=document.querySelector(".profile-avatar"),t=document.querySelector(".dropdown-content");e&&t&&(e.addEventListener("click",function(n){n.stopPropagation(),t.classList.toggle("hidden")}),window.addEventListener("click",function(n){!e.contains(n.target)&&!t.contains(n.target)&&t.classList.add("hidden")}))});
