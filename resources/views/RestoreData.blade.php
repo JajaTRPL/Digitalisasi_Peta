@@ -184,7 +184,7 @@
             toggleDetailModal();
 
             $.ajax({
-                url: `http://127.0.0.1:8000/api/get/deleted-ground/${id}`,
+                url: `{{ config('app.API_URL') }}/api/get/deleted-ground/${id}`,
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -243,7 +243,7 @@
             const token = localStorage.getItem('token');
             
             $.ajax({
-                url: `http://127.0.0.1:8000/api/restore/deleted-ground/${restoreId}`,
+                url: `{{ config('app.API_URL') }}/api/restore/deleted-ground/${restoreId}`,
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -307,7 +307,7 @@
 
             if (token) {
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/deleted-ground',
+                    url: '{{ config('app.API_URL') }}/api/get/deleted-ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token

@@ -286,7 +286,7 @@
 
             if(token){
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/ground',
+                    url: '{{ config('app.API_URL') }}/api/get/ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token

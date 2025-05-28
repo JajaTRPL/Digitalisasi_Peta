@@ -179,7 +179,7 @@
             const token = localStorage.getItem('token');
 
             $.ajax({
-                url: `http://127.0.0.1:8000/api/delete/admin/${currentDeleteId}`,
+                url: `{{ config('app.API_URL') }}/api/delete/admin/${currentDeleteId}`,
                 type: 'DELETE',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -299,7 +299,7 @@
             window.loadAdminData = function() {
                 if (token) {
                     $.ajax({
-                        url: 'http://127.0.0.1:8000/api/get/admin',
+                        url: '{{ config('app.API_URL') }}/api/get/admin',
                         type: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + token
@@ -373,7 +373,7 @@
 
                 if (password === confirmPassword) {
                     $.ajax({
-                        url: 'http://127.0.0.1:8000/api/register/admin',
+                        url: '{{ config('app.API_URL') }}/api/register/admin',
                         type: 'POST',
                         data: JSON.stringify({
                             name: username,
@@ -435,7 +435,7 @@
                 }
 
                 $.ajax({
-                    url: `http://127.0.0.1:8000/api/update/admin/${userId}`,
+                    url: `{{ config('app.API_URL') }}/api/update/admin/${userId}`,
                     type: 'PUT',
                     data: JSON.stringify(data),
                     contentType: 'application/json',

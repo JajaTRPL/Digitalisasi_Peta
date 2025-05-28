@@ -239,7 +239,7 @@
                 showLoading();
                 
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/ground',
+                    url: '{{ config('app.API_URL') }}/api/get/ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
@@ -344,7 +344,7 @@
                     deleteBtn.prop('disabled', true);
 
                     $.ajax({
-                        url: `http://127.0.0.1:8000/api/delete/ground/${selectedGroundId}`,
+                        url: `{{ config('app.API_URL') }}/api/delete/ground/${selectedGroundId}`,
                         type: 'DELETE',
                         headers: {
                             'Authorization': 'Bearer ' + token
@@ -385,7 +385,7 @@
             toggleDetailModal();
 
             $.ajax({
-                url: `http://127.0.0.1:8000/api/get/ground/${id}`,
+                url: `{{ config('app.API_URL') }}/api/get/ground/${id}`,
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,

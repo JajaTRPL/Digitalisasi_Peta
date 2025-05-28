@@ -131,7 +131,7 @@
         let password = $('input[name="password"]').val();
 
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/login',
+            url: '{{ config('app.API_URL') }}/api/login',
             type: 'POST',
             data: JSON.stringify({
                 email: email,

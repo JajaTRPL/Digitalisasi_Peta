@@ -229,7 +229,7 @@
 
             console.log(id);
             $.ajax({
-                url: 'http://127.0.0.1:8000/api/get/ground/' + id,
+                url: '{{ config('app.API_URL') }}/api/get/ground/' + id,
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token  // Pastikan kalau API pakai token
@@ -306,28 +306,28 @@
             // Ambil semua dropdown & detail data sekaligus
             $.when(
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/tipe-tanah',
+                    url: '{{ config('app.API_URL') }}/api/get/tipe-tanah',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 }),
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/status-tanah',
+                    url: '{{ config('app.API_URL') }}/api/get/status-tanah',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 }),
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/status-kepemilikan',
+                    url: '{{ config('app.API_URL') }}/api/get/status-kepemilikan',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 }),
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/ground/' + id,
+                    url: '{{ config('app.API_URL') }}/api/get/ground/' + id,
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token

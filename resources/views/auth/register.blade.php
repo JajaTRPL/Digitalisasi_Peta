@@ -184,7 +184,7 @@
 
         // API call
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/register/guest',
+            url: '{{ config('app.API_URL') }}/api/register/guest',
             type: 'POST',
             data: JSON.stringify({
                 name: username,

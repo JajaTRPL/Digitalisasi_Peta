@@ -395,7 +395,7 @@
             submitBtn.disabled = true;
 
             $.ajax({
-                url: 'http://127.0.0.1:8000/api/create/ground',
+                url: '{{ config('app.API_URL') }}/api/create/ground',
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -470,21 +470,21 @@
 
             $.when(
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/tipe-tanah',
+                    url: '{{ config('app.API_URL') }}/api/get/tipe-tanah',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 }),
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/status-tanah',
+                    url: '{{ config('app.API_URL') }}/api/get/status-tanah',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 }),
                 $.ajax({
-                    url: 'http://127.0.0.1:8000/api/get/status-kepemilikan',
+                    url: '{{ config('app.API_URL') }}/api/get/status-kepemilikan',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
