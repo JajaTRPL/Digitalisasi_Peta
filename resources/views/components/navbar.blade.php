@@ -185,7 +185,7 @@
     if (token) {
       showSpinner(true, 'Loading...');
       $.ajax({
-        url: 'http://127.0.0.1:8000/api/user',
+        url: '{{ config('app.API_URL') }}/api/user',
         type: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token
@@ -218,7 +218,7 @@
       // Add slight delay to ensure spinner is visible
       setTimeout(() => {
         $.ajax({
-          url: 'http://127.0.0.1:8000/api/logout',
+          url: '{{ config('app.API_URL') }}/api/logout',
           type: 'POST',
           headers: {
             'Authorization': 'Bearer ' + token
