@@ -32,6 +32,13 @@
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
+            <!-- Forgot Password Link -->
+            <div class="text-center mb-4 flex justify-end">
+                <a href="{{ route('password.request') }}" class="text-[#666CFF] hover:underline text-sm">
+                    forgot password?
+                </a>
+            </div>
+
             <div class="mb-4 mt-6 md:mt-10 lg:mt-4 relative">
                 <button type="submit" id="loginButton" class="w-full bg-[#666CFF] text-white p-3 rounded-lg hover:bg-blue-700 transition-colors duration-300">
                     <span id="loginText">Masuk</span>
@@ -43,6 +50,8 @@
                     </span>
                 </button>
             </div>
+
+            
 
             <div class="text-center">
                 <p class="text-sm">Tidak memiliki akun?

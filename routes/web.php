@@ -56,4 +56,9 @@ Route::get('/restore-data', function () {
     return view('RestoreData');
 })->name('data.restore');
 
+
+Route::get('/lupa-password', function () {
+    return view('auth.reset-password'); // Sesuaikan dengan nama blade Anda
+})->name('password.request');
+
 require __DIR__.'/auth.php';

@@ -41,17 +41,17 @@
     text-align: center;
 }
 
-/* Fix untuk Zoom Control Leaflet */
-.leaflet-control-zoom {
-    position: absolute !important;
-    right: 10px !important;
-    top: 10px !important;
+/* Fix untuk Zoom Control Leaflet - Posisi Top Right dengan Jarak dari Atas */
+.leaflet-top.leaflet-right .leaflet-control-zoom {
+    margin-top: 25px !important;  /* Memberi jarak dari atas */
+    margin-right: 10px !important;
     z-index: 1000 !important;
     border: 2px solid rgba(0,0,0,0.2) !important;
     background-color: white !important;
     border-radius: 4px !important;
 }
 
+/* Style tombol zoom (opsional) */
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
     width: 30px !important;

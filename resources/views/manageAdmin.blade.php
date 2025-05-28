@@ -30,9 +30,9 @@
     @include('components.navbar')
 
     <div class="container mx-auto mt-10">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex items-center mb-4 gap-5">
-                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded">
+        <div class="bg-white px-10 py-7 rounded-lg shadow-md overflow-hidden">
+            <div class="flex items-center justify-between mb-6">
+                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded-lg transition-colors hover:bg-[#5a60e5]">
                     <i class="fas fa-plus mr-2"></i>
                     Tambah Admin
                 </button>
@@ -41,11 +41,11 @@
             <table class="min-w-full bg-white table-auto" id="adminTable">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">NO</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">NAMA</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">EMAIL</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">PERAN</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">AKSI</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-200">NO</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-200">NAMA</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-200">EMAIL</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-200">PERAN</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-200">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +61,34 @@
     @include('components.TambahAdminModal')
     @include('components.UpdateAdminModal')
 
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteAdminModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Konfirmasi Hapus Admin</h3>
+                <button onclick="closeDeleteModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mb-6">
+                <p>Apakah Anda yakin ingin menghapus admin ini?</p>
+                <div class="mt-4 p-4 bg-amber-50 rounded-lg">
+                    <p class="font-semibold" id="adminToDeleteName"></p>
+                    <p class="text-gray-600 text-sm mt-1" id="adminToDeleteEmail"></p>
+                </div>
+            </div>
+            <div class="flex justify-center mt-4 space-x-4">
+                    <button onclick="closeDeleteModal()" class="px-4 py-2 w-full border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors" onclick="toggleModal()">
+                        Batal
+                    </button>
+                    <button id="confirmDeleteBtn" class="px-4 py-2 w-full bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" >
+                        Hapus
+                    </button>
+                    <form id="modalDeleteForm" class="hidden"></form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
     <!-- Toastify JS -->
@@ -75,7 +103,7 @@
                 close: true,
                 gravity: "top",
                 position: "right",
-                backgroundColor: "#4CAF50",
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                 stopOnFocus: true,
                 className: "toast-success"
             }).showToast();
@@ -88,7 +116,7 @@
                 close: true,
                 gravity: "top",
                 position: "right",
-                backgroundColor: "#F44336",
+                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
                 stopOnFocus: true,
                 className: "toast-error"
             }).showToast();
@@ -122,13 +150,36 @@
             $('#editAdminForm')[0].reset();
         }
 
-        function deleteAdmin(id) {
-            if (!confirm('Apakah Anda yakin ingin menghapus admin ini?')) return;
+        // Delete modal functions
+        let currentDeleteId = null;
+        let currentDeleteName = null;
+        let currentDeleteEmail = null;
 
+        function openDeleteModal(id, name, email) {
+            currentDeleteId = id;
+            currentDeleteName = name;
+            currentDeleteEmail = email;
+            $('#adminToDeleteName').text(name);
+            $('#adminToDeleteEmail').text(email);
+            $('#modalOverlay').addClass('open');
+            $('#deleteAdminModal').addClass('open');
+        }
+
+        function closeDeleteModal() {
+            $('#modalOverlay').removeClass('open');
+            $('#deleteAdminModal').removeClass('open');
+            currentDeleteId = null;
+            currentDeleteName = null;
+            currentDeleteEmail = null;
+        }
+
+        function confirmDelete() {
+            if (!currentDeleteId) return;
+            
             const token = localStorage.getItem('token');
 
             $.ajax({
-                url: `http://127.0.0.1:8000/api/delete/admin/${id}`,
+                url: `http://127.0.0.1:8000/api/delete/admin/${currentDeleteId}`,
                 type: 'DELETE',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -138,14 +189,21 @@
                     console.log('Delete response:', response);
                     if (response.status === 'success') {
                         showSuccessToast('Admin berhasil dihapus!');
-                        loadAdminData();
+                        // Reload halaman setelah 1 detik
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
                     } else {
                         showErrorToast('Gagal menghapus admin: ' + response.message);
                     }
+                    closeDeleteModal();
+                    setTimeout(() => window.location.reload(), 1000);
                 },
                 error: function(xhr) {
                     console.error('Error during delete:', xhr.responseText);
                     showErrorToast('Terjadi kesalahan saat menghapus admin');
+                    closeDeleteModal();
+                    setTimeout(() => window.location.reload(), 1000);
                 }
             });
         }
@@ -158,26 +216,45 @@
             $('#modalOverlay').on('click', function() {
                 closeTambahModal();
                 closeEditModal();
+                closeDeleteModal();
             });
 
             // Initialize DataTable
             let table = $('#adminTable').DataTable({
                 "language": {
                     "emptyTable": "Tidak ada data admin",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                    "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                    "info": "<span class='text-gray-500' font-inter> Menampilkan _START_ sampai _END_ dari _TOTAL_ entri </span>",
+                    "infoEmpty": " Menampilkan 0 sampai 0 dari 0 entri",
                     "infoFiltered": "(difilter dari total _MAX_ entri)",
-                    "lengthMenu": "Tampilkan:_MENU_ ",
+                    "lengthMenu": "Tampilkan: _MENU_",
                     "search": "",
-                    "zeroRecords": "Tidak ditemukan data yang sesuai"
+                    "searchPlaceholder": "Cari admin",
+                    "zeroRecords": "Tidak ditemukan data yang sesuai",
+                    "paginate": {
+                        "first": "<span class='pagination-icon-wrapper'><i class='fas fa-angle-double-left'></i></span>",
+                        "last": "<span class='pagination-icon-wrapper'><i class='fas fa-angle-double-right'></i></span>",
+                        "next": "<span class='pagination-icon-wrapper'><i class='fas fa-angle-right'></i></span>",
+                        "previous": "<span class='pagination-icon-wrapper'><i class='fas fa-angle-left'></i></span>"
+                    }
                 },
-                "responsive": true
+                "pagingType": "full_numbers",
+                "responsive": true,
+                "dom": '<"flex justify-between items-center mb-4"lf>rt<"flex justify-between items-center mt-4"ip>',
+                "initComplete": function() {
+                    $('.dataTables_filter input').attr('placeholder', 'Cari nama/email...');
+                    $('.dataTables_filter label').contents().filter(function() {
+                        return this.nodeType === 3;
+                    }).remove();
+                }
             });
 
             // Add event listener for add admin button
             $('#tambahAdminBtn').on('click', function() {
                 openTambahModal();
             });
+
+            // Add event listener for confirm delete button
+            $('#confirmDeleteBtn').on('click', confirmDelete);
 
             // Event handler for edit and delete buttons using event delegation
             $('#adminTable').on('click', '.edit-btn', function() {
@@ -190,8 +267,33 @@
 
             $('#adminTable').on('click', '.delete-btn', function() {
                 const id = $(this).data('id');
-                deleteAdmin(id);
+                const row = $(this).closest('tr');
+                const name = row.find('td:eq(1)').text();
+                const email = row.find('td:eq(2)').text();
+                openDeleteModal(id, name, email);
             });
+
+            // Function to generate random avatar color
+            function getRandomAvatarColor() {
+                const colors = [
+                    'bg-red-500', 'bg-blue-500', 'bg-green-500', 
+                    'bg-yellow-500', 'bg-purple-500', 'bg-pink-500',
+                    'bg-indigo-500', 'bg-teal-500', 'bg-orange-500'
+                ];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            // Function to get initials from name
+            function getInitials(name) {
+                const names = name.split(' ');
+                let initials = names[0].substring(0, 1).toUpperCase();
+                
+                if (names.length > 1) {
+                    initials += names[names.length - 1].substring(0, 1).toUpperCase();
+                }
+                
+                return initials;
+            }
 
             // Load admin data
             window.loadAdminData = function() {
@@ -210,15 +312,31 @@
                                 table.clear();
 
                                 response.data.forEach((item, index) => {
-                                    const editButton = `<button type="button" class="text-blue-500 mx-1 edit-btn" data-id="${item.id}" data-name="${item.name}" data-email="${item.email}" data-role="${item.roles}"><i class="fas fa-pen"></i></button>`;
-                                    const deleteButton = `<button type="button" class="text-red-500 mx-1 delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>`;
+                                    // Create avatar with initials
+                                    const avatarColor = getRandomAvatarColor();
+                                    const initials = getInitials(item.name);
+                                    
+                                    const emailWithAvatar = `
+                                        <div class="flex items-center">
+                                            <div class="w-8 h-8 rounded-full ${avatarColor} flex items-center justify-center text-white font-semibold mr-3">
+                                                ${initials}
+                                            </div>
+                                            <div>
+                                                ${item.email}
+                                            </div>
+                                        </div>
+                                    `;
+
+                                    const deleteButton = `<button type="button" class="text-red-500 delete-btn" data-id="${item.id}"> <img src="/images/DeleteBtn.png" alt="Delete"></button>`;
+                                    const editButton = `<button type="button" class="text-blue-500 mx-1 edit-btn" data-id="${item.id}" data-name="${item.name}" data-email="${item.email}" data-role="${item.roles}"><img src="/images/UpdateBtn.png" alt="Update"></button>`;
+                                    
 
                                     table.row.add([
                                         index + 1,
                                         item.name,
-                                        item.email,
+                                        emailWithAvatar,
                                         item.roles,
-                                        `<div class="flex items-center justify-start">${editButton}${deleteButton}</div>`
+                                        `<div class="flex items-center justify-start">${deleteButton}${editButton}</div>`
                                     ]).draw(false);
                                 });
                             } else {
@@ -272,7 +390,10 @@
                             showSuccessToast('Admin berhasil ditambahkan!');
                             $('#tambahAdminForm')[0].reset();
                             closeTambahModal();
-                            loadAdminData();
+                            // Reload halaman setelah 1 detik
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
                         },
                         error: function(xhr) {
                             let errorMessage = 'Registrasi gagal';
@@ -283,6 +404,7 @@
                             }
                             console.log('Registrasi gagal:', errorMessage);
                             showErrorToast('Registrasi gagal: ' + errorMessage);
+                            setTimeout(() => window.location.reload(), 1000);
                         }
                     });
                 } else {
@@ -326,7 +448,10 @@
                         console.log(response);
                         showSuccessToast('Admin berhasil diperbarui!');
                         closeEditModal();
-                        loadAdminData();
+                        // Reload halaman setelah 1 detik
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1000);
                     },
                     error: function(xhr) {
                         let errorMessage = 'Update gagal';
@@ -337,11 +462,11 @@
                         }
                         console.log('Update gagal:', errorMessage);
                         showErrorToast('Update gagal: ' + errorMessage);
+                        setTimeout(() => window.location.reload(), 1000);
                     }
                 });
             });
         });
     </script>
-
 </body>
 </html>

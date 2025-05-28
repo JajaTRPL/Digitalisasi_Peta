@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    
 </head>
 
 <body class="bg-black relative">
@@ -23,7 +25,6 @@
                 <span class="text-lg font-semibold">
                     Ground Kelurahan
                 </span>
-                <!-- Tombol untuk menutup sidebar menggunakan gambar -->
                 <button id="toggleSidebar">
                     <img src="{{ asset('images/Sidebar.png') }}" alt="Toggle Sidebar" class="w-6 h-6">
                 </button>
@@ -65,35 +66,24 @@
 
     <!-- Script to handle interactivity -->
     <script>
-        // Fungsi Ascending Descending yang sudah diperbaiki
+        // Fungsi Ascending Descending
         document.getElementById('sort').addEventListener('change', function() {
             const list = document.getElementById('groundList');
-            const items = Array.from(list.getElementsByTagName('li')); // Ambil semua elemen li dalam list
+            const items = Array.from(list.getElementsByTagName('li'));
 
-            // Tentukan urutan pengurutan berdasarkan pilihan
             const sortOrder = this.value;
 
-            // Mengurutkan berdasarkan nama_tanah
             items.sort((a, b) => {
                 const textA = a.textContent.trim().toLowerCase();
                 const textB = b.textContent.trim().toLowerCase();
                 
-                if (sortOrder === 'asc') {
-                    return textA.localeCompare(textB); // Urutkan ascending
-                } else {
-                    return textB.localeCompare(textA); // Urutkan descending
-                }
+                return sortOrder === 'asc' 
+                    ? textA.localeCompare(textB)
+                    : textB.localeCompare(textA);
             });
 
-            // Menghapus semua item dari list
-            while (list.firstChild) {
-                list.removeChild(list.firstChild);
-            }
-
-            // Menambahkan kembali item yang sudah diurutkan ke dalam list
-            items.forEach(item => {
-                list.appendChild(item);
-            });
+            list.innerHTML = '';
+            items.forEach(item => list.appendChild(item));
         });
 
         document.getElementById('toggleSidebar').addEventListener('click', function() {
@@ -104,10 +94,7 @@
         });
 
         // Initialize the Leaflet map
-        const map = L.map('map', {zoomControl: false }).setView([-7.614555267905213, 110.43468152673236], 15);
-
-        // Menambahkan kembali kontrol zoom di bawah kontrol layer
-        L.control.zoom({ position: 'topright' }).addTo(map);
+        const map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15);
 
         // Define different tile layers
         const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -141,7 +128,14 @@
             "OpenTopoMap": satelliteLayer
         };
 
-        L.control.layers(baseLayers).addTo(map);
+        // Tambahkan kontrol dengan posisi yang berbeda
+        L.control.layers(baseLayers, null, {
+            position: 'topright' // Layers control di kanan atas
+        }).addTo(map);
+
+        L.control.zoom({
+            position: 'topright' // Zoom control di kiri atas (default)
+        }).addTo(map);
 
         // Close modal
         document.getElementById('closeModal').addEventListener('click', () => {
@@ -209,11 +203,9 @@
                                     const coords = parsedData.geometry.coordinates;
 
                                     if (geoType === 'Polygon' && Array.isArray(coords)) {
-                                        // Ambil ring pertama (biasanya index 0)
                                         const firstRing = coords[0];
 
                                         if (Array.isArray(firstRing) && firstRing.length > 0) {
-                                            // Convert jadi [lat, lng]
                                             const formattedCoords = firstRing.map(coord => [coord[1], coord[0]]);
 
                                             const polygon = L.polygon(formattedCoords, {
@@ -225,14 +217,8 @@
                                             polygon.on('click', function () {
                                                 showInfoModal(tanah);
                                             });
-                                        } else {
-                                            console.warn('First ring polygon kosong:', firstRing);
                                         }
-                                    } else {
-                                        console.warn('Geometry bukan Polygon atau invalid:', geoType, coords);
                                     }
-                                } else {
-                                    console.warn('Tidak ada geometry.coordinates di parsedData:', parsedData);
                                 }
                             }
                         });
@@ -241,8 +227,6 @@
                         console.error('Error fetching ground data:', error);
                     }
                 });
-            } else {
-                console.log('Token tidak ditemukan di localStorage');
             }
         });
 

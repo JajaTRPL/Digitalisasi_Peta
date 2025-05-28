@@ -2,3 +2,83 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Forgot-password */
+ /* Animasi untuk seluruh halaman */
+    body {
+        opacity: 0;
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Animasi untuk form */
+    .form-container {
+        animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+        from { 
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Animasi spinner */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .animate-spin {
+        animation: spin 1s linear infinite;
+    }
+    
+    /* Transisi untuk overlay */
+    #loadingOverlay {
+        transition: opacity 0.3s ease;
+    }
+    
+    /* Transisi untuk link */
+    .transition-all {
+        transition-property: all;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 150ms;
+    }
+    
+    /* Hide sections initially */
+    #otpSection {
+        display: none;
+    }
+    
+    #passwordSection {
+        display: none;
+    }
+    
+    /* Success message */
+    .success-message {
+        display: none;
+    }
+    
+    /* Resend OTP link */
+    .resend-otp {
+        color: #4F46E5;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    
+    .resend-otp:hover {
+        color: #4338CA;
+    }
+    
+    .resend-otp.disabled {
+        color: #9CA3AF;
+        cursor: not-allowed;
+        text-decoration: none;
+    }

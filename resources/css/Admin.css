@@ -137,36 +137,134 @@
     padding: 1.5rem;
 }
 
-#adminTable tbody td:first-child {
-  text-align: left !important;
-}
+ /* DataTable Styles */
+    #adminTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+    
+    #adminTable thead th {
+        background-color: #f8fafc;
+        color: #64748b;
+        font-weight: 500;
+        padding: 12px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        text-align: left;
+    }
+    
+    #adminTable tbody td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        color: #262B43B2;
+        background-color: white;
+        text-align: left
+    }
 
-/* Toastify custom styles */
-        .toast-success {
-            background: #4CAF50 !important;
-            color: white !important;
-            border-radius: 4px !important;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
-            font-family: inherit !important;
-            padding: 12px 20px !important;
-        }
+    #adminTable tbody td:first-child {
+        color: #666CFF; /* Warna ungu untuk kolom nomor */
+        font-weight: 500; /* Opsional: membuat teks sedikit tebal */
+    }
+    
+    #adminTable tbody tr:hover td {
+        background-color: #f8fafc;
+    }
+    
+    /* Search input styling */
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 8px 12px;
+        margin-left: 10px;
+        background-color: white;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    
+    .dataTables_wrapper .dataTables_filter input:focus {
+        outline: none;
+        border-color: #666CFF;
+        box-shadow: 0 0 0 3px rgba(102, 108, 255, 0.1);
+    }
+    
+    .dataTables_wrapper .dataTables_filter label {
+        display: flex;
+        align-items: center;
+        color: #64748b;
+    }
+    
+    /* PAGINATION CUSTOM STYLE */
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 1rem;
+        margin-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 
-        .toast-error {
-            background: #F44336 !important;
-            color: white !important;
-            border-radius: 4px !important;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
-            font-family: inherit !important;
-            padding: 12px 20px !important;
-        }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        min-width: 2rem;
+        height: 2rem;
+        margin: 0 0.25rem;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.2s ease;
+        padding: 0 0.5rem;
+        background: white;
+    }
 
-        .toastify-close {
-            color: white !important;
-            opacity: 0.8 !important;
-            padding-left: 10px !important;
-        }
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        background: #f8fafc;
+        color: #666CFF;
+        border-color: #e2e8f0;
+        text-decoration: none;
+    }
 
-        /* Modal overlay styles */
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        background: #666CFF;
+        color: white;
+        border-color: #666CFF;
+        font-weight: 500;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+        color: #cbd5e1;
+        background: transparent;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .ellipsis {
+        padding: 0 0.5rem;
+        color: #64748b;
+    }
+        
+    /* Length select styling */
+    .dataTables_wrapper .dataTables_length select {
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.375rem 1.75rem 0.375rem 0.75rem;
+        background-color: white;
+        color: #64748b;
+    }
+    
+    .dataTables_wrapper .dataTables_length select:focus {
+        outline: none;
+        border-color: #666CFF;
+        box-shadow: 0 0 0 3px rgba(102, 108, 255, 0.1);
+    }
+    
+
+    
+/* Modal overlay styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -182,3 +280,52 @@
             display: block;
         }
 
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .modal-overlay.open {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 28rem;
+            padding: 1.5rem;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .modal.open .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        

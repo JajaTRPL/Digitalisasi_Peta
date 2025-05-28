@@ -3,15 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>
-        Pulihkan Data Tanah Kalurahan Umbulharjo
-    </title>
+    <title>Pulihkan Data Tanah Kalurahan Umbulharjo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <!-- Add Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    @vite(['resources/css/ManageGround.css'])
+    @vite(['resources/css/RestoreData.css'])
 </head>
 
 <body class="bg-[#F6F9EE]">
@@ -34,7 +32,7 @@
     <div class="container mx-auto mt-10">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex items-center mb-4 gap-5">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="history.back()">
+                <button class="bg-[#666CFF] text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors" onclick="history.back()">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Kembali
                 </button>
@@ -43,14 +41,14 @@
                 </div>
             </div>
 
-            <table class="min-w-full bg-white table-auto" id="deletedGroundTable">
+            <table class="min-w-full bg-white" id="deletedGroundTable">
                 <thead>
                     <tr>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">NO</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">NAMA TANAH</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">DIHAPUS OLEH</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">TANGGAL DIHAPUS</th>
-                        <th class="py-2 px-4 border-b text-left bg-gray-200">AKSI</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-100 text-gray-700 font-semibold">NO</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-100 text-gray-700 font-semibold">NAMA TANAH</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-100 text-gray-700 font-semibold">DIHAPUS OLEH</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-100 text-gray-700 font-semibold">TANGGAL DIHAPUS</th>
+                        <th class="py-3 px-4 border-b text-left bg-gray-100 text-gray-700 font-semibold">AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,50 +58,82 @@
         </div>
     </div>
 
-    <!-- Detail Modal -->
-    <div id="detailModal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold">Detail Tanah</h3>
-                <button class="text-gray-500 hover:text-gray-700" onclick="closeDetailModal()">
+    <!-- Detail Information Modal -->
+    <div id="detailModal" class=" hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
+        <div class="modal-content">
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-center items-center">Detail Informasi Tanah</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Nama:</p>
+                    <p id="detailLandName" class="text-gray-600 flex justify-center items-center">-</p>
+                </div>
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Alamat:</p>
+                    <p id="detailLandAddress" class="text-gray-600 flex justify-center items-center">-</p>
+                </div>
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Status Kepemilikan:</p>
+                    <p id="ownershipStatus" class="text-gray-600 flex justify-center items-center">-</p>
+                </div>
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Tipe Tanah:</p>
+                    <p id="detailLandOwnership" class="text-gray-600 flex justify-center items-center">-</p>
+                </div>
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Luas Tanah:</p>
+                    <p id="landArea" class="text-gray-600 flex justify-center items-center">-</p>
+                </div>
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Longitude:</p>
+                    <p id="longtitude" class="text-gray-600 flex justify-center items-center">-</p>
+                </div>
+            </div>
+            <div class="flex justify-center">
+                <button id="closeDetailModal" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center gap-2">
+                    <i class="fas fa-times"></i>
+                    <span>Tutup</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restore Confirmation Modal -->
+    <div id="restoreModal" class="hidden fixed inset-0 items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md ">
+            <div class="flex justify-end">
+                <button class="text-gray-500 hover:text-gray-700 transition-colors" onclick="toggleRestoreModal()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="grid grid-cols-1 gap-4">
-                <div>
-                    <p class="font-semibold">Nama:</p>
-                    <p id="detailLandName">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Alamat:</p>
-                    <p id="detailLandAddress">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Status Kepemilikan:</p>
-                    <p id="ownershipStatus">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Tipe Tanah:</p>
-                    <p id="detailLandOwnership">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Luas Tanah:</p>
-                    <p id="landArea">-</p>
-                </div>
-                <div>
-                    <p class="font-semibold">Longtitude:</p>
-                    <p id="longtitude">-</p>
-                </div>
+            <div class="text-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">Konfirmasi Pemulihan Data</h2>
+                <p class="text-gray-600 mt-2">Apakah Anda yakin ingin memulihkan data ini?</p>
             </div>
-            <div class="flex justify-center mt-6">
-                <button class="px-4 py-2 bg-red-500 text-white rounded-md" onclick="closeDetailModal()">Tutup</button>
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-700">Nama Tanah</h3>
+                        <p class="text-gray-600" id="restoreGroundName">-</p>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-700">Dihapus Pada</h3>
+                        <p class="text-gray-600" id="restoreDeletedAt">-</p>
+                    </div>
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button class="px-4 py-2 w-full border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors" onclick="toggleRestoreModal()">
+                        Batal
+                    </button>
+                    <button class="px-4 py-2 w-full bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors" onclick="confirmRestore()">
+                        Pulihkan
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <!-- Add Toastify JS -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
@@ -115,7 +145,7 @@
                 close: true,
                 gravity: "top",
                 position: "right",
-                backgroundColor: "#4CAF50",
+                backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)", 
                 stopOnFocus: true,
                 className: "toast-success"
             }).showToast();
@@ -128,72 +158,112 @@
                 close: true,
                 gravity: "top",
                 position: "right",
-                backgroundColor: "#F44336",
+                backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
                 stopOnFocus: true,
                 className: "toast-error"
             }).showToast();
         }
 
-        // Definisikan fungsi di global scope
+        // Modal functions
+        function toggleDetailModal() {
+            $('#detailModal').toggleClass('hidden');
+            $('#detailModal').toggleClass('flex');
+        }
+
         function showDetailModal(id) {
             const token = localStorage.getItem('token');
+            
+            // Show loading state in modal
+            $('#detailLandName').html('<span class="text-gray-400">Memuat...</span>');
+            $('#detailLandAddress').html('<span class="text-gray-400">Memuat...</span>');
+            $('#ownershipStatus').html('<span class="text-gray-400">Memuat...</span>');
+            $('#detailLandOwnership').html('<span class="text-gray-400">Memuat...</span>');
+            $('#landArea').html('<span class="text-gray-400">Memuat...</span>');
+            $('#longtitude').html('<span class="text-gray-400">Memuat...</span>');
+            
+            toggleDetailModal();
 
             $.ajax({
                 url: `http://127.0.0.1:8000/api/get/deleted-ground/${id}`,
                 type: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + token
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json'
                 },
-                success: function (response) {
-                    console.log('Detail response:', response);
-                    if (response.status === 'success') {
+                success: function(response) {
+                    if (response.status === 'success' && response.data) {
                         const data = response.data[0];
 
-                        $('#detailLandName').text(data.nama_tanah ?? '-');
-                        $('#detailLandAddress').text(data.alamat ?? '-');
-                        $('#ownershipStatus').text(data.nama_status_kepemilikan ?? '-');
-                        $('#detailLandOwnership').text(data.nama_tipe_tanah ?? '-');
-                        $('#landArea').text(data.luas_tanah ?? '-');
-                        $('#longtitude').text(data.longitude ?? '-');
+                        $('#detailLandName').text(data.nama_tanah || '-');
+                        $('#detailLandAddress').text(data.alamat || '-');
+                        $('#ownershipStatus').text(data.nama_status_kepemilikan || '-');
+                        $('#detailLandOwnership').text(data.nama_tipe_tanah || '-');
+                        $('#landArea').text(data.luas_tanah ? `${data.luas_tanah} m²` : '-');
+                        $('#longtitude').text(data.longitude || '-');
 
-                        $('#detailModal').removeClass('hidden');
+                        
+
+                    } else {
+                        showErrorToast('Gagal memuat detail tanah');
+                        toggleDetailModal();
                     }
                 },
-                error: function (xhr) {
-                    console.error('Error fetching detail:', xhr.responseText);
-                    showErrorToast('Terjadi kesalahan saat mengambil detail.');
+                error: function(xhr) {
+                    console.error('Error:', xhr.responseText);
+                    showErrorToast('Terjadi kesalahan saat mengambil detail');
+                    toggleDetailModal();
+                    
+                    if (xhr.status === 401) {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('userData');
+                        window.location.href = '/login';
+                    }
                 }
             });
         }
 
-        function closeDetailModal() {
-            $('#detailModal').addClass('hidden');
+        // Modal restore functions
+        let restoreId = null;
+
+        function toggleRestoreModal() {
+            $('#restoreModal').toggleClass('hidden');
+            $('#restoreModal').toggleClass('flex');
         }
 
-        function restoreData(id) {
-            if (!confirm('Apakah Anda yakin ingin memulihkan data ini?')) return;
+        function showRestoreModal(id, name, deletedAt) {
+            restoreId = id;
+            $('#restoreGroundName').text(name || '-');
+            $('#restoreDeletedAt').text(deletedAt || '-');
+            toggleRestoreModal();
+        }
 
+        function confirmRestore() {
+            if (!restoreId) return;
+            
             const token = localStorage.getItem('token');
-
+            
             $.ajax({
-                url: `http://127.0.0.1:8000/api/restore/deleted-ground/${id}`,
+                url: `http://127.0.0.1:8000/api/restore/deleted-ground/${restoreId}`,
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + token,
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    console.log('Restore response:', response);
                     if (response.status === 'success') {
                         showSuccessToast('Data berhasil dipulihkan!');
-                        location.reload();
+                        setTimeout(() => {
+                            location.reload();
+                        }, 1000);
                     } else {
                         showErrorToast(response.message || 'Gagal memulihkan data');
                     }
+                    toggleRestoreModal();
                 },
                 error: function(xhr) {
                     console.error('Error during restore:', xhr.responseText);
                     showErrorToast('Terjadi kesalahan saat memulihkan data');
+                    toggleRestoreModal();
                 }
             });
         }
@@ -202,27 +272,35 @@
             const token = localStorage.getItem('token');
             const user = JSON.parse(localStorage.getItem('userData'));
 
-            // Inisialisasi DataTable
-            let table = $('#deletedGroundTable').DataTable({
+            // Initialize DataTable with improved configuration
+            const table = $('#deletedGroundTable').DataTable({
                 "language": {
                     "emptyTable": "Tidak ada data yang dihapus",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                    "infoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
-                    "infoFiltered": "(difilter dari total _MAX_ entri)",
-                    "lengthMenu": "Tampilkan _MENU_ entri",
-                    "search": "Cari:",
-                    "zeroRecords": "Tidak ditemukan data yang sesuai"
+                    "info": "<span class='text-gray-500' font-inter> Menampilkan _START_ sampai _END_ dari _TOTAL_ entri </span>",
+                    "infoEmpty": "Menampilkan 0 hingga 0 dari 0 entri",
+                    "infoFiltered": "(disaring dari _MAX_ total entri)",
+                    "lengthMenu": "Tampilkan: _MENU_",
+                    "search": "",
+                    "searchPlaceholder": "Cari tanah...",
+                    "zeroRecords": "Tidak ditemukan data yang sesuai",
                 },
+                "dom": '<"flex flex-wrap justify-between items-center mb-4"<"flex items-center gap-4"l<"dataTables_length">><"flex items-center gap-4"f>>rt<"flex flex-wrap justify-between items-center mt-4"<"dataTables_info"i><"dataTables_paginate"p>>',
                 "responsive": true
             });
 
-            // Tambahkan event handler untuk tombol restore dan detail menggunakan delegasi event
-            $('#deletedGroundTable').on('click', '.restore-btn', function() {
+            // Close detail modal handler
+            $('#closeDetailModal').on('click', toggleDetailModal);
+
+            // Ganti handler yang lama dengan ini:
+            $(document).on('click', '.restore-btn', function() {
                 const id = $(this).data('id');
-                restoreData(id);
+                const row = table.row($(this).closest('tr')).data();
+                const deletedAt = row[3]; // Sesuaikan dengan index kolom tanggal di DataTable
+                showRestoreModal(id, row[1], deletedAt); // row[1] adalah nama tanah
             });
 
-            $('#deletedGroundTable').on('click', '.detail-btn', function() {
+            // Detail button click handler
+            $(document).on('click', '.detail-btn', function() {
                 const id = $(this).data('id');
                 showDetailModal(id);
             });
@@ -235,75 +313,55 @@
                         'Authorization': 'Bearer ' + token
                     },
                     success: function (response) {
-                        console.log('Full API response:', response);
+                        console.log('API Response:', response);
 
-                        if (response.status === 'success') {
-                            // Clear table first
+                        if (response.status === 'success' && response.data) {
                             table.clear();
-
+                            
                             response.data.forEach((item, index) => {
-                                const restoreButton = `<button type="button" class="text-blue-500 mx-1 restore-btn" data-id="${item.detail_tanah_id}"><i class="fas fa-undo"></i></button>`;
-                                const detailButton = `<button type="button" class="text-gray-500 mx-1 detail-btn" data-id="${item.detail_tanah_id}"><i class="fas fa-info-circle"></i></button>`;
-
                                 table.row.add([
                                     index + 1,
                                     item.nama_tanah,
                                     item.deleted_by_name ? item.deleted_by_name : 'System',
                                     item.deleted_at ? new Date(item.deleted_at).toLocaleString('id-ID') : '-',
-                                    `<div class="flex items-center justify-start">${restoreButton}${detailButton}</div>`
-                                ]).draw(false);
+                                    `
+                                    <div class="flex items-center justify-start gap-3">
+                                        <button type="button" class="text-blue-500 hover:text-blue-700 transition-colors restore-btn"
+                                            data-id="${item.detail_tanah_id}">
+                                            <img src="/images/RestoreBtn.png" alt="Information">
+                                        </button>
+                                        <button type="button" class="text-gray-500 hover:text-green-600 transition-colors detail-btn"
+                                            data-id="${item.detail_tanah_id}">
+                                            <img src="/images/InfoBtn.png" alt="Information">
+                                        </button>
+                                    </div>
+                                    `
+                                ]);
                             });
+                            
+                            table.draw();
                         } else {
-                            console.error('Error in API response:', response.message);
-                            showErrorToast('Gagal memuat data yang dihapus: ' + response.message);
+                            showErrorToast('Gagal memuat data tanah yang dihapus');
                         }
                     },
                     error: function(xhr) {
-                        console.error('AJAX error:', xhr.responseText);
-                        showErrorToast('Terjadi kesalahan saat mengambil data');
+                        console.error('Error:', xhr.responseText);
+                        showErrorToast('Terjadi kesalahan saat memuat data');
+                        
                         if (xhr.status === 401) {
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('userData');
                             window.location.href = '/login';
                         }
                     }
                 });
             } else {
-                console.error('Token not found');
-                showErrorToast('Tidak dapat mengakses data. Silakan login kembali.');
+                console.log('Token tidak ditemukan');
+                showErrorToast('Silakan login kembali');
                 window.location.href = '/login';
             }
         });
     </script>
-
-    <style>
-        /* Toastify custom styles */
-        .toast-success {
-            background: #4CAF50 !important;
-            color: white !important;
-            border-radius: 4px !important;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
-            font-family: inherit !important;
-            padding: 12px 20px !important;
-        }
-
-        .toast-error {
-            background: #F44336 !important;
-            color: white !important;
-            border-radius: 4px !important;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !important;
-            font-family: inherit !important;
-            padding: 12px 20px !important;
-        }
-
-        .toastify-close {
-            color: white !important;
-            opacity: 0.8 !important;
-            padding-left: 10px !important;
-        }
-
-        /* Modal styles */
-        #detailModal {
-            display: none;
-        }
-    </style>
+    
 </body>
 </html>
