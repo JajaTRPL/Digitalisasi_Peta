@@ -24,7 +24,7 @@
     @endif
 
     <!-- Navbar -->
-    @include('components.navbar')
+    @include('components.navbar_tanah')
 
     <div class="container mx-auto mt-10 px-4">
         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -32,7 +32,7 @@
                 <div class="flex items-center gap-3">
                     <button class="bg-[#666CFF] text-white px-4 py-2 rounded-md hover:bg-[#5a60e5] transition-colors flex items-center gap-2" onclick="window.location.href='/AddGround'">
                         <i class="fas fa-plus"></i>
-                        <span>Add Ground</span>
+                        <span>Tambah Tanah</span>
                     </button>
                     <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors flex items-center gap-2" onclick="window.location.href='/restore-data'">
                         <img src="/images/DB.png" alt="Icon" class="w-4 h-4">
@@ -80,7 +80,7 @@
                     <button class="px-4 py-2 w-full border border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50 transition-colors" onclick="toggleModal()">
                         Batal
                     </button>
-                    <button class="px-4 py-2 w-full bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" onclick="document.getElementById('modalDeleteForm').submit()">
+                    <button class="px-4 py-2 w-full bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors" onclick="$('#modalDeleteForm').trigger('submit')">
                         Hapus
                     </button>
                     <form id="modalDeleteForm" class="hidden"></form>
@@ -93,7 +93,13 @@
     <div id="detailModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
         <div class="modal-content">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800">Detail Informasi Tanah</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <p class="font-semibold">Foto Tanah:</p>
+                <div class="mt-2 w-full h-64 rounded border border-gray-300 overflow-hidden">
+                    <img id="landPhoto"
+                        src="{{ asset('images/Ground-Image-Default.png') }}"
+                        alt="Foto Tanah"
+                        class="w-full h-full object-cover mx-auto" />
+                </div>
                 <div class="detail-field">
                     <p class="font-semibold text-gray-700">Nama:</p>
                     <p id="detailLandName" class="text-gray-600">-</p>
@@ -239,7 +245,7 @@
                 showLoading();
                 
                 $.ajax({
-                    url: '{{ config('app.API_URL') }}/api/get/ground',
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
@@ -315,6 +321,7 @@
                 $(document).on('click', '.delete-btn', function() {
                     const groundId = $(this).data('id');
                     const groundName = $(this).data('name');
+                    console.log(groundId);
                     showDeleteModal(groundId, groundName);
                 });
 
@@ -325,12 +332,15 @@
                 });
 
                 // Delete form submission
-                $('#modalDeleteForm').on('submit', function(e) {
+                $(document).on('submit', '#modalDeleteForm', function(e) {
                     e.preventDefault();
 
                     if (!selectedGroundId) {
-                        showErrorToast('ID tanah tidak ditemukan!');
-                        return;
+                        if (!selectedGroundId) {
+                            alert('ID tanah tidak ditemukan!');
+                            showErrorToast('ID tanah tidak ditemukan!');
+                            return;
+                        }
                     }
 
                     if (!token) {
@@ -344,7 +354,7 @@
                     deleteBtn.prop('disabled', true);
 
                     $.ajax({
-                        url: `{{ config('app.API_URL') }}/api/delete/ground/${selectedGroundId}`,
+                        url: `https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/delete/ground/${selectedGroundId}`,
                         type: 'DELETE',
                         headers: {
                             'Authorization': 'Bearer ' + token
@@ -385,7 +395,7 @@
             toggleDetailModal();
 
             $.ajax({
-                url: `{{ config('app.API_URL') }}/api/get/ground/${id}`,
+                url: `https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/ground/${id}`,
                 type: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -401,6 +411,14 @@
                         $('#detailLandOwnership').text(data.nama_tipe_tanah || '-');
                         $('#landArea').text(data.luas_tanah ? `${data.luas_tanah} m²` : '-');
                         $('#longtitude').text(data.longitude || '-');
+
+
+                        if (data.foto_tanah) {
+                            const imageUrl = `https://digitalmap-umbulharjo-api.madanateknologi.web.id/storage/ground_image/${data.foto_tanah}`;
+                            $('#landPhoto').attr('src', imageUrl).removeClass('hidden');
+                        } else {
+                            //
+                        }
                     } else {
                         showErrorToast('Gagal memuat detail tanah');
                         toggleDetailModal();

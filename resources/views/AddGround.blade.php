@@ -40,40 +40,39 @@
     <!-- NavBar -->
 
     @include('components.navbar')
-
-
     <!-- Form Add -->
     <div class="max-w-7xl mx-auto p-6 bg-white mt-6 shadow-md rounded-md">
+        <span class="block text-[24px] font-semibold mb-8 font-poppins">Tambah Data Tanah</span>
         <div class="grid grid-cols-2 gap-6">
             {{-- <div>
-                <label class="block text-gray-700">Nomor Asset</label>
+                <label class="block text-black-700 font-semibold">Nomor Asset</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nomor Asset"
                     type="text" id="nomor_asset" />
             </div> --}}
             <div>
-                <label class="block text-gray-700">Nama Aset</label>
+                <label class="block text-black-700 font-semibold">Nama Aset</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset"
                     type="text" id="nama_tanah" />
             </div>
             <div>
-                <label class="block text-gray-700">Detail Alamat</label>
+                <label class="block text-black-700 font-semibold">Detail Alamat</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Detail Alamat (Jalan, Blok, Nomor)"
                     type="text" id="detail_alamat" />
             </div>
             <div>
-                <label class="block text-gray-700">RT</label>
+                <label class="block text-black-700 font-semibold">RT</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RT"
                     type="text" id="rt" />
             </div>
             <div>
-                <label class="block text-gray-700">RW</label>
+                <label class="block text-black-700 font-semibold">RW</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RW"
                     type="text" id="rw" />
             </div>
             <div>
-                <label class="block text-gray-700">Padukuhan</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="padukuhan">
-                    <option value="" disabled selected>Pilih Padukuhan</option>
+                <label class="block text-black-700 font-semibold">Padukuhan</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="padukuhan">
+                    <option value="" disabled selected >Pilih</option>
                     <option value="Palemsari">Palemsari</option>
                     <option value="Pangukrejo">Pangukrejo</option>
                     <option value="Gondang">Gondang</option>
@@ -86,7 +85,7 @@
                 </select>
             </div>
             <div>
-                <label class="block text-gray-700">Desa</label>
+                <label class="block text-black-700 font-semibold">Desa</label>
                 <input
                     type="text"
                     class="w-full mt-1 p-2 border border-gray-300 rounded-md"
@@ -96,7 +95,7 @@
                 />
             </div>
             <div>
-                <label class="block text-gray-700">Kecamatan</label>
+                <label class="block text-black-700 font-semibold">Kecamatan</label>
                 <input
                     type="text"
                     class="w-full mt-1 p-2 border border-gray-300 rounded-md"
@@ -106,7 +105,7 @@
                 />
             </div>
             <div>
-                <label class="block text-gray-700">Kabupaten</label>
+                <label class="block text-black-700 font-semibold">Kabupaten</label>
                 <input
                     type="text"
                     class="w-full mt-1 p-2 border border-gray-300 rounded-md"
@@ -116,23 +115,23 @@
                 />
             </div>
             <div>
-                <label class="block text-gray-700">Status Kepemilikan</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_kepemilikan">
+                <label class="block text-black-700 font-semibold">Status Kepemilikan</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="status_kepemilikan">
                 </select>
             </div>
             <div>
-                <label class="block text-gray-700">Status Tanah</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_tanah">
+                <label class="block text-black-700 font-semibold">Status Tanah</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="status_tanah">
                 </select>
             </div>
             <div>
-                <label class="block text-gray-700">Luas Aset Tanah</label>
+                <label class="block text-black-700 font-semibold">Luas Aset Tanah</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Luas Tanah"
                     type="text" id="luas_tanah" />
             </div>
             <div>
-                <label class="block text-gray-700">Tipe Tanah</label>
-                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="tipe_tanah">
+                <label class="block text-black-700 font-semibold">Tipe Tanah</label>
+                <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="tipe_tanah">
                 </select>
             </div>
             <div class="font-[sans-serif] max-w-md mx-auto">
@@ -151,12 +150,12 @@
                 <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
             </div>
             <div>
-                <label class="block text-gray-700">Longtitude</label>
+                <label class="block text-black-700 font-semibold">Longtitude</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude"
                     type="text" id="longitude" readonly />
             </div>
             <div>
-                <label class="block text-gray-700">Latitude</label>
+                <label class="block text-black-700 font-semibold">Latitude</label>
                 <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Latitude"
                     type="text" id="latitude" readonly/>
             </div>
@@ -175,7 +174,7 @@
 
 
         <div class="flex justify-end space-x-4 mt-6">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="submit" name="submit">Add</button>
+            <button class="bg-[#666CFF] text-white px-4 py-2 rounded-md" id="submit" name="submit">Add</button>
             <button class="bg-gray-300 text-black px-4 py-2 rounded-md" onclick="history.back()">Cancel</button>
         </div>
 
@@ -301,10 +300,10 @@
             },
             draw: {
             polygon: true,
-            marker: true,
-            polyline: true,
-            rectangle: true,
-            circle: true,
+            marker: false,
+            polyline: false,
+            rectangle: false,
+            circle: false,
             }
         });
         map.addControl(drawControl);

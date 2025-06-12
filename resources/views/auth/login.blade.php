@@ -34,8 +34,14 @@
 
             <!-- Forgot Password Link -->
             <div class="text-center mb-4 flex justify-end">
-                <a href="{{ route('password.request') }}" class="text-[#666CFF] hover:underline text-sm">
-                    forgot password?
+                <a href="{{ route('password.request') }}" id="forgotPasswordLink" class="text-[#666CFF] hover:underline text-sm relative">
+                    <span id="forgotText">forgot password?</span>
+                    <span id="forgotSpinner" class="hidden absolute inset-0 flex items-center justify-center">
+                        <svg class="animate-spin h-4 w-4 text-[#666CFF]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </span>
                 </a>
             </div>
 
@@ -50,8 +56,6 @@
                     </span>
                 </button>
             </div>
-
-            
 
             <div class="text-center">
                 <p class="text-sm">Tidak memiliki akun?
@@ -114,6 +118,19 @@
         document.getElementById('loadingOverlay').classList.remove('hidden');
     });
 
+    // Add animation to forgot password link
+    document.getElementById('forgotPasswordLink')?.addEventListener('click', function(e) {
+        const link = e.currentTarget;
+        const text = link.querySelector('#forgotText');
+        const spinner = link.querySelector('#forgotSpinner');
+        
+        text.classList.add('opacity-0');
+        spinner.classList.remove('hidden');
+        
+        // Show loading overlay
+        document.getElementById('loadingOverlay').classList.remove('hidden');
+    });
+
     // Login form submission
     $('#loginForm').submit(function(e) {
         e.preventDefault();
@@ -161,6 +178,10 @@
                     stopOnFocus: true,
                 }).showToast();
                 
+                const token = encodeURIComponent(response.access_token);
+                document.cookie = `auth_token=${token}; path=/; SameSite=None; Secure`;
+                console.log('Cookie set:', document.cookie);
+
                 // Redirect after 3 seconds
                 setTimeout(function() {
                     window.location.href = 'dashboard';
@@ -195,26 +216,6 @@
     });
 </script>
 
-<style>
-    /* Smooth transitions for the button states */
-    #loginButton, #registerLink {
-        transition: all 0.3s ease;
-    }
-    
-    /* Loading spinner animation */
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    .animate-spin {
-        animation: spin 1s linear infinite;
-    }
-    
-    /* Smooth opacity transitions */
-    #loginText, #registerText {
-        transition: opacity 0.3s ease;
-    }
-</style>
+
 
 @endsection

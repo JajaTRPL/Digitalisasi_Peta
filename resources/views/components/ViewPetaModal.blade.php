@@ -2,7 +2,7 @@
     <div id="infoModal" class="modal">
         <div class="modal-content shadow-lg">
             <h2 class="text-xl font-semibold mb-2">Informasi Tanah</h2>
-            <img id="landPhoto" src="" alt="Foto Tanah" class="w-full h-48 object-cover mb-2 rounded-md">
+            <img id="landPhoto" src="{{ asset('images/Ground-Image-Default.png') }}" alt="Foto Tanah" class="w-full h-48 object-cover mb-2 rounded-md">
             <p><strong>Nama:</strong> <span id="landName"></span></p>
             <p><strong>Alamat:</strong> <span id="landAddress"></span></p>
             <p><strong>Tipe Tanah:</strong> <span id="landOwnership"></span></p>

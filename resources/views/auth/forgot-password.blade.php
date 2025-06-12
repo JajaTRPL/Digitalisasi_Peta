@@ -15,7 +15,7 @@
         </h2>
         
         <!-- Success Message (hidden initially) -->
-        <div id="successMessage" class="success-message text-center mb-6">
+        <div id="successMessage" class="success-message text-center mb-6 hidden">
             <svg class="h-12 w-12 text-green-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -39,11 +39,11 @@
         </form>
         
         <!-- OTP Form (hidden initially) -->
-        <form id="otpForm" class="w-full space-y-6 mt-6">
+        <form id="otpForm" class="w-full space-y-6 mt-6 hidden">
             <div class="text-sm text-gray-600 mb-4">
                 Kode OTP telah dikirim ke <span id="emailDisplay" class="font-medium"></span>. 
-                <span id="resendOtp" class="resend-otp">Kirim ulang OTP</span>
-                <span id="countdown" class="text-gray-500 ml-1">(20)</span>
+                <span id="resendOtp" class="text-indigo-600 cursor-pointer hover:underline">Kirim ulang OTP</span>
+                <span id="countdown" class="text-gray-500 ml-1">(30)</span>
             </div>
             
             <!-- OTP Code -->
@@ -56,13 +56,13 @@
                        required/>
             </div>
             
-            <button id="submitOtp" class="w-full bg-indigo-600 text-white text-sm rounded-lg py-3 mt-2 hover:bg-indigo-700 transition-colors duration-300" type="button">
+            <button id="verifyOtp" class="w-full bg-indigo-600 text-white text-sm rounded-lg py-3 mt-2 hover:bg-indigo-700 transition-colors duration-300" type="button">
                 Verifikasi OTP
             </button>
         </form>
         
         <!-- Password Form (hidden initially) -->
-        <form id="passwordForm" class="w-full space-y-6 mt-6">
+        <form id="passwordForm" class="w-full space-y-6 mt-6 hidden">
             <!-- Password -->
             <div class="relative">
                 <input id="new_password" name="new_password"
@@ -132,7 +132,33 @@
     </div>
 </div>
 
+<!-- Toastify Container -->
+<div id="toast-container" class="fixed z-50" style="top: 20px; right: 20px;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
+    // Function to show Toastify notification
+    function showToast(message, type = 'info') {
+        let backgroundColor = '#4B506D'; // default gray
+        if (type === 'error') backgroundColor = 'linear-gradient(to right, #ff5f6d, #ffc371)';
+        if (type === 'success') backgroundColor = 'linear-gradient(to right, #00b09b, #96c93d)';
+        if (type === 'warning') backgroundColor = 'linear-gradient(to right, #FAAD14, #FF6F00)';
+        
+        Toastify({
+            text: message,
+            duration: 5000,
+            close: true,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+                background: backgroundColor,
+                borderRadius: '4px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+            }
+        }).showToast();
+    }
+
     // Toggle password visibility
     function togglePassword(inputId, eyeIconId, eyeSlashId) {
         const input = document.getElementById(inputId);
@@ -175,128 +201,182 @@
     document.getElementById('sendOtp')?.addEventListener('click', function() {
         const email = document.getElementById('email').value;
         const overlay = document.getElementById('loadingOverlay');
-        
-        // Simple validation
+
+        // Validasi
         if (!email) {
-            alert('Email harus diisi');
+            showToast('Email harus diisi', 'error');
             return;
         }
-        
-        // Validate email format
+
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-            alert('Format email tidak valid');
+            showToast('Format email tidak valid', 'error');
             return;
         }
-        
-        // Show loading
+
+        // Tampilkan loading
         overlay.style.opacity = '0';
         overlay.classList.remove('hidden');
         setTimeout(() => overlay.style.opacity = '1', 10);
-        
-        // Simulate API call to send OTP (replace with actual API call)
-        setTimeout(() => {
-            // Hide loading
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-            
-            // For demo purposes, assume success
-            // Hide email form and show OTP form
-            document.getElementById('emailForm').style.display = 'none';
-            document.getElementById('otpForm').style.display = 'block';
-            
-            // Display email address
-            document.getElementById('emailDisplay').textContent = email;
-            
-            // Start countdown for resend OTP
-            startCountdown(120);
-        }, 1500);
-    });
-    
-    // Handle OTP submission
-    document.getElementById('submitOtp')?.addEventListener('click', function() {
-        const otp = document.getElementById('otp').value;
-        const overlay = document.getElementById('loadingOverlay');
-        
-        // Simple validation
-        if (!otp) {
-            alert('OTP harus diisi');
-            return;
-        }
-        
-        if (otp.length !== 6) {
-            alert('OTP harus 6 digit');
-            return;
-        }
-        
-        // Show loading
-        overlay.style.opacity = '0';
-        overlay.classList.remove('hidden');
-        setTimeout(() => overlay.style.opacity = '1', 10);
-        
-        // Simulate API call to verify OTP (replace with actual API call)
-        setTimeout(() => {
-            // Hide loading
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-            
-            // For demo purposes, assume OTP is valid
-            // In real app, check response from server
-            const isValidOtp = true;
-            
-            if (isValidOtp) {
-                // Hide OTP form
-                document.getElementById('otpForm').style.display = 'none';
+
+        // Kirim AJAX request ke server
+        $.ajax({
+            url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/forgot-password-by-otp',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email }),
+            success: function(response) {
+                // Sembunyikan loading
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                // Tampilkan form OTP dan sembunyikan form email
+                document.getElementById('emailForm').classList.add('hidden');
+                document.getElementById('otpForm').classList.remove('hidden');
+                document.getElementById('emailDisplay').textContent = email;
                 
-                // Show success message and password form
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('passwordForm').style.display = 'block';
-            } else {
-                alert('OTP tidak valid. Silakan coba lagi.');
+                // Simpan token di localStorage
+                localStorage.setItem('forgot-pass-token', response.data.token);
+                
+                // Mulai countdown resend OTP (30 detik)
+                startCountdown(30);
+                
+                showToast('OTP telah dikirim ke email Anda', 'success');
+            },
+            error: function(xhr) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                let errMsg = 'Gagal mengirim OTP';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errMsg = xhr.responseJSON.message;
+                }
+                showToast(errMsg, 'error');
             }
-        }, 1500);
+        });
     });
     
-    // Handle password submission
+    // Handle verify OTP button click
+    document.getElementById('verifyOtp')?.addEventListener('click', function() {
+        const otp = document.getElementById('otp').value;
+        const email = document.getElementById('email').value;
+        const overlay = document.getElementById('loadingOverlay');
+
+        // Validasi
+        if (!otp) {
+            showToast('OTP harus diisi', 'error');
+            return;
+        }
+
+        // Tampilkan loading
+        overlay.style.opacity = '0';
+        overlay.classList.remove('hidden');
+        setTimeout(() => overlay.style.opacity = '1', 10);
+
+        // Kirim AJAX request ke server untuk verifikasi OTP
+        $.ajax({
+            url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/verify-forgot-password-otp',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                email: email,
+                otp: otp
+            }),
+            success: function(response) {
+                // Sembunyikan loading
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                // Tampilkan form password dan sembunyikan form OTP
+                document.getElementById('otpForm').classList.add('hidden');
+                document.getElementById('passwordForm').classList.remove('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+                
+                showToast('OTP berhasil diverifikasi', 'success');
+            },
+            error: function(xhr) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                let errMsg = 'Gagal verifikasi OTP';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errMsg = xhr.responseJSON.message;
+                }
+                showToast(errMsg, 'error');
+            }
+        });
+    });
+    
+    // Handle submit password button click
     document.getElementById('submitPassword')?.addEventListener('click', function() {
         const newPassword = document.getElementById('new_password').value;
         const confirmPassword = document.getElementById('new_password_confirmation').value;
+        const email = document.getElementById('email').value;
+        const token = localStorage.getItem('forgot-pass-token');
         const overlay = document.getElementById('loadingOverlay');
-        
-        // Validation
+
+        // Validasi
         if (!newPassword || !confirmPassword) {
-            alert('Password dan konfirmasi password harus diisi');
+            showToast('Password dan konfirmasi password harus diisi', 'error');
             return;
         }
-        
+
         if (newPassword !== confirmPassword) {
-            alert('Password dan konfirmasi password tidak cocok');
+            showToast('Password dan konfirmasi password tidak cocok', 'error');
             return;
         }
-        
+
         if (newPassword.length < 8) {
-            alert('Password minimal 8 karakter');
+            showToast('Password minimal 8 karakter', 'error');
             return;
         }
-        
-        // Show loading
+
+        // Tampilkan loading
         overlay.style.opacity = '0';
         overlay.classList.remove('hidden');
         setTimeout(() => overlay.style.opacity = '1', 10);
-        
-        // Simulate API call to reset password (replace with actual API call)
-        setTimeout(() => {
-            // Hide loading
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-            
-            // For demo purposes, assume success
-            alert('Password berhasil diubah! Silakan login dengan password baru Anda.');
-            window.location.href = "{{ route('login') }}";
-        }, 1500);
+
+        // Kirim AJAX request ke server untuk reset password
+        $.ajax({
+            url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/reset-password-by-otp',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ 
+                email: email,
+                new_password: newPassword,
+                confirm_new_password: confirmPassword,
+                token: token
+            }),
+            success: function(response) {
+                // Sembunyikan loading
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                if (response.success) {
+                    showToast('Password berhasil diubah! Silakan login dengan password baru Anda.', 'success');
+                    setTimeout(() => {
+                        window.location.href = "{{ route('login') }}";
+                    }, 2000);
+                } else {
+                    showToast(response.message || 'Gagal mengubah password', 'error');
+                }
+            },
+            error: function(xhr) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                let errMsg = 'Gagal mengubah password';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errMsg = xhr.responseJSON.message;
+                }
+                showToast(errMsg, 'error');
+            }
+        });
     });
     
     // Handle resend OTP
     document.getElementById('resendOtp')?.addEventListener('click', function() {
+        const email = document.getElementById('email').value;
+        const overlay = document.getElementById('loadingOverlay');
         const resendBtn = document.getElementById('resendOtp');
         const countdown = document.getElementById('countdown');
         
@@ -304,26 +384,40 @@
         if (resendBtn.classList.contains('disabled')) return;
         
         // Show loading
-        const overlay = document.getElementById('loadingOverlay');
         overlay.style.opacity = '0';
         overlay.classList.remove('hidden');
         setTimeout(() => overlay.style.opacity = '1', 10);
         
-        // Simulate API call to resend OTP (replace with actual API call)
-        setTimeout(() => {
-            // Hide loading
-            overlay.style.opacity = '0';
-            setTimeout(() => overlay.classList.add('hidden'), 300);
-            
-            // For demo purposes, assume success
-            alert('OTP baru telah dikirim ke email Anda');
-            
-            // Start countdown again
-            startCountdown(120);
-        }, 1500);
+        // Kirim ulang OTP
+        $.ajax({
+            url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/forgot-password-by-otp',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email }),
+            success: function(response) {
+                // Sembunyikan loading
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                
+                showToast('OTP baru telah dikirim ke email Anda', 'success');
+                
+                // Mulai countdown lagi (30 detik)
+                startCountdown(30);
+            },
+            error: function(xhr) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+
+                let errMsg = 'Gagal mengirim ulang OTP';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errMsg = xhr.responseJSON.message;
+                }
+                showToast(errMsg, 'error');
+            }
+        });
     });
     
-    // Countdown function for resend OTP
+    // Countdown function for resend OTP (30 detik)
     function startCountdown(seconds) {
         const resendBtn = document.getElementById('resendOtp');
         const countdown = document.getElementById('countdown');

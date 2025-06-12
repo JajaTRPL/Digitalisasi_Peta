@@ -9,6 +9,13 @@
             <!-- Modal Body with Information -->
             <h2 class="text-2xl font-semibold mb-4">Detail Informasi Tanah</h2>
             <div class="grid grid-cols-2 gap-4">
+                <p class="font-semibold">Foto Tanah:</p>
+                <div class="mt-2 w-full h-64 rounded border border-gray-300 overflow-hidden">
+                    <img id="landPhoto"
+                        src="{{ asset('images/Ground-Image-Default.png') }}"
+                        alt="Foto Tanah"
+                        class="w-full h-full object-cover mx-auto" />
+                </div>
                 <div>
                     <p class="font-semibold">Nama:</p>
                     <p id="detailLandName">-</p>

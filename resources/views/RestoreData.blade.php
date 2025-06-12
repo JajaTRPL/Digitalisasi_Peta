@@ -27,7 +27,7 @@
     @endif
 
     <!-- Navbar -->
-    @include('components.navbar')
+    @include('components.navbar_tanah')
 
     <div class="container mx-auto mt-10">
         <div class="bg-white p-6 rounded-lg shadow-md">
@@ -37,7 +37,7 @@
                     Kembali
                 </button>
                 <div class="flex-1">
-                    <h2 class="text-xl font-semibold">Pulihkan Data Tanah</h2>
+                    <h2 class="mx-5 text-xl font-semibold">Pulihkan Data Tanah</h2>
                 </div>
             </div>
 

@@ -27,7 +27,7 @@
     @endif
 
     <!-- Navbar -->
-    @include('components.navbar')
+    @include('components.navbar_admin')
 
     <div class="container mx-auto mt-10">
         <div class="bg-white px-10 py-7 rounded-lg shadow-md overflow-hidden">
@@ -134,12 +134,10 @@
             $('#tambahAdminForm')[0].reset();
         }
 
-        function openEditModal(id, name, email, role) {
+        function openEditModal(id, name, email) {
             $('#editUserId').val(id);
             $('#editName').val(name);
             $('#editEmail').val(email);
-            $('#editRole').val(role.toLowerCase());
-            $('#editPassword').val('');
             $('#modalOverlay').addClass('open');
             $('#editAdminModal').addClass('open');
         }
@@ -253,6 +251,7 @@
                 openTambahModal();
             });
 
+
             // Add event listener for confirm delete button
             $('#confirmDeleteBtn').on('click', confirmDelete);
 
@@ -261,8 +260,7 @@
                 const id = $(this).data('id');
                 const name = $(this).data('name');
                 const email = $(this).data('email');
-                const role = $(this).data('role');
-                openEditModal(id, name, email, role);
+                openEditModal(id, name, email);
             });
 
             $('#adminTable').on('click', '.delete-btn', function() {
@@ -328,7 +326,7 @@
                                     `;
 
                                     const deleteButton = `<button type="button" class="text-red-500 delete-btn" data-id="${item.id}"> <img src="/images/DeleteBtn.png" alt="Delete"></button>`;
-                                    const editButton = `<button type="button" class="text-blue-500 mx-1 edit-btn" data-id="${item.id}" data-name="${item.name}" data-email="${item.email}" data-role="${item.roles}"><img src="/images/UpdateBtn.png" alt="Update"></button>`;
+                                    const editButton = `<button type="button" class="text-blue-500 mx-1 edit-btn" data-id="${item.id}" data-name="${item.name}" data-email="${item.email}"><img src="/images/UpdateBtn.png" alt="Update"></button>`;
                                     
 
                                     table.row.add([
@@ -419,27 +417,19 @@
                 const userId = $('#editUserId').val();
                 const name = $('#editName').val();
                 const email = $('#editEmail').val();
-                const role = $('#editRole').val();
-                const password = $('#editPassword').val();
 
                 // Prepare data object
                 const data = {
                     name: name,
                     email: email,
-                    role: role
+                    _method: 'PATCH',
                 };
-
-                // Include password only if provided
-                if (password) {
-                    data.password = password;
-                }
 
                 $.ajax({
                     url: `{{ config('app.API_URL') }}/api/update/admin/${userId}`,
-                    type: 'PUT',
+                    type: 'POST',
                     data: JSON.stringify(data),
                     contentType: 'application/json',
-                    dataType: 'json',
                     headers: {
                         'Authorization': 'Bearer ' + token,
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -448,7 +438,6 @@
                         console.log(response);
                         showSuccessToast('Admin berhasil diperbarui!');
                         closeEditModal();
-                        // Reload halaman setelah 1 detik
                         setTimeout(() => {
                             window.location.reload();
                         }, 1000);

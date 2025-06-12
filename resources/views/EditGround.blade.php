@@ -21,65 +21,32 @@
 
     <!-- Navbar -->
 
-    <nav class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
-                <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12 rounded-full">
-                <h1 class="text-lg font-semibold">Tambah Peta</h1>
-            </div>
-            <div class="items-center flex space-x-4">
-                <a href="{{ route('dashboard')}}" class="text-blue-500 hover:text-black">Dashboard</a>
-                <a href="{{ route('ViewPeta')}}" class="text-blue-500 hover:text-black">Maps</a>
-                <a href="#" class="text-blue-500 hover:text-black">Manage Admin</a>
-                <a href="{{route('ManageGround')}}" class="text-blue-500 hover:text-black">Manage Ground</a>
-                <div class="relative inline-block text-left">
-                    <img src="{{ asset('images/Avatar.png') }}" alt="Profile" class="profile-avatar cursor-pointer w-10 h-10 rounded-full">
-                    <div class="dropdown-content absolute right-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
-                        <div class="py-1">
-                            <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
-                                <svg class="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10 2a6 6 0 016 6 5.989 5.989 0 01-3.6 5.48c-.227.11-.34.366-.25.6l1.94 4.86a1 1 0 01-.92 1.4H5.83a1 1 0 01-.92-1.4l1.94-4.86c.09-.234-.023-.49-.25-.6A5.99 5.99 0 014 8a6 6 0 016-6z"></path>
-                                </svg>
-                                Profile
-                            </a>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-gray-700 bg-red-50 hover:bg-red-200 hover:text-red-800 rounded-md transition duration-200 ease-in-out">
-                                    <svg class="w-4 h-4 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M8.707 15.707a1 1 0 01-1.414 0L2.586 11l4.707-4.707a1 1 0 011.414 1.414L5.414 11l3.293 3.293a1 1 0 010 1.414zm9.414-1.414a1 1 0 01-1.414 0L11 8.414V7h2a3 3 0 000-6H7a3 3 0 000 6h2v1.414l-5.707 5.707a1 1 0 01-1.414-1.414L7 7.586V7a1 1 0 011-1h4a1 1 0 011 1v5.586l5.293 5.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    Log Out
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </nav>
+    @include('components.navbar')
 
     <div class="max-w-7xl mx-auto p-6 bg-white mt-6 shadow-md rounded-md">
         <form>
+            <span class="block text-[24px] font-semibold mb-8 font-poppins">Edit Data Tanah</span>
             <div class="grid grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-gray-700">Nama Aset</label>
+                    <label class="block text-black-700 font-semibold">Nama Aset</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Nama Asset" type="text" id="nama_tanah" value=""/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Detail Alamat</label>
+                    <label class="block text-black-700 font-semibold">Detail Alamat</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Detail Alamat" type="text" id="detail_alamat" value=""/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">RT</label>
+                    <label class="block text-black-700 font-semibold">RT</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RT"
                         type="text" id="rt" value=""/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">RW</label>
+                    <label class="block text-black-700 font-semibold">RW</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan no RW"
                         type="text" id="rw" value=""/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Padukuhan</label>
+                    <label class="block text-black-700 font-semibold">Padukuhan</label>
                     <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="padukuhan">
                         <option value=""></option>
                         <option value="Palemsari">Palemsari</option>
@@ -94,7 +61,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Desa</label>
+                    <label class="block text-black-700 font-semibold">Desa</label>
                     <input
                         type="text"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md"
@@ -104,7 +71,7 @@
                     />
                 </div>
                 <div>
-                    <label class="block text-gray-700">Kecamatan</label>
+                    <label class="block text-black-700 font-semibold">Kecamatan</label>
                     <input
                         type="text"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md"
@@ -114,7 +81,7 @@
                     />
                 </div>
                 <div>
-                    <label class="block text-gray-700">Kabupaten</label>
+                    <label class="block text-black-700 font-semibold">Kabupaten</label>
                     <input
                         type="text"
                         class="w-full mt-1 p-2 border border-gray-300 rounded-md"
@@ -124,26 +91,26 @@
                     />
                 </div>
                 <div>
-                    <label class="block text-gray-700">Status Kepemilikan</label>
-                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_kepemilikan">
+                    <label class="block text-black-700 font-semibold">Status Kepemilikan</label>
+                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="status_kepemilikan">
                         <option value="">
                         </option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Status Tanah</label>
-                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="status_tanah">
+                    <label class="block text-black-700 font-semibold">Status Tanah</label>
+                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="status_tanah">
                         <option value=""></option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Luas Aset Tanah</label>
+                    <label class="block text-black-700 font-semibold">Luas Aset Tanah</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Luas Tanah"
                         type="text" id="luas_tanah" value=""/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Tipe Tanah</label>
-                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500" id="tipe_tanah">
+                    <label class="block text-black-700 font-semibold">Tipe Tanah</label>
+                    <select class="w-full mt-1 p-2 border border-gray-300 rounded-md text-gray-500 font-bold" id="tipe_tanah">
                         <option value=""></option>
                     </select>
                 </div>
@@ -160,16 +127,16 @@
                     <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
                     <input type="file"
                     class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded"
-                    id="sertifikat" name="sertifikat" value=""/>
+                    id="sertifikat_tanah" name="sertifikat" value=""/>
                     <p class="text-xs text-gray-400 mt-2">Sertifikat PDF</p>
                 </div>
 
                 <div>
-                    <label class="block text-gray-700">Longtitude</label>
+                    <label class="block text-black-700 font-semibold">Longtitude</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Longtitude" type="text" id="longitude" value=""/>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Latitude</label>
+                    <label class="block text-black-700 font-semibold">Latitude</label>
                     <input class="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="Masukkan Latitude" type="text" id="latitude" value=""/>
                 </div>
             </div>
@@ -184,7 +151,7 @@
 
 
             <div class="flex justify-end space-x-4 mt-6">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded-md" id="perbarui" name="perbarui">Perbarui</button>
+                <button class="bg-[#666CFF] text-white px-4 py-2 rounded-md" id="perbarui" name="perbarui">Perbarui</button>
                 <button class="bg-gray-300 text-black px-4 py-2 rounded-md"><a href="{{route('ManageGround')}}">Kembali</a></button>
             </div>
         </form>
@@ -199,159 +166,155 @@
 
     <script>
 
-        //user drop down
-        const avatar = document.querySelector('.profile-avatar');
-        const dropdown = document.querySelector('.dropdown-content');
-
-        avatar.addEventListener('click', function() {
-            dropdown.classList.toggle('hidden');
-        });
-
-        window.addEventListener('click', function(event) {
-            if (!avatar.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.add('hidden');
-            }
-        });
-
-        // map
         var map = L.map('map').setView([-7.614555267905213, 110.43468152673236], 15);
-
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
+        const drawnItems = new L.FeatureGroup();
+        const markerGroup = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+        map.addLayer(markerGroup);
+        let centerMarker = null;
 
-        $(document).ready(function() {
-            var path = window.location.pathname;
-            var id = path.split('/').pop();
+        const drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems
+            },
+            draw: {
+                polygon: true,
+                marker: false,
+                polyline: false,
+                rectangle: false,
+                circle: false,
+            }
+        });
+        map.addControl(drawControl);
 
+        map.on('draw:created', function (event) {
+            drawnItems.clearLayers(); // hapus polygon lama
+            markerGroup.clearLayers(); // hapus marker lama
+            const layer = event.layer;
+            drawnItems.addLayer(layer);
+
+            const geoJsonData = layer.toGeoJSON();
+            $('#polygon').val(JSON.stringify(geoJsonData));
+            addMarker(geoJsonData);
+        });
+
+        // Jika polygon diedit
+        map.on('draw:edited', function (event) {
+            event.layers.eachLayer(function (layer) {
+                const geoJsonData = layer.toGeoJSON();
+                $('#polygon').val(JSON.stringify(geoJsonData));
+                addMarker(geoJsonData);
+            });
+        });
+
+        function addMarker(geoJsonData) {
+            const centroid = turf.centroid(geoJsonData);
+            const center = [centroid.geometry.coordinates[1], centroid.geometry.coordinates[0]];
+
+            if (centerMarker) {
+                markerGroup.removeLayer(centerMarker);
+            }
+            centerMarker = L.marker(center);
+            markerGroup.addLayer(centerMarker);
+
+            $('#latitude').val(center[0]);
+            $('#longitude').val(center[1]);
+        }
+
+        $(document).ready(function () {
             const token = localStorage.getItem('token');
+            const id = window.location.pathname.split('/').pop();
 
-            console.log(id);
+            // Ambil detail tanah dan render ke form + map
             $.ajax({
-                url: '{{ config('app.API_URL') }}/api/get/ground/' + id,
+                url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/ground/' + id,
                 type: 'GET',
                 headers: {
-                    'Authorization': 'Bearer ' + token  // Pastikan kalau API pakai token
+                    'Authorization': 'Bearer ' + token
                 },
-                success: function(response) {
-                    $('#nama_tanah').val(response.data.nama_tanah);
-                    $('#detail_alamat').val(response.data.alamat);
-                    $('#rt').val(response.data.rt);
-                    $('#rw').val(response.data.rw);
-                    $('#luas_tanah').val(response.data.luas_tanah);
-                    $('#latitude').val(response.data.latitude);
-                    $('#longitude').val(response.data.longitude);
+                success: function (response) {
+                    const data = response.data;
+                    $('#nama_tanah').val(data.nama_tanah);
+                    $('#detail_alamat').val(data.alamat);
+                    $('#rt').val(data.rt);
+                    $('#rw').val(data.rw);
+                    $('#luas_tanah').val(data.luas_tanah);
+                    $('#latitude').val(data.latitude);
+                    $('#longitude').val(data.longitude);
+                    $('#padukuhan').val(data.padukuhan);
 
-
-                    if (response.data.latitude && response.data.longitude) {
-                        const marker = L.marker([response.data.latitude, response.data.longitude]).addTo(map);
-
-                        
+                    // Tampilkan marker lokasi
+                    if (data.latitude && data.longitude) {
+                        const marker = L.marker([data.latitude, data.longitude]).addTo(markerGroup);
                     }
 
-                    if (response.data.coordinates) {
-                        let parsedData;
+                    // Jika ada koordinat polygon dari DB, tampilkan polygon
+                    if (data.coordinates) {
                         try {
-                            parsedData = JSON.parse(response.data.coordinates);
-                        } catch (e) {
-                            console.error('Gagal parse JSON dari coordinates:', response.data.coordinates, e);
-                            return;
-                        }
+                            const parsedData = JSON.parse(data.coordinates);
+                            if (parsedData.geometry && parsedData.geometry.coordinates) {
+                                const geoType = parsedData.geometry.type;
+                                const coords = parsedData.geometry.coordinates;
 
-                        if (parsedData.geometry && parsedData.geometry.coordinates) {
-                            const geoType = parsedData.geometry.type;
-                            const coords = parsedData.geometry.coordinates;
-
-                            if (geoType === 'Polygon' && Array.isArray(coords)) {
-                                // Ambil ring pertama (biasanya index 0)
-                                const firstRing = coords[0];
-
-                                if (Array.isArray(firstRing) && firstRing.length > 0) {
-                                    // Convert jadi [lat, lng]
-                                    const formattedCoords = firstRing.map(coord => [coord[1], coord[0]]);
-
+                                if (geoType === 'Polygon') {
+                                    const formattedCoords = coords[0].map(coord => [coord[1], coord[0]]);
                                     const polygon = L.polygon(formattedCoords, {
                                         color: 'blue',
                                         fillColor: '#1e90ff',
                                         fillOpacity: 0.5
-                                    }).addTo(map);
-
-                                    polygon.on('click', function () {
-                                        showInfoModal(tanah);
                                     });
-                                } else {
-                                    console.warn('First ring polygon kosong:', firstRing);
+                                    drawnItems.addLayer(polygon);
+                                    addMarker(parsedData);
                                 }
-                            } else {
-                                console.warn('Geometry bukan Polygon atau invalid:', geoType, coords);
                             }
-                        } else {
-                            console.warn('Tidak ada geometry.coordinates di parsedData:', parsedData);
+                        } catch (e) {
+                            console.error('Gagal parse polygon:', e);
                         }
                     }
                 },
-                error: function(xhr) {
+                error: function () {
                     alert('Gagal load data');
                 }
             });
-        });
-    </script>
 
-    <script>
-        $(document).ready(function(){
-            const token = localStorage.getItem('token');
-            var id = window.location.pathname.split('/').pop();
-
-            // Ambil semua dropdown & detail data sekaligus
+            // Load dropdown dropdown
             $.when(
                 $.ajax({
-                    url: '{{ config('app.API_URL') }}/api/get/tipe-tanah',
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/tipe-tanah',
                     type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 }),
                 $.ajax({
-                    url: '{{ config('app.API_URL') }}/api/get/status-tanah',
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/status-tanah',
                     type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 }),
                 $.ajax({
-                    url: '{{ config('app.API_URL') }}/api/get/status-kepemilikan',
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/status-kepemilikan',
                     type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 }),
                 $.ajax({
-                    url: '{{ config('app.API_URL') }}/api/get/ground/' + id,
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/ground/' + id,
                     type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
+                    headers: { 'Authorization': 'Bearer ' + token }
                 })
-            ).done(function(tipeTanahVal, statusTanahVal, statusKepemilikanVal, groundDetailVal) {
+            ).done(function (tipeTanahVal, statusTanahVal, statusKepemilikanVal, groundDetailVal) {
                 const tipeTanah = tipeTanahVal[0].data;
                 const statusTanah = statusTanahVal[0].data;
                 const statusKepemilikan = statusKepemilikanVal[0].data;
                 const detail = groundDetailVal[0].data;
 
-                console.log(tipeTanah, statusTanah, statusKepemilikan, detail);
-
-                // Populate option
                 itemDropdown('#tipe_tanah', tipeTanah, 'id', 'nama_tipe_tanah', detail.tipe_tanah_id);
                 itemDropdown('#status_tanah', statusTanah, 'id', 'nama_status_tanah', detail.status_tanah_id);
                 itemDropdown('#status_kepemilikan', statusKepemilikan, 'id', 'nama_status_kepemilikan', detail.status_kepemilikan_id);
-
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                console.error('Error ambil data:', textStatus);
             });
 
-            // Modify itemDropdown to support selected value
-            function itemDropdown(selector, data, valueKey, textKey, selectedVal){
+            function itemDropdown(selector, data, valueKey, textKey, selectedVal) {
                 const dropdown = $(selector);
                 dropdown.empty();
                 dropdown.append(`<option disabled>Pilih</option>`);
@@ -361,7 +324,72 @@
                 });
             }
         });
-
     </script>
+
+    <script>
+        $(document).ready(function () {
+            const token = localStorage.getItem('token');
+            const id = window.location.pathname.split('/').pop();
+
+            $('#perbarui').on('click', function (e) {
+                e.preventDefault();
+
+                const formData = new FormData();
+
+                formData.append('_method', 'PATCH'); // Method override
+
+                // Data biasa
+                formData.append('nama_tanah', $('#nama_tanah').val());
+                formData.append('detail_alamat', $('#detail_alamat').val());
+                formData.append('rt', $('#rt').val());
+                formData.append('rw', $('#rw').val());
+                formData.append('padukuhan', $('#padukuhan').val());
+                formData.append('desa', $('#desa').val());
+                formData.append('kecamatan', $('#kecamatan').val());
+                formData.append('kabupaten', $('#kabupaten').val()); // Fix: kamu ambil dari kecamatan tadi
+                formData.append('status_kepemilikan_id', $('#status_kepemilikan').val());
+                formData.append('status_tanah_id', $('#status_tanah').val());
+                formData.append('luas_tanah', $('#luas_tanah').val());
+                formData.append('tipe_tanah_id', $('#tipe_tanah').val());
+                formData.append('longitude', $('#longitude').val());
+                formData.append('latitude', $('#latitude').val());
+                formData.append('coordinates', $('#polygon').val()); // asumsi ini input geoJSON string
+
+                // File upload (optional)
+                if ($('#foto_tanah')[0].files.length > 0) {
+                    formData.append('foto_tanah', $('#foto_tanah')[0].files[0]);
+                }
+                if ($('#sertifikat_tanah')[0].files.length > 0) {
+                    formData.append('sertifikat_tanah', $('#sertifikat_tanah')[0].files[0]);
+                }
+
+                $.ajax({
+                    url: "https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/update/ground/" + id,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Accept': 'application/json'
+                    },
+                    success: function (res) {
+                        alert('Data berhasil disimpan!');
+                        window.location.href = "/ManageGround";
+                    },
+                    error: function (err) {
+                        console.error(err);
+                        if (err.responseJSON && err.responseJSON.message) {
+                            alert('Error: ' + err.responseJSON.message);
+                        } else {
+                            alert('Terjadi kesalahan. Cek console untuk detail.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+
 </body>
 </html>

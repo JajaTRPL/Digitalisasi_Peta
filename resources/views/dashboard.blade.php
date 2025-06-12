@@ -16,70 +16,69 @@
             Jumlah Pengunjung
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold">
                         Hari ini
                     </h3>
-                    <div class="text-2xl font-bold my-2">
-                        156
-                        <i class="fas fa-chart-bar text-gray-500 text-4xl"> </i>
+                    <div class="flex items-center justify-center text-2xl font-bold my-2 gap-4 ">
+                        <p id="daily" class="mx-5"></p>
+                        <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
+                    </div>
+                    <div class="w-full mt-6 bg-gradient-to-r from-[#666CFF] to-[#8B90FF] p-4 rounded font-semibold text-white">
+                        <p>User</p>
                     </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-lg shadow-md text-center">
-                    <h3 class="text-lg font-semibold">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-lg font-semibold ">
                         Mingguan
                     </h3>
-                    <div class="text-2xl font-bold my-2">
-                        604
-                        <i class="fas fa-chart-bar text-gray-500 text-4xl"> </i>
+                    <div class="flex items-center justify-center text-2xl font-bold my-2 gap-4">
+                        <p id="weekly"></p>
+                        <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <button class="mt-4 text-sm text-gray-500">
-                        Detail
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
+                    <div class="w-full mt-6 bg-gradient-to-r from-[#4CAF50] to-[#8BC34A] p-4 rounded font-semibold text-white shadow-lg">
+                        <p>Detail</p>
+                    </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold">
                         Bulanan
                     </h3>
-                    <div class="text-2xl font-bold my-2">
-                        5287
-                        <i class="fas fa-chart-bar text-gray-500 text-4xl"> </i>
+                    <div class="flex items-center justify-center text-2xl font-bold my-2 gap-4" >
+                        <p id="monthly"></p>
+                        <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <button class="mt-4 text-sm text-gray-500">
-                        Detail
-                        <i class="fas fa-arrow-right"> </i>
-                    </button>
+                    <div class="w-full mt-6 bg-gradient-to-r from-[#FF9800] to-[#FFC107] p-4 rounded font-semibold text-white shadow-lg">
+                        <p>Detail</p>
+                    </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold">
                         Tahunan
                     </h3>
-                    <div class="text-2xl font-bold my-2">
-                        12941
-                        <i class="fas fa-chart-bar text-gray-500 text-4xl"> </i>
+                    <div class="flex items-center justify-center text-2xl font-bold my-2 gap-4">
+                        <p id="yearly"></p>
+                        <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <button class="mt-4 text-sm text-gray-500">
-                        Detail
-                        <i class="fas fa-arrow-right"> </i>
-                    </button>
+                    <div class="w-full mt-6 bg-gradient-to-r from-[#9C27B0] to-[#673AB7] p-4 rounded font-semibold text-white shadow-lg">
+                        <p>Detail</p>
+                    </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
                     <h3 class="text-lg font-semibold">
                         Total
                     </h3>
-                    <div class="text-2xl font-bold my-2">
-                        52784
-                        <i class="fas fa-chart-bar text-gray-500 text-4xl"> </i>
+                    <div class="flex items-center justify-center text-2xl font-bold my-2 gap-4">
+                        <p id="total"></p>
+                        <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <button class="mt-4 text-sm text-gray-500">
-                        Detail
-                        <i class="fas fa-arrow-right"> </i>
-                    </button>
+                   <div class="w-full mt-6 bg-gradient-to-r from-[#FF9800] to-[#8BC34A] p-4 rounded font-semibold text-white">
+                        <p>User</p>
+                    </div>
                 </div>
             </div>
        </section>
@@ -284,9 +283,53 @@
         $(document).ready(function(){
             const token = localStorage.getItem('token');
 
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             if(token){
+
                 $.ajax({
-                    url: '{{ config('app.API_URL') }}/api/get/ground',
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/visit',
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    data: { visitor_token: token },
+                    success: function(response) {
+                        console.log('Visit recorded:', response);
+                    },
+                    error: function(error) {
+                        console.error('Error recording visit:', error);
+                        console.error('Error recording visit:', error.responseText);
+                    }
+                });
+
+
+                $.ajax({
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/visitors',
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    success: function(data) {
+                        console.log('API Response:', data);
+                        $('#daily').text(data.data.daily);
+                        $('#weekly').text(data.data.weekly);
+                        $('#monthly').text(data.data.monthly);
+                        $('#yearly').text(data.data.yearly);
+                        $('#total').text(data.data.total);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching counts:', error);
+                    }
+                });
+
+
+                $.ajax({
+                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/ground',
                     type: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token

@@ -231,7 +231,7 @@
         });
 
         function showInfoModal(ground) {
-            document.getElementById('landPhoto').src = "storage/ground_image/" + ground.photoGround;
+            document.getElementById('landPhoto').src = "https://digitalmap-umbulharjo-api.madanateknologi.web.id/storage/ground_image/" + ground.foto_tanah;
             document.getElementById('landName').textContent = ground.nama_tanah;
             document.getElementById('landAddress').textContent = ground.alamat;
             document.getElementById('landOwnership').textContent = ground.nama_tipe_tanah;
@@ -246,6 +246,7 @@
             document.getElementById('detailModal').style.display = 'flex';
 
             document.getElementById('detailLandPhoto').src = "storage/ground_image/" + ground.foto_tanah;
+            document.getElementById('detailLandNumber').textContent = ground.detail_tanah_id;
             document.getElementById('detailLandName').textContent = ground.nama_tanah;
             document.getElementById('detailLandAddress').textContent = ground.alamat;
             document.getElementById('detailLandOwnership').textContent = ground.nama_tipe_tanah;

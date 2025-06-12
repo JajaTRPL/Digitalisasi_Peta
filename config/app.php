@@ -40,6 +40,7 @@ return [
     */
 
     'debug' => (bool) env('APP_DEBUG', false),
+    'API_URL' => env('API_URL','https://digitalmap-umbulharjo-api.madanateknologi.web.id'),
 
     /*
     |--------------------------------------------------------------------------

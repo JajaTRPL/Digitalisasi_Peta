@@ -1,4 +1,24 @@
 {
+  "resources/css/Admin.css": {
+    "file": "assets/Admin-DKAIeUIf.css",
+    "src": "resources/css/Admin.css",
+    "isEntry": true
+  },
+  "resources/css/ManageGround.css": {
+    "file": "assets/ManageGround-bPeVE-o2.css",
+    "src": "resources/css/ManageGround.css",
+    "isEntry": true
+  },
+  "resources/css/RestoreData.css": {
+    "file": "assets/RestoreData-H_QvOT2l.css",
+    "src": "resources/css/RestoreData.css",
+    "isEntry": true
+  },
+  "resources/css/ViewPeta.css": {
+    "file": "assets/ViewPeta-BWapS9e_.css",
+    "src": "resources/css/ViewPeta.css",
+    "isEntry": true
+  },
   "resources/css/app.css": {
     "file": "assets/app-Vpc-emzl.css",
     "src": "resources/css/app.css",
@@ -8,6 +28,18 @@
     "file": "assets/app-DQaypouS.js",
     "name": "app",
     "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/auth.js": {
+    "file": "assets/auth-l0sNRNKZ.js",
+    "name": "auth",
+    "src": "resources/js/auth.js",
+    "isEntry": true
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-D2H03dmm.js",
+    "name": "bootstrap",
+    "src": "resources/js/bootstrap.js",
     "isEntry": true
   }
 }

@@ -111,6 +111,7 @@
   <div class="container mx-auto px-4 py-4 flex justify-between items-center">
     <div class="flex items-center space-x-4">
       <img src="{{ asset('images/sleman-logo.png') }}" alt="Logo" class="h-12 w-12">
+      <p class="text-[24px] font-semibold font-poppins">Daftar Pengguna Website</p>
     </div>
     <div id="navLinks" class="items-center flex space-x-4">
       <a id="dashboard" href="{{route('dashboard')}}" class="text-[#666CFF] hover:text-black">Dashboard</a>
@@ -120,7 +121,6 @@
 
       <div class="relative inline-block text-left">
         <div class="profile-avatar cursor-pointer w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold bg-blue-500"></div>
-        
         <div class="dropdown-content absolute right-0 z-50 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
           <div class="py-1">
             <a id="user-name" href="#" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-blue-50 hover:bg-blue-200 hover:text-blue-800 rounded-md transition duration-200 ease-in-out">
@@ -183,7 +183,6 @@
       }).showToast();
     }
 
-    // Di dalam $(document).ready(function() { ... }), tambahkan:
     if (token) {
         showSpinner(true, 'Loading...');
         $.ajax({
