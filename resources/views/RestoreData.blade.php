@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <!-- Add Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="icon" href="{{ asset('images/sleman-logo.png') }}" type="image/png">
     @vite(['resources/css/RestoreData.css'])
 </head>
 
@@ -31,8 +32,8 @@
 
     <div class="container mx-auto mt-10">
         <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex items-center mb-4 gap-5">
-                <button class="bg-[#666CFF] text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors" onclick="history.back()">
+            <div class="flex items-center gap-5 relative mb-[-42] z-9999">
+                <button class="relative z-50 bg-[#666CFF] text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors" onclick="history.back()" id="backBtn">
                     <i class="fas fa-arrow-left mr-2"></i>
                     Kembali
                 </button>
@@ -62,6 +63,15 @@
     <div id="detailModal" class=" hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
         <div class="modal-content">
             <h2 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-center items-center">Detail Informasi Tanah</h2>
+             <div class="w-full text-center">
+                <p class="font-semibold">Foto Tanah:</p>
+                <div class="mt-2 w-full h-64 rounded border border-gray-300 overflow-hidden">
+                    <!-- Modal Header with Image -->
+                <div class="relative mb-4">
+                    <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
+                </div>
+                </div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div class="detail-field">
                     <p class="font-semibold text-gray-700 flex justify-center items-center">Nama:</p>
@@ -87,6 +97,10 @@
                     <p class="font-semibold text-gray-700 flex justify-center items-center">Longitude:</p>
                     <p id="longtitude" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
+            </div>
+            <div class="text-center mx-auto w-full mt-5 mb-5">
+                <p class="font-semibold">Download Sertifikat:</p>
+                <p id="sertif">-</p>
             </div>
             <div class="flex justify-center">
                 <button id="closeDetailModal" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center gap-2">
@@ -138,7 +152,7 @@
 
     <script>
         // Toast notification functions
-        function showSuccessToast(message) {
+        function showErrorToast(message) {
             Toastify({
                 text: message,
                 duration: 3000,
@@ -151,7 +165,7 @@
             }).showToast();
         }
 
-        function showErrorToast(message) {
+        function showSuccessToast(message) {
             Toastify({
                 text: message,
                 duration: 3000,
@@ -180,6 +194,7 @@
             $('#detailLandOwnership').html('<span class="text-gray-400">Memuat...</span>');
             $('#landArea').html('<span class="text-gray-400">Memuat...</span>');
             $('#longtitude').html('<span class="text-gray-400">Memuat...</span>');
+            $('#sertif').html('<span class="text-gray-400">Memuat...</span>');
             
             toggleDetailModal();
 
@@ -194,13 +209,16 @@
                     if (response.status === 'success' && response.data) {
                         const data = response.data[0];
 
+
+                        console.log(data)
+                        $("#detailLandPhoto").attr("src", "https://digitalmap-umbulharjo-api.madanateknologi.web.id/storage/ground_image/" + data.foto_tanah)
                         $('#detailLandName').text(data.nama_tanah || '-');
                         $('#detailLandAddress').text(data.alamat || '-');
                         $('#ownershipStatus').text(data.nama_status_kepemilikan || '-');
                         $('#detailLandOwnership').text(data.nama_tipe_tanah || '-');
                         $('#landArea').text(data.luas_tanah ? `${data.luas_tanah} m²` : '-');
                         $('#longtitude').text(data.longitude || '-');
-
+                        $('#sertif').html(`<a class="text-blue-600" href="https://digitalmap-umbulharjo-api.madanateknologi.web.id/view-pdf/${data.sertifikat_tanah}">${data.sertifikat_tanah}</a>`)
                         
 
                     } else {
@@ -250,12 +268,13 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-                    if (response.status === 'success') {
+                    if (response.status === 'success' || response.success) {
                         showSuccessToast('Data berhasil dipulihkan!');
                         setTimeout(() => {
                             location.reload();
                         }, 1000);
                     } else {
+                        console.log(response)
                         showErrorToast(response.message || 'Gagal memulihkan data');
                     }
                     toggleRestoreModal();
@@ -285,7 +304,24 @@
                     "zeroRecords": "Tidak ditemukan data yang sesuai",
                 },
                 "dom": '<"flex flex-wrap justify-between items-center mb-4"<"flex items-center gap-4"l<"dataTables_length">><"flex items-center gap-4"f>>rt<"flex flex-wrap justify-between items-center mt-4"<"dataTables_info"i><"dataTables_paginate"p>>',
-                "responsive": true
+                "responsive": true,
+                 "initComplete": function() {
+
+                    // Styling untuk wrapper dan pagination
+                     // Styling untuk wrapper dan pagination
+                    $("#deletedGroundTable_wrapper").children().first().removeClass('justify-between').addClass("justify-end");
+                    $("#deletedGroundTable_wrapper").children().first().children().eq(0).addClass("mr-0");
+                    $("#deletedGroundTable_wrapper").children().first().children().eq(0).children().first().children().first().addClass("mr-3 opacity-50");
+                    $("#deletedGroundTable_wrapper").children().first().children().eq(0).children().first().children().eq(1).attr('style','border-radius:7px; padding: 10px 15px');
+                    $("#deletedGroundTable_wrapper").children().first().children().eq(1).children().first().children().first().attr('style','border-radius:7px; padding: 10px 15px');
+                    $("#deletedGroundTable_wrapper .dt-paging-button").attr('style','background:#666CFF');
+                    $("#deletedGroundTable_wrapper nav[aria-label=\"pagination\"]").children().eq(2).attr('style', 'border: 1px solid black; border-radius:100%;padding:10px');
+
+                    $('#deletedGroundTable').on('draw.dt', function () {
+                        $(".dt-paging-button").attr('style', 'border: 1px solid rgba(0,0,0,0.3); border-radius:100%; height:45px;width:45px;');
+                        $(".dt-paging-button.current").attr('style', 'border: 1px solid rgba(0,0,0,0.3); border-radius:100%; height:45px;width:45px;background:#666CFF;color:white!important;');
+                        });
+                }
             });
 
             // Close detail modal handler

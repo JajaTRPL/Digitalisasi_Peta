@@ -31,37 +31,49 @@ Route::get('/dashboard', function(){
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/ViewPeta', function() {
-        return view('ViewPeta');
-    })->name('ViewPeta');
+Route::get('/ViewPeta', function() {
+    return view('ViewPeta');
+})->name('ViewPeta');
 
-    Route::get('/ManageGround', function(){
-        return view('ManageGround');
-    })->name('ManageGround');
+Route::get('/ManageGround', function(){
+    return view('ManageGround');
+})->name('ManageGround');
 
-    Route::delete('/ManageGround/{id}', [GroundController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
+Route::delete('/ManageGround/{id}', [GroundController::class, 'destroy'])->middleware(['auth', 'verified', 'role:superAdmin|admin'])->name('GroundDestroy');
 
-    Route::get('/AddGround', [GroundController::class, 'create'])->name('AddGround');
+Route::get('/AddGround', [GroundController::class, 'create'])->name('AddGround');
 
-    Route::post('/SaveGround', [GroundController::class, 'store'])->name('SaveGround');
+Route::post('/SaveGround', [GroundController::class, 'store'])->name('SaveGround');
 
-    Route::get('/EditGround/{id}', function($id){
-        return view('EditGround', ['id' => $id]);
-    })->name('EditGround');
+Route::get('/EditGround/{id}', function($id){
+    return view('EditGround', ['id' => $id]);
+})->name('EditGround');
 
 
-    // Route::put('/UpdatePeta/{id}', [GroundController::class, 'update'])->name('UpdatePeta');
+// Route::put('/UpdatePeta/{id}', [GroundController::class, 'update'])->name('UpdatePeta');
 
-    Route::get('/admin', function () {
-        return view('manageAdmin');
-    })->name('manageAdmin');
+Route::get('/admin', function () {
+    return view('manageAdmin');
+})->name('manageAdmin');
 
-    Route::get('/restore-data', function () {
-        return view('RestoreData');
-    })->name('data.restore');
+Route::get('/restore-data', function () {
+    return view('RestoreData');
+})->name('data.restore');
 
 Route::get('/lupa-password', function () {
     return view('auth.reset-password'); // Sesuaikan dengan nama blade Anda
 })->name('password.request');
+
+Route::get('/StatistikWeek', function () {
+    return view('StatistikWeek'); // Halaman statistik mingguan
+});
+
+Route::get('/StatistikMonth', function () {
+    return view('StatistikMonth'); // Halaman statistik bulanan
+});
+
+Route::get('/StatistikYear', function () {
+    return view('StatistikYear'); // Halaman statistik tahunan
+});
 
 require __DIR__.'/auth.php';

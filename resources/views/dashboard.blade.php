@@ -6,6 +6,7 @@
     <title>Dashboard</title>
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="{{ asset('images/sleman-logo.png') }}" type="image/png">
 </head>
 <body class="bg-[#F6F9EE]">
     @include('components.navbar')
@@ -24,7 +25,7 @@
                         <p id="daily" class="mx-5"></p>
                         <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <div class="w-full mt-6 bg-gradient-to-r from-[#666CFF] to-[#8B90FF] p-4 rounded font-semibold text-white">
+                    <div class="w-full mt-6 bg-gradient-to-r from-[#666CFF] to-[#8B90FF]  shadow-lg p-4 rounded font-semibold text-white">
                         <p>User</p>
                     </div>
                 </div>
@@ -37,8 +38,11 @@
                         <p id="weekly"></p>
                         <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <div class="w-full mt-6 bg-gradient-to-r from-[#4CAF50] to-[#8BC34A] p-4 rounded font-semibold text-white shadow-lg">
-                        <p>Detail</p>
+                    <div class="w-full mt-6 group cursor-pointer" onclick="window.location.href='/StatistikWeek'">
+                        <div onMouseOver="this.style.scale='1.05'" onMouseOut="this.style.scale='1.0'" class="bg-gradient-to-r from-[#4CAF50] to-[#8BC34A] p-4 rounded font-semibold text-white shadow-lg flex justify-center items-center gap-3">
+                            <p class="hover:underline">Detail</p>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -50,8 +54,11 @@
                         <p id="monthly"></p>
                         <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <div class="w-full mt-6 bg-gradient-to-r from-[#FF9800] to-[#FFC107] p-4 rounded font-semibold text-white shadow-lg">
-                        <p>Detail</p>
+                    <div class="w-full mt-6 group cursor-pointer" onclick="window.location.href='/StatistikMonth'">
+                        <div onMouseOver="this.style.scale='1.05'" onMouseOut="this.style.scale='1.0'" class="bg-gradient-to-r from-[#FF9800] to-[#FFC107] p-4 rounded font-semibold text-white shadow-lg flex justify-center items-center gap-3">
+                            <p class="hover:underline">Detail</p>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -63,8 +70,11 @@
                         <p id="yearly"></p>
                         <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                    <div class="w-full mt-6 bg-gradient-to-r from-[#9C27B0] to-[#673AB7] p-4 rounded font-semibold text-white shadow-lg">
-                        <p>Detail</p>
+                    <div class="w-full mt-6 group cursor-pointer" onclick="window.location.href='/StatistikYear'">
+                        <div onMouseOver="this.style.scale='1.05'" onMouseOut="this.style.scale='1.0'" class=" bg-gradient-to-r from-[#9C27B0] to-[#673AB7] p-4 rounded font-semibold text-white shadow-lg flex justify-center items-center gap-3">
+                            <p class="hover:underline">Detail</p>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
                     </div>
                 </div>
 
@@ -76,7 +86,7 @@
                         <p id="total"></p>
                         <i class="fas fa-chart-bar text-[#666CFF] text-4xl"> </i>
                     </div>
-                   <div class="w-full mt-6 bg-gradient-to-r from-[#FF9800] to-[#8BC34A] p-4 rounded font-semibold text-white">
+                   <div class="w-full mt-6 bg-gradient-to-r from-[#FF9800] to-[#8BC34A] p-4 rounded  shadow-lg font-semibold text-white">
                         <p>User</p>
                     </div>
                 </div>
@@ -300,33 +310,31 @@
                     data: { visitor_token: token },
                     success: function(response) {
                         console.log('Visit recorded:', response);
+
+                        $.ajax({
+                        url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/visitors',
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        success: function(data) {
+                            console.log('API Response:', data);
+                            $('#daily').text(data.data.daily);
+                            $('#weekly').text(data.data.weekly);
+                            $('#monthly').text(data.data.monthly);
+                            $('#yearly').text(data.data.yearly);
+                            $('#total').text(data.data.total);
+                        },
+                        error: function(error) {
+                            console.error('Error fetching counts:', error);
+                        }
+                });
                     },
                     error: function(error) {
                         console.error('Error recording visit:', error);
                         console.error('Error recording visit:', error.responseText);
                     }
                 });
-
-
-                $.ajax({
-                    url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/visitors',
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    },
-                    success: function(data) {
-                        console.log('API Response:', data);
-                        $('#daily').text(data.data.daily);
-                        $('#weekly').text(data.data.weekly);
-                        $('#monthly').text(data.data.monthly);
-                        $('#yearly').text(data.data.yearly);
-                        $('#total').text(data.data.total);
-                    },
-                    error: function(error) {
-                        console.error('Error fetching counts:', error);
-                    }
-                });
-
 
                 $.ajax({
                     url: 'https://digitalmap-umbulharjo-api.madanateknologi.web.id/api/get/ground',

@@ -7,6 +7,7 @@
     <!-- Add Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @vite(['resources/css/ManageGround.css'])
+    <link rel="icon" href="{{ asset('images/sleman-logo.png') }}" type="image/png">
 </head>
 
 <body class="bg-[#F6F9EE] ]">
@@ -29,12 +30,12 @@
     <div class="container mx-auto mt-10 px-4">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 mb-[-93px] z-[999999]">
                     <button class="bg-[#666CFF] text-white px-4 py-2 rounded-md hover:bg-[#5a60e5] transition-colors flex items-center gap-2" onclick="window.location.href='/AddGround'">
                         <i class="fas fa-plus"></i>
                         <span>Tambah Tanah</span>
                     </button>
-                    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors flex items-center gap-2" onclick="window.location.href='/restore-data'">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors flex items-center gap-2 " onclick="window.location.href='/restore-data'">
                         <img src="/images/DB.png" alt="Icon" class="w-4 h-4">
                         <span>Pulihkan Data</span>
                     </button>
@@ -90,40 +91,47 @@
     </div>
 
     <!-- Detail Information Modal -->
-    <div id="detailModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
+    <div id="detailModal" class=" hidden fixed inset-0 z-50 items-center justify-center bg-black bg-opacity-50">
         <div class="modal-content">
-            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Detail Informasi Tanah</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800 flex justify-center items-center">Detail Informasi Tanah</h2>
+             <div class="w-full text-center">
                 <p class="font-semibold">Foto Tanah:</p>
                 <div class="mt-2 w-full h-64 rounded border border-gray-300 overflow-hidden">
-                    <img id="landPhoto"
-                        src="{{ asset('images/Ground-Image-Default.png') }}"
-                        alt="Foto Tanah"
-                        class="w-full h-full object-cover mx-auto" />
+                    <!-- Modal Header with Image -->
+                <div class="relative mb-4">
+                    <img id="landPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
+                </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="detail-field">
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Nama:</p>
+                    <p id="detailLandName" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
                 <div class="detail-field">
-                    <p class="font-semibold text-gray-700">Nama:</p>
-                    <p id="detailLandName" class="text-gray-600">-</p>
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Alamat:</p>
+                    <p id="detailLandAddress" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
                 <div class="detail-field">
-                    <p class="font-semibold text-gray-700">Alamat:</p>
-                    <p id="detailLandAddress" class="text-gray-600">-</p>
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Status Kepemilikan:</p>
+                    <p id="ownershipStatus" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
                 <div class="detail-field">
-                    <p class="font-semibold text-gray-700">Status Kepemilikan:</p>
-                    <p id="ownershipStatus" class="text-gray-600">-</p>
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Tipe Tanah:</p>
+                    <p id="detailLandOwnership" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
                 <div class="detail-field">
-                    <p class="font-semibold text-gray-700">Tipe Tanah:</p>
-                    <p id="detailLandOwnership" class="text-gray-600">-</p>
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Luas Tanah:</p>
+                    <p id="landArea" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
                 <div class="detail-field">
-                    <p class="font-semibold text-gray-700">Luas Tanah:</p>
-                    <p id="landArea" class="text-gray-600">-</p>
+                    <p class="font-semibold text-gray-700 flex justify-center items-center">Longitude:</p>
+                    <p id="longtitude" class="text-gray-600 flex justify-center items-center">-</p>
                 </div>
-                <div class="detail-field">
-                    <p class="font-semibold text-gray-700">Longitude:</p>
-                    <p id="longtitude" class="text-gray-600">-</p>
-                </div>
+            </div>
+            <div class="text-center mx-auto w-full mt-5 mb-5">
+                <p class="font-semibold">Download Sertifikat:</p>
+                <p id="certificate-link">-</p>
             </div>
             <div class="flex justify-center">
                 <button id="closeDetailModal" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors flex items-center gap-2">
@@ -221,10 +229,23 @@
                         return this.nodeType === 3;
                     }).remove();
                     
-                    // Add custom classes to elements
-                    $('.dataTables_length').addClass('flex items-center');
-                    $('.dataTables_filter').addClass('flex items-center');
+                    
+
+                    // Styling untuk wrapper dan pagination
+                    $("#groundTable_wrapper").children().first().removeClass('justify-between').addClass("justify-end");
+                    $("#groundTable_wrapper").children().first().children().eq(0).addClass("mr-0");
+                    $("#groundTable_wrapper").children().first().children().eq(0).children().first().children().first().addClass("mr-3 opacity-50");
+                    $("#groundTable_wrapper").children().first().children().eq(0).children().first().children().eq(1).attr('style','border-radius:7px; padding: 10px 15px');
+                    $("#groundTable_wrapper").children().first().children().eq(1).children().first().children().first().attr('style','border-radius:7px; padding: 10px 15px');
+                    $("#groundTable_wrapper .dt-paging-button").attr('style','background:#666CFF');
+                    $("#groundTable_wrapper nav[aria-label=\"pagination\"]").children().eq(2).attr('style', 'border: 1px solid black; border-radius:100%;padding:10px');
+
+                    $('#groundTable').on('draw.dt', function () {
+                        $(".dt-paging-button").attr('style', 'border: 1px solid rgba(0,0,0,0.3); border-radius:100%; height:45px;width:45px;');
+                        $(".dt-paging-button.current").attr('style', 'border: 1px solid rgba(0,0,0,0.3); border-radius:100%; height:45px;width:45px;background:#666CFF;color:white!important;');
+                        });
                 }
+                
             });
 
             // Show loading state
@@ -391,6 +412,7 @@
             $('#detailLandOwnership').html('<span class="text-gray-400">Memuat...</span>');
             $('#landArea').html('<span class="text-gray-400">Memuat...</span>');
             $('#longtitude').html('<span class="text-gray-400">Memuat...</span>');
+            $('#certificate-link').html('<span class="text-gray-400">Memuat...</span>');
             
             toggleDetailModal();
 
@@ -411,6 +433,7 @@
                         $('#detailLandOwnership').text(data.nama_tipe_tanah || '-');
                         $('#landArea').text(data.luas_tanah ? `${data.luas_tanah} m²` : '-');
                         $('#longtitude').text(data.longitude || '-');
+                        $('#certificate-link').html(`<a class="text-blue-600" href="https://digitalmap-umbulharjo-api.madanateknologi.web.id/view-pdf/${data.sertifikat_tanah}">${data.sertifikat_tanah}</a>` || '-');
 
 
                         if (data.foto_tanah) {
@@ -436,6 +459,8 @@
                     }
                 }
             });
+
+            
         }
     </script>
 </body>

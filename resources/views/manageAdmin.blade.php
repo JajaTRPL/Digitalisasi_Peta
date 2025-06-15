@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <!-- Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="icon" href="{{ asset('images/sleman-logo.png') }}" type="image/png">
 </head>
 
 <body class="bg-[#F6F9EE]">
@@ -32,7 +33,7 @@
     <div class="container mx-auto mt-10">
         <div class="bg-white px-10 py-7 rounded-lg shadow-md overflow-hidden">
             <div class="flex items-center justify-between mb-6">
-                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded-lg transition-colors hover:bg-[#5a60e5]">
+                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded-lg transition-colors hover:bg-[#5a60e5] mb-[-85px] z-[999999]">
                     <i class="fas fa-plus mr-2"></i>
                     Tambah Admin
                 </button>
@@ -239,6 +240,11 @@
                 "responsive": true,
                 "dom": '<"flex justify-between items-center mb-4"lf>rt<"flex justify-between items-center mt-4"ip>',
                 "initComplete": function() {
+                            // Custom pagination buttons
+                    $('.dt-paging-button.next').addClass('btn-next-custom');
+                    $('.dt-paging').addClass('btn-paging');
+                    
+                    // Custom search input
                     $('.dataTables_filter input').attr('placeholder', 'Cari nama/email...');
                     $('.dataTables_filter label').contents().filter(function() {
                         return this.nodeType === 3;
@@ -455,6 +461,19 @@
                     }
                 });
             });
+            $("#adminTable_wrapper").children().first().removeClass('justify-between').addClass("justify-end");
+            $("#adminTable_wrapper").children().first().children().eq(0).addClass("mr-3");
+            $("#adminTable_wrapper").children().first().children().eq(0).children().first().addClass("mr-3 opacity-50");
+            $("#adminTable_wrapper").children().first().children().eq(0).children().eq(1).attr('style','border-radius:7px; padding: 10px 15px');
+            $("#adminTable_wrapper").children().first().children().eq(1).children().first().attr('style','border-radius:7px; padding: 10px 15px');
+            $("#adminTable_wrapper").children().last().children().last().children().first().children().first().attr('style','background:#666CFF');
+            $("#adminTable_wrapper .dt-paging-button").attr('style','background:#666CFF');
+            $("#adminTable_wrapper nav[aria-label=\"pagination\"]").children().eq(2).attr('style', 'border: 1px solid black; border-radius:100%;padding:10px');
+            $('#adminTable').on('draw.dt', function () {
+                $(".dt-paging-button").attr('style', 'border: 1px solid rgba(0,0,0,0.3); border-radius:100%; height:45px;width:45px;');
+                $(".dt-paging-button.current").attr('style', 'border: 1px solid rgba(0,0,0,0.3); border-radius:100%; height:45px;width:45px;background:#666CFF;color:white!important;');
+                });
+
         });
     </script>
 </body>

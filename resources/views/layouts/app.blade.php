@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     @vite('resources/css/app.css')
+    <link rel="icon" href="{{ asset('images/sleman-logo.png') }}" type="image/png">
 </head>
 <body>
     <div>

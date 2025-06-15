@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+    <link rel="icon" href="{{ asset('images/sleman-logo.png') }}" type="image/png">
     
 </head>
 
@@ -245,7 +245,7 @@
             document.getElementById('infoModal').style.display = 'none';
             document.getElementById('detailModal').style.display = 'flex';
 
-            document.getElementById('detailLandPhoto').src = "storage/ground_image/" + ground.foto_tanah;
+            document.getElementById('detailLandPhoto').src = "https://digitalmap-umbulharjo-api.madanateknologi.web.id/storage/ground_image/" + ground.foto_tanah;
             document.getElementById('detailLandNumber').textContent = ground.detail_tanah_id;
             document.getElementById('detailLandName').textContent = ground.nama_tanah;
             document.getElementById('detailLandAddress').textContent = ground.alamat;
@@ -253,8 +253,8 @@
             document.getElementById('landArea').textContent = ground.luas_tanah;
             document.getElementById('ownershipStatus').textContent = ground.nama_status_kepemilikan;
             document.getElementById('longtitude').textContent = ground.longitude;
-            document.getElementById('detailLandNumber').textContent = ground.id;
-            document.getElementById('numberSertif').textContent = ground.sertifikat_tanah ? ground.sertifikat_tanah.substr(0, ground.sertifikat_tanah.length - 4) : '';
+            document.getElementById('numberSertif').textContent = ground.sertifikat_tanah ? ground.sertifikat_tanah.substr("ground_sertifikat_".length, ground.sertifikat_tanah.length - 4 - "ground_sertifikat_".length) : '';
+            document.getElementById('sertif').innerHTML = `<a class="text-blue-600" href="https://digitalmap-umbulharjo-api.madanateknologi.web.id/view-pdf/${ground.sertifikat_tanah}">${ground.sertifikat_tanah}</a>` || '-';
         }
     </script>
 </body>

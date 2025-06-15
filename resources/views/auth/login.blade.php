@@ -16,7 +16,7 @@
 
             <div class="mb-4">
                 <input id="email" name="email" type="email" placeholder="Email" :value="old('email')" required autofocus autocomplete="username" class="w-full p-3 border border-gray-300 rounded-lg ">
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2" id="error-email"/>
             </div>
 
             <div class="mb-4 relative">
@@ -29,7 +29,7 @@
                         <path d="M3.293 3.293a1 1 0 011.414 0L16.707 15.293a1 1 0 01-1.414 1.414L3.293 4.707a1 1 0 010-1.414zm4.547 4.547l1.415 1.415A3.001 3.001 0 0110 13a3.001 3.001 0 01-1.999-.757z" />
                     </svg>
                 </span>
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2" id="error-password"/>
             </div>
 
             <!-- Forgot Password Link -->
@@ -180,26 +180,37 @@
                 
                 const token = encodeURIComponent(response.access_token);
                 document.cookie = `auth_token=${token}; path=/; SameSite=None; Secure`;
-                console.log('Cookie set:', document.cookie);
-
+                
                 // Redirect after 3 seconds
                 setTimeout(function() {
                     window.location.href = 'dashboard';
                 }, 3000);
             },
             error: function(xhr) {
+
+                $('#error-email').text('');
+                $('#error-password').text('');
+
                 // Reset button state
                 loginText.classList.remove('opacity-0');
                 loginSpinner.classList.add('hidden');
                 loginButton.disabled = false;
                 
                 let errorMessage = 'Login Gagal';
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    errorMessage = xhr.responseJSON.message;
-                } else if (xhr.responseText) {
-                    errorMessage = xhr.responseText || 'An error occurred';
+                try {
+                    let response = JSON.parse(xhr.responseText);
+                    if (response.message) {
+                        errorMessage = response.message;
+                    }
+                } catch (e) {
+                    errorMessage = xhr.responseText;
                 }
-                console.log('Login gagal:', errorMessage);
+
+                if (errorMessage.toLowerCase().includes('password')) {
+                    $('#error-password').text(errorMessage);
+                } else if (errorMessage.toLowerCase().includes('email')) {
+                    $('#error-email').text(errorMessage);
+                }
                 
                 // Error toast
                 Toastify({

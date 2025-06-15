@@ -1,21 +1,20 @@
 <!-- Modal 2 -->
     <div id="detailModal" class="modal">
         <div class="modal-content bg-white rounded-lg shadow-lg overflow-hidden p-6">
-            <!-- Modal Header with Image -->
-            <div class="relative mb-4">
-                <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
-            </div>
+            
 
             <!-- Modal Body with Information -->
             <h2 class="text-2xl font-semibold mb-4">Detail Informasi Tanah</h2>
-            <div class="grid grid-cols-2 gap-4">
+            <div class="w-full text-center">
                 <p class="font-semibold">Foto Tanah:</p>
                 <div class="mt-2 w-full h-64 rounded border border-gray-300 overflow-hidden">
-                    <img id="landPhoto"
-                        src="{{ asset('images/Ground-Image-Default.png') }}"
-                        alt="Foto Tanah"
-                        class="w-full h-full object-cover mx-auto" />
+                    <!-- Modal Header with Image -->
+                <div class="relative mb-4">
+                    <img id="detailLandPhoto" src="" alt="Foto Tanah" class="w-full h-64 object-cover rounded-md">
                 </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
                 <div>
                     <p class="font-semibold">Nama:</p>
                     <p id="detailLandName">-</p>
@@ -48,6 +47,11 @@
                     <p class="font-semibold">Nomor Sertifikat:</p>
                     <p id="numberSertif">-</p>
                 </div>
+                
+            </div>
+            <div class="text-center mx-auto w-full mt-5">
+                <p class="font-semibold">Download Sertifikat:</p>
+                <p id="sertif">-</p>
             </div>
 
             <!-- Modal Footer with Close Button -->
