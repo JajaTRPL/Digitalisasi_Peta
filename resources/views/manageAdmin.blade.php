@@ -33,7 +33,7 @@
     <div class="container mx-auto mt-10">
         <div class="bg-white px-10 py-7 rounded-lg shadow-md overflow-hidden">
             <div class="flex items-center justify-between mb-6">
-                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded-lg transition-colors hover:bg-[#5a60e5] mb-[-85px] z-[999999]">
+                <button id="tambahAdminBtn" class="bg-[#666CFF] text-white px-4 py-2 rounded-lg transition-colors hover:bg-[#5a60e5] mb-[-85px] z-[999]">
                     <i class="fas fa-plus mr-2"></i>
                     Tambah Admin
                 </button>

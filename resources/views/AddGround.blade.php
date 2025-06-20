@@ -40,7 +40,7 @@
 
     <!-- NavBar -->
 
-    @include('components.navbar')
+    @include('components.navbar_tambah_tanah')
     <!-- Form Add -->
     <div class="max-w-7xl mx-auto p-6 bg-white mt-6 shadow-md rounded-md">
         <span class="block text-[24px] font-semibold mb-8 font-poppins">Tambah Data Tanah</span>

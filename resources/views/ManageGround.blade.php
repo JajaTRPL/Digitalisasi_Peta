@@ -30,7 +30,7 @@
     <div class="container mx-auto mt-10 px-4">
         <div class="bg-white p-6 rounded-lg shadow-md">
             <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
-                <div class="flex items-center gap-3 mb-[-93px] z-[999999]">
+                <div class="flex items-center gap-3 mb-[-93px] z-[9999]">
                     <button class="bg-[#666CFF] text-white px-4 py-2 rounded-md hover:bg-[#5a60e5] transition-colors flex items-center gap-2" onclick="window.location.href='/AddGround'">
                         <i class="fas fa-plus"></i>
                         <span>Tambah Tanah</span>

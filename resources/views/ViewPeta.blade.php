@@ -15,7 +15,7 @@
 
 <body class="bg-black relative">
     <!-- Navigation Bar -->
-    @include('components.navbar')
+    @include('components.navbar_view')
 
     <!-- Main Content -->
     <div class="flex relative">

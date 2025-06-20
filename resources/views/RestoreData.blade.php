@@ -361,7 +361,12 @@
                                     item.deleted_by_name ? item.deleted_by_name : 'System',
                                     item.deleted_at ? new Date(item.deleted_at).toLocaleString('id-ID') : '-',
                                     `
-                                    <div class="flex items-center justify-start gap-3">
+                                    <div class="flex items-center justify-start gap-1">
+                                        <button type="button" class="action-btn delete-btn mr-2"
+                                            data-id="${item.detail_tanah_id}" 
+                                            data-name="${item.nama_tanah}">
+                                            <img src="/images/DeleteBtn.png" alt="Delete" >
+                                        </button>
                                         <button type="button" class="text-blue-500 hover:text-blue-700 transition-colors restore-btn"
                                             data-id="${item.detail_tanah_id}">
                                             <img src="/images/RestoreBtn.png" alt="Information">
